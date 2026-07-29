@@ -718,7 +718,7 @@
         <div style="flex:1;min-width:220px">
           <label class="field-label" for="usernameInput" data-i18n="friends.username">Your display name</label>
           <input class="text-input" id="usernameInput" type="text" value="You" maxlength="24">
-          <p style="margin-top:.6rem"><span data-i18n="friends.yourid">Your ID:</span> <span class="id-tag" id="myIdTag">SS-00000</span> <button class="btn btn-secondary btn-sm" id="copyIdBtn" type="button" data-i18n="friends.copyid">Copy</button></p>
+          <p style="margin-top:.6rem"><span data-i18n="friends.yourid">Your ID:</span> <span class="id-tag" id="myIdTag">SS-00000</span> <button class="btn btn-secondary btn-sm" id="copyIdBtn" type="button" data-i18n="friends.copyid">Copy</button> <button class="btn btn-secondary btn-sm" id="copyInviteBtn" type="button" data-i18n="friends.invite">Copy invite link</button></p>
         </div>
         <button class="btn btn-secondary" id="saveProfileBtn" data-i18n="friends.save">Save profile</button>
       </div>
@@ -726,7 +726,7 @@
       <div class="friends-tabs" role="tablist" aria-label="Friends sections">
         <button class="friends-tab" role="tab" aria-selected="true" data-tab="mine" data-i18n="friends.tabmine">My friends</button>
         <button class="friends-tab" role="tab" aria-selected="false" data-tab="add" data-i18n="friends.tabadd">Add friend</button>
-        <button class="friends-tab" role="tab" aria-selected="false" data-tab="requests" data-i18n="friends.tabreq">Requests</button>
+        <button class="friends-tab" role="tab" aria-selected="false" data-tab="requests"><span data-i18n="friends.tabreq">Requests</span><span id="reqBadge"></span></button>
       </div>
       <div class="friends-tabpanel active" data-panel="mine"><div class="card-grid" id="myFriendsGrid"></div></div>
       <div class="friends-tabpanel" data-panel="add">
@@ -857,10 +857,12 @@
         <div class="field-group"><label class="field-label" for="stripeMonthlyInput">Stripe Payment Link — Monthly (€4.99/mo)</label><input class="text-input" id="stripeMonthlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <div class="field-group"><label class="field-label" for="stripeYearlyInput">Stripe Payment Link — Yearly (€36/yr)</label><input class="text-input" id="stripeYearlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <div class="field-group"><label class="field-label" for="stripeExtrasInput">Stripe Payment Link — Grandparents &amp; Grandchildren + Health AI bonus pack (€1/mo)</label><input class="text-input" id="stripeExtrasInput" type="url" placeholder="https://buy.stripe.com/..."></div>
-        <label style="display:flex;gap:.6rem;align-items:center;font-weight:700;margin-bottom:1rem"><input type="checkbox" id="liveModeToggle" style="width:22px;height:22px"> Use real Stripe checkout instead of the demo card form</label>
+        <h3 style="margin-top:1.2rem;font-size:1.15rem">Return links to paste into Stripe</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">In each Stripe Payment Link, open <em>After payment &rarr; Redirect customers to a page you choose</em> and paste the matching link below. Access only switches on when the customer comes back through one of these.</p>
+        <div id="returnUrlList" class="code-table"></div>
         <button class="btn btn-teal btn-sm" id="saveOwnerSettingsBtn" type="button">Save administrator settings</button>
         <p class="save-confirm" id="ownerSaveConfirm">Saved.</p>
-        <p class="note-box" style="margin-top:1.4rem">Paste your Stripe Payment Links above and tick the box to send customers to real Stripe checkout. Money then lands in the Stripe account that owns those links. Everything else on this page stays exactly as it is.</p>
+        <p class="note-box" style="margin-top:1.4rem"><strong>How the money reaches you.</strong>Every purchase now goes through Stripe's own checkout page: the customer types their card there, and the money lands in the Stripe account that owns the Payment Links above. This page never sees a card number and never unlocks anything on its own. The one honest limitation of a site with no server: the unlock happens because Stripe sends the customer back to your return link, which a determined person could type by hand. When you are ready for airtight verification, add a small backend that listens to Stripe webhooks.</p>
       </div>
     </div>
   </section>
@@ -987,21 +989,6 @@
       <button class="btn btn-plum btn-sm" id="bonusCardBtn" type="button" data-i18n="extras.unlockbtn">Unlock 100+ extra exercises</button>
     </div>
     <p class="auth-error" id="paymentError"></p>
-    <div id="cardFields">
-      <div class="field-group"><label class="field-label" for="cardName" data-i18n="pay.cardname">Name on card</label><input class="text-input" id="cardName" type="text"></div>
-      <div class="field-group"><label class="field-label" for="cardNumber" data-i18n="pay.cardnum">Card number</label><input class="text-input" id="cardNumber" type="text" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19"></div>
-      <div class="card-row">
-        <div class="field-group"><label class="field-label" for="cardExpiry" data-i18n="pay.exp">Expiry</label><input class="text-input" id="cardExpiry" type="text" placeholder="MM/YY" maxlength="5"></div>
-        <div class="field-group"><label class="field-label" for="cardCvv" data-i18n="pay.cvv">CVV</label>
-          <div class="secret-wrap"><input class="text-input" id="cardCvv" type="password" inputmode="numeric" maxlength="4">
-            <button type="button" class="eye-btn" data-eye-for="cardCvv" aria-label="Show CVV" aria-pressed="false">
-              <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-              <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.62 21.62 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
     <button class="btn btn-primary" id="paymentSubmitBtn" type="button" style="width:100%"></button>
     <p class="note-box" id="paymentFooterNote" style="margin-top:1.4rem"></p>
   </div>
@@ -1212,6 +1199,10 @@ I18N.en = {
 "extras.demo":"Demo mode: no real charge is made. The site owner can switch on real Stripe checkout in the administrator panel.",
 "extras.gatednote":"Grandparents & Grandchildren and the Health AI helper are part of the paid bonus pack, which is sold separately from the subscription plans.",
 "reviews.h":"Reviews & feedback","reviews.p":"Tell us what could be better. The site owner can read every review left here.","reviews.submit":"Send feedback","reviews.thanks":"Thank you — your feedback has been sent.","reviews.empty":"Please write something first.",
+"friends.invite":"Copy invite link","friends.invitecopied":"Invite link copied — send it to them!","friends.newreq":"{name} wants to connect — see Requests.",
+"pay.afterpay":"You'll pay on Stripe's own secure page. As soon as you come back here, your access switches on.",
+"pay.notsetup":"Payments aren't switched on yet — the site owner still has to paste the Stripe link in the administrator panel.",
+"pay.unlocked":"Payment received — your access is on. Thank you!",
 "undo.action":"Undo",
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
@@ -1363,6 +1354,10 @@ I18N.pt = {
 "extras.demo":"Modo de demonstração: não é cobrado nada. O proprietário pode ligar o pagamento real da Stripe no painel de administrador.",
 "extras.gatednote":"Avós e Netos e a IA de Saúde fazem parte do pacote bónus pago, que é vendido à parte dos planos de subscrição.",
 "reviews.h":"Avaliações e sugestões","reviews.p":"Diga-nos o que pode melhorar. O proprietário do site pode ler todas as avaliações deixadas aqui.","reviews.submit":"Enviar sugestão","reviews.thanks":"Obrigado — a sua sugestão foi enviada.","reviews.empty":"Escreva algo primeiro.",
+"friends.invite":"Copiar link de convite","friends.invitecopied":"Link de convite copiado — envie-lho!","friends.newreq":"{name} quer ligar-se a si — veja os Pedidos.",
+"pay.afterpay":"Vai pagar na página segura da própria Stripe. Assim que voltar aqui, o seu acesso é ativado.",
+"pay.notsetup":"Os pagamentos ainda não estão ligados — o proprietário do site tem de colar o link da Stripe no painel de administrador.",
+"pay.unlocked":"Pagamento recebido — o seu acesso está ativo. Obrigado!",
 "undo.action":"Desfazer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
@@ -1514,6 +1509,10 @@ I18N.es = {
 "extras.demo":"Modo de demostración: no se cobra nada. El propietario puede activar el pago real de Stripe en el panel de administrador.",
 "extras.gatednote":"Abuelos y Nietos y la IA de Salud forman parte del pack de regalo de pago, que se vende aparte de los planes de suscripción.",
 "reviews.h":"Opiniones y sugerencias","reviews.p":"Dinos qué se puede mejorar. El propietario del sitio puede leer todas las opiniones dejadas aquí.","reviews.submit":"Enviar sugerencia","reviews.thanks":"Gracias — tu comentario se ha enviado.","reviews.empty":"Escribe algo primero.",
+"friends.invite":"Copiar enlace de invitación","friends.invitecopied":"Enlace copiado — ¡envíaselo!","friends.newreq":"{name} quiere conectar contigo — mira Solicitudes.",
+"pay.afterpay":"Pagarás en la página segura de la propia Stripe. En cuanto vuelvas aquí, tu acceso se activa.",
+"pay.notsetup":"Los pagos aún no están activados — el propietario del sitio todavía tiene que pegar el enlace de Stripe en el panel de administrador.",
+"pay.unlocked":"Pago recibido — tu acceso está activo. ¡Gracias!",
 "undo.action":"Deshacer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
@@ -1665,6 +1664,10 @@ I18N.fr = {
 "extras.demo":"Mode démonstration : aucun paiement réel. Le propriétaire peut activer le vrai paiement Stripe dans le panneau d'administration.",
 "extras.gatednote":"Grands-parents et petits-enfants et l'IA Santé font partie du pack bonus payant, vendu séparément des formules d'abonnement.",
 "reviews.h":"Avis et suggestions","reviews.p":"Dites-nous ce qui pourrait être mieux. Le propriétaire du site peut lire chaque avis laissé ici.","reviews.submit":"Envoyer un avis","reviews.thanks":"Merci — votre avis a bien été envoyé.","reviews.empty":"Écrivez d'abord quelque chose.",
+"friends.invite":"Copier le lien d'invitation","friends.invitecopied":"Lien copié — envoyez-le-lui !","friends.newreq":"{name} souhaite vous ajouter — voir Demandes.",
+"pay.afterpay":"Vous payez sur la page sécurisée de Stripe. Dès votre retour ici, votre accès s'active.",
+"pay.notsetup":"Les paiements ne sont pas encore activés — le propriétaire doit coller le lien Stripe dans le panneau d'administration.",
+"pay.unlocked":"Paiement reçu — votre accès est actif. Merci !",
 "undo.action":"Annuler",
 "common.cancel":"Annuler","common.save":"Enregistrer","common.close":"Fermer","common.yes":"Oui","common.no":"Non"
 };
@@ -2735,6 +2738,22 @@ document.getElementById("googleContinueBtn").addEventListener("click", function(
 document.getElementById("googleEmail").addEventListener("keydown", function(e){
   if(e.key === "Enter"){ e.preventDefault(); document.getElementById("googleContinueBtn").click(); }
 });
+async function handleReturnFromStripe(){
+  var m = (location.search || "").match(/[?&]unlock=([a-z]+)/i);
+  if(!m) return;
+  var key = m[1].toLowerCase();
+  if(key !== "extras" && !PLAN_DEFS[key]) return;
+  if(!STATE.auth.loggedIn){
+    pendingUnlock = key;
+    openAuthModal(null, "signin");
+    return;
+  }
+  try{ history.replaceState({}, "", location.pathname); }catch(e){}
+  var amount = key === "extras" ? EXTRAS_PRICE : PLAN_DEFS[key].price;
+  var ok = await grantProduct(key, amount);
+  if(ok) alert(t("pay.unlocked"));
+}
+var pendingUnlock = null;
 function finishAuthSuccess(){
   closeGooglePanel();
   closeAuthModal();
@@ -2742,6 +2761,13 @@ function finishAuthSuccess(){
   refreshChrome();
   restoreGatedViews();
   var cb = pendingAfterAuth; pendingAfterAuth = null;
+  if(pendingUnlock){
+    var u = pendingUnlock; pendingUnlock = null;
+    try{ history.replaceState({}, "", location.pathname); }catch(e){}
+    grantProduct(u, u === "extras" ? EXTRAS_PRICE : PLAN_DEFS[u].price).then(function(ok){ if(ok) alert(t("pay.unlocked")); });
+  }
+  if(pendingInvite){ var inv = pendingInvite; pendingInvite = null; addFriendById(inv, null).then(function(){ tryShowView("friends"); }); }
+  if(typeof pollRequests === "function") pollRequests();
   if(isLocked()){ renderLock(); }
   else if(cb){ cb(); }
 }
@@ -2803,7 +2829,7 @@ document.getElementById("settingsUpgradeBtn").addEventListener("click", function
 /* ============ 8. OWNER PANEL, PROMO CODES, PAYMENTS ============ */
 var SPEC_KEYS = ["physio","ortho","gp","rheum","neuro","cardio","pulmo","podiat","ent","trainer","nutri","other"];
 function specLabel(k){ return t("doc.spec." + (k || "other")); }
-var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[], stripe:{ monthly:"", yearly:"", extras:"" }, liveMode:false,
+var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[], stripe:{ monthly:"", yearly:"", extras:"" }, liveMode:true,
   contacts: [], supportPhone: "" };
 var ownerLoaded = false;
 async function loadOwnerSettings(){
@@ -2815,7 +2841,6 @@ async function loadOwnerSettings(){
     if(saved.stripe) ownerSettings.stripe = Object.assign(ownerSettings.stripe, saved.stripe);
     if(saved.contacts) ownerSettings.contacts = saved.contacts;
     if(saved.supportPhone) ownerSettings.supportPhone = saved.supportPhone;
-    ownerSettings.liveMode = !!saved.liveMode;
   }
   ownerLoaded = true;
   return ownerSettings;
@@ -2825,6 +2850,15 @@ function isOwner(){
   var me = normEmail(STATE.auth.email);
   if(me === normEmail(ownerSettings.ownerEmail)) return true;
   return (ownerSettings.extraEmails || []).some(function(e){ return normEmail(e) === me; });
+}
+function renderReturnUrls(){
+  var wrap = document.getElementById("returnUrlList");
+  if(!wrap) return;
+  var rows = '<table class="code-table"><thead><tr><th>Product</th><th>Paste this as the Stripe return link</th></tr></thead><tbody>';
+  ["monthly","yearly","extras"].forEach(function(k){
+    rows += '<tr><td>' + productLabel(k) + '</td><td><code>' + returnUrlFor(k) + '</code></td></tr>';
+  });
+  wrap.innerHTML = rows + '</tbody></table>';
 }
 function renderPromoTable(){
   var tb = document.getElementById("promoCodeTable");
@@ -3014,7 +3048,7 @@ async function renderOwnerPanel(){
   document.getElementById("stripeYearlyInput").value = ownerSettings.stripe.yearly || "";
   document.getElementById("stripeExtrasInput").value = ownerSettings.stripe.extras || "";
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
-  document.getElementById("liveModeToggle").checked = !!ownerSettings.liveMode;
+  renderReturnUrls();
   renderPromoTable();
   renderOwnerSuggestions();
   renderOwnerNotifications();
@@ -3030,7 +3064,6 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   ownerSettings.stripe.yearly  = document.getElementById("stripeYearlyInput").value.trim();
   ownerSettings.stripe.extras  = document.getElementById("stripeExtrasInput").value.trim();
   ownerSettings.supportPhone = document.getElementById("admSupportPhone").value.trim();
-  ownerSettings.liveMode = document.getElementById("liveModeToggle").checked;
   await Store.setJSON("business:settings", ownerSettings);
   var c = document.getElementById("ownerSaveConfirm");
   c.classList.add("show");
@@ -3189,15 +3222,49 @@ function renderPlanOptions(){
   });
 }
 function selectPlan(key){ selectedPlan = key; renderPlanOptions(); updatePaymentButton(); }
+/* Real money only: every paid purchase leaves this page for Stripe's own
+   checkout, so the card is typed on Stripe and the payment lands in the
+   owner's Stripe account. Nothing here can unlock a product by itself. */
+function stripeLinkFor(key){ return (ownerSettings.stripe && ownerSettings.stripe[key]) || ""; }
+function returnUrlFor(key){
+  var base = location.origin + location.pathname;
+  if(location.protocol !== "http:" && location.protocol !== "https:") base = "https://your-site/";
+  return base + "?unlock=" + key;
+}
+function goToStripe(key, errEl){
+  var link = stripeLinkFor(key);
+  if(!link){ errEl.textContent = t("pay.notsetup"); errEl.classList.add("show"); return false; }
+  var sep = link.indexOf("?") === -1 ? "?" : "&";
+  window.location.href = link + sep +
+    "prefilled_email=" + encodeURIComponent(STATE.auth.email || "") +
+    "&client_reference_id=" + encodeURIComponent(STATE.profile.id);
+  return true;
+}
+async function grantProduct(key, amount){
+  if(key === "extras"){
+    STATE.auth.extras = true;
+    STATE.auth.extrasExpiry = Date.now() + 30 * 86400000;
+  } else if(PLAN_DEFS[key]){
+    STATE.auth.paid = true;
+    STATE.auth.plan = key;
+    STATE.auth.planExpiry = PLAN_DEFS[key].days ? (Date.now() + PLAN_DEFS[key].days * 86400000) : null;
+  } else { return false; }
+  saveState();
+  await saveAccount();
+  await recordPurchase(STATE.auth.email, key, amount);
+  restoreGatedViews();
+  refreshChrome();
+  renderLibrary();
+  renderGG();
+  return true;
+}
 function updatePaymentButton(){
   var btn = document.getElementById("paymentSubmitBtn");
   var priceNow = planFinalPrice(selectedPlan);
   var label = PLAN_DEFS[selectedPlan].label;
-  document.getElementById("cardFields").style.display = (priceNow === 0 || ownerSettings.liveMode) ? "none" : "block";
   if(priceNow === 0) btn.textContent = t("pay.freebtn", { plan: label });
-  else if(ownerSettings.liveMode) btn.textContent = t("pay.stripebtn");
-  else btn.textContent = t("pay.paybtn", { amount: priceNow.toFixed(2) });
-  document.getElementById("paymentFooterNote").textContent = ownerSettings.liveMode ? t("pay.live") : t("pay.demo");
+  else btn.textContent = t("pay.stripebtn");
+  document.getElementById("paymentFooterNote").textContent = priceNow === 0 ? t("pay.live") : t("pay.afterpay");
   var owned = extrasActive();
   document.getElementById("bonusCardText").textContent = owned ? t("pay.bonusowned") : t("pay.bonustext", { n: countExtras() });
   document.getElementById("bonusCardBtn").style.display = owned ? "none" : "inline-flex";
@@ -3219,40 +3286,15 @@ document.getElementById("paymentSubmitBtn").addEventListener("click", async func
   var btn = this;
   var priceNow = planFinalPrice(selectedPlan);
   errEl.classList.remove("show");
-  if(priceNow > 0 && ownerSettings.liveMode){
-    var link = ownerSettings.stripe[selectedPlan];
-    if(!link){ errEl.textContent = t("pay.needlink"); errEl.classList.add("show"); return; }
-    var sep = link.indexOf("?") === -1 ? "?" : "&";
-    window.open(link + sep + "prefilled_email=" + encodeURIComponent(STATE.auth.email || ""), "_blank", "noopener");
-    return;
-  }
-  if(priceNow > 0){
-    var name = document.getElementById("cardName").value.trim();
-    var num  = document.getElementById("cardNumber").value.replace(/\s+/g,"");
-    var exp  = document.getElementById("cardExpiry").value.trim();
-    var cvv  = document.getElementById("cardCvv").value.trim();
-    if(!name || num.length < 12 || !/^\d{2}\/\d{2}$/.test(exp) || cvv.length < 3){
-      errEl.textContent = t("pay.badcard"); errEl.classList.add("show"); return;
-    }
-  }
+  if(priceNow > 0){ goToStripe(selectedPlan, errEl); return; }
+  /* Only a 100% promo code from the owner can activate without paying. */
   btn.disabled = true;
-  btn.textContent = priceNow > 0 ? t("pay.processing") : t("pay.activating");
-  setTimeout(async function(){
-    var def = PLAN_DEFS[selectedPlan];
-    /* Buying a plan gives plan access only — the bonus pack stays locked. */
-    STATE.auth.paid = true;
-    STATE.auth.plan = selectedPlan;
-    STATE.auth.planExpiry = def.days ? (Date.now() + def.days * 86400000) : null;
-    saveState();
-    await saveAccount();
-    await recordPurchase(STATE.auth.email, selectedPlan, priceNow);
-    btn.disabled = false;
-    paymentOverlay.classList.remove("active");
-    ["cardName","cardNumber","cardExpiry","cardCvv"].forEach(function(id){ document.getElementById(id).value = ""; });
-    refreshChrome();
-    updatePaymentButton();
-    alert(priceNow > 0 ? t("pay.thanks", { plan: def.label }) : t("pay.thanksfree", { plan: def.label }));
-  }, 700);
+  btn.textContent = t("pay.activating");
+  await grantProduct(selectedPlan, 0);
+  btn.disabled = false;
+  paymentOverlay.classList.remove("active");
+  updatePaymentButton();
+  alert(t("pay.thanksfree", { plan: PLAN_DEFS[selectedPlan].label }));
 });
 /* --- Bonus pack modal --- */
 var extrasOverlay = document.getElementById("extrasOverlay");
@@ -3292,8 +3334,8 @@ function updateExtrasButton(){
   var priceNow = extrasFinalPrice();
   document.getElementById("extrasPrice").innerHTML = (priceNow !== EXTRAS_PRICE ? '<span class="was">€' + EXTRAS_PRICE.toFixed(2) + '</span>' : "") +
     '€' + priceNow.toFixed(2) + '<span class="period">' + t("pay.permonth") + '</span>';
-  btn.textContent = priceNow === 0 ? t("extras.freebtn") : (ownerSettings.liveMode ? t("pay.stripebtn") : t("extras.paybtn", { amount: priceNow.toFixed(2) }));
-  document.getElementById("extrasFooterNote").textContent = ownerSettings.liveMode ? t("pay.live") : t("extras.demo");
+  btn.textContent = priceNow === 0 ? t("extras.freebtn") : t("pay.stripebtn");
+  document.getElementById("extrasFooterNote").textContent = priceNow === 0 ? t("pay.live") : t("pay.afterpay");
 }
 function openExtrasModal(){
   if(!STATE.auth.loggedIn){ openAuthModal(function(){ openExtrasModal(); }, "signup"); return; }
@@ -3321,23 +3363,10 @@ document.getElementById("extrasSubmitBtn").addEventListener("click", async funct
   var priceNow = extrasFinalPrice();
   var errEl = document.getElementById("extrasError");
   errEl.classList.remove("show");
-  if(priceNow > 0 && ownerSettings.liveMode){
-    var link = ownerSettings.stripe.extras;
-    if(!link){ errEl.textContent = t("pay.needlink"); errEl.classList.add("show"); return; }
-    var sep = link.indexOf("?") === -1 ? "?" : "&";
-    window.open(link + sep + "prefilled_email=" + encodeURIComponent(STATE.auth.email || ""), "_blank", "noopener");
-    return;
-  }
-  STATE.auth.extras = true;
-  STATE.auth.extrasExpiry = Date.now() + 30 * 86400000;
-  saveState();
-  await saveAccount();
-  await recordPurchase(STATE.auth.email, "extras", priceNow);
+  /* The bonus pack never unlocks on its own — it is a real payment. */
+  if(priceNow > 0){ goToStripe("extras", errEl); return; }
+  await grantProduct("extras", 0);
   extrasOverlay.classList.remove("active");
-  restoreGatedViews();
-  refreshChrome();
-  renderLibrary();
-  renderGG();
   alert(t("extras.thanks", { n: countExtras() }));
 });
 /* ============ 9. LIBRARY, TOGETHER, SESSION PLAYER ============ */
@@ -4158,6 +4187,16 @@ document.getElementById("copyIdBtn").addEventListener("click", function(){
   if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(STATE.profile.id).then(done, done); }
   else done();
 });
+document.getElementById("copyInviteBtn").addEventListener("click", function(){
+  var btn = this, link = inviteUrl();
+  var done = function(){
+    btn.textContent = t("friends.invitecopied");
+    setTimeout(function(){ btn.textContent = t("friends.invite"); }, 2600);
+  };
+  if(navigator.share){ navigator.share({ text: link }).then(done, done); return; }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(done, done); }
+  else done();
+});
 document.getElementById("profilePillBtn").addEventListener("click", function(){ tryShowView("friends"); });
 document.querySelectorAll(".friends-tab").forEach(function(tab){
   tab.addEventListener("click", function(){
@@ -4190,6 +4229,10 @@ function loadQrLib(){
 function qrFallback(box){
   box.innerHTML = '<div class="qr-fallback">' + STATE.profile.id + '<br><span style="font-size:.8rem;font-family:var(--font-body);font-weight:400">' + t("friends.qrfail") + '</span></div>';
 }
+function inviteUrl(){
+  if(location.protocol !== "http:" && location.protocol !== "https:") return STATE.profile.id;
+  return location.origin + location.pathname + "?add=" + STATE.profile.id;
+}
 function renderQR(){
   var box = document.getElementById("qrBox");
   if(!box) return;
@@ -4199,7 +4242,7 @@ function renderQR(){
     try{
       box.innerHTML = "";
       new QRCode(box, {
-        text: STATE.profile.id,
+        text: inviteUrl(),
         width: 168, height: 168,
         colorDark: "#163F3A", colorLight: "#ffffff",
         correctLevel: (window.QRCode.CorrectLevel && window.QRCode.CorrectLevel.H) || 2
@@ -4231,6 +4274,7 @@ function renderFriendsView(){
   renderQR();
   document.getElementById("friendsNote").textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
   renderMyFriends();
+  pollRequests();
   checkIncomingLinks().then(function(changed){ if(changed) renderMyFriends(); });
 }
 function renderMyFriends(){
@@ -4314,6 +4358,38 @@ document.getElementById("addByIdBtn").addEventListener("click", async function()
 document.getElementById("addIdInput").addEventListener("keydown", function(e){
   if(e.key === "Enter"){ e.preventDefault(); document.getElementById("addByIdBtn").click(); }
 });
+/* Requests really arrive: the inbox is polled while the page is open, the
+   Requests tab shows how many are waiting, and a new one raises a message. */
+async function pollRequests(){
+  if(!STATE.auth.loggedIn) return 0;
+  var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
+  var pending = reqs.filter(function(r){ return !STATE.friends.some(function(f){ return f.id === r.id; }); });
+  var badge = document.getElementById("reqBadge");
+  if(badge) badge.textContent = pending.length ? " (" + pending.length + ")" : "";
+  if(!STATE.seenRequests) STATE.seenRequests = [];
+  var fresh = pending.filter(function(r){ return STATE.seenRequests.indexOf(r.id) === -1; });
+  if(fresh.length){
+    STATE.seenRequests = pending.map(function(r){ return r.id; });
+    saveState();
+    fresh.forEach(function(r){ showUndoToast(t("friends.newreq", { name: r.name || r.id }), function(){}); });
+    var panel = document.querySelector('.friends-tabpanel[data-panel="requests"]');
+    if(panel && panel.classList.contains("active")) renderRequests();
+  }
+  return pending.length;
+}
+setInterval(pollRequests, 25000);
+var pendingInvite = null;
+async function handleInviteLink(){
+  var m = (location.search || "").toUpperCase().match(/[?&]ADD=(SS-\d{5})/);
+  if(!m) return;
+  var id = m[1];
+  try{ history.replaceState({}, "", location.pathname); }catch(e){}
+  if(!STATE.auth.loggedIn){ pendingInvite = id; return; }
+  if(id === STATE.profile.id) return;
+  await addFriendById(id, null);
+  showUndoToast(t("friends.added", { name: id }), function(){});
+  tryShowView("friends");
+}
 async function checkIncomingLinks(){
   var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
   var changed = false;
@@ -4344,6 +4420,7 @@ async function renderRequests(){
       await addFriendById(b.getAttribute("data-acc"), null);
       renderRequests();
       renderMyFriends();
+      pollRequests();
     });
   });
   wrap.querySelectorAll("[data-dec]").forEach(function(b){
@@ -5685,6 +5762,9 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
     renderLock();
     renderSupportFab();
     renderHealthContacts();
+    handleReturnFromStripe();
+    handleInviteLink();
+    pollRequests();
   });
 })();
 })();
