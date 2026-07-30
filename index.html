@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v13 — Home Workouts for You</title>
+<title>Steady &amp; Strong v14 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -251,7 +251,10 @@
   .chat-input-row{display:flex;gap:.6rem;margin-top:.8rem}
   .chat-input-row input{flex:1}
   .call-modal .modal-box{max-width:520px;text-align:center}
-  .call-video-wrap{background:var(--teal-dark);border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:1rem}
+  .msg-time{display:block;font-size:.72rem;opacity:.6;margin-top:.2rem}
+  .call-video-wrap{position:relative;background:var(--teal-dark);border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:1rem}
+  #callRemote{width:100%;height:100%;object-fit:cover;background:#000}
+  #callVideo.pip{position:absolute;right:10px;bottom:10px;width:30%;max-width:150px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.35);z-index:2}
   .call-video-wrap video{width:100%;height:100%;object-fit:cover}
   .call-placeholder{color:#fff;font-weight:700}
   .call-timer{font-family:var(--font-display);font-size:1.4rem;color:var(--teal-dark);margin:1rem 0 .4rem}
@@ -435,7 +438,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v13</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v14</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -581,6 +584,8 @@
             <button class="focus-btn" data-focus="balance" aria-pressed="false" data-i18n="session.balanceonly">Balance only</button>
           </div>
           <label class="voice-toggle"><input type="checkbox" id="voiceToggle"><span data-i18n="session.voice">Announce each exercise aloud</span></label>
+          <label class="voice-toggle" id="voiceCmdRow"><input type="checkbox" id="voiceCmdToggle"><span data-i18n="vc.toggle">Let me control the session with my voice</span></label>
+          <p class="desc-line" id="voiceCmdHint" data-i18n="vc.list">Say: next &middot; pause &middot; carry on &middot; repeat &middot; how long &middot; end session</p>
           <div style="display:flex;gap:.8rem;flex-wrap:wrap"><button class="btn btn-primary" id="beginBtn" disabled data-i18n="session.begin">Begin session</button>
           <button class="btn btn-secondary" id="easyDayBtn" type="button" data-i18n="easy.btn">I can't manage today</button></div>
         </div>
@@ -602,6 +607,7 @@
             <button class="btn btn-secondary" id="skipBtn" data-i18n="session.skip">Skip forward</button>
             <button class="btn btn-secondary" id="endBtn" data-i18n="session.end">End session</button>
           </div>
+          <p class="desc-line" id="vcStatus" style="display:none"></p>
         </div>
         <div class="session-complete" id="sessionComplete">
           <div class="badge" aria-hidden="true"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -893,11 +899,12 @@
           <select class="text-input" id="langSelect" style="max-width:220px"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option><option value="fr">Français</option></select>
         </div>
         <div class="settings-row"><div><h3 data-i18n="settings.voiceh">Voice announcements</h3><p data-i18n="settings.voicep">Read each exercise name aloud during guided sessions.</p></div><input type="checkbox" id="settingsVoiceToggle" style="width:26px;height:26px"></div>
+        <div class="settings-row"><div><h3 data-i18n="vc.h">Voice control</h3><p data-i18n="vc.p">During a guided session, listen through the microphone so you can say "next" or "pause" instead of reaching for the screen.</p></div><input type="checkbox" id="settingsVoiceCmd" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.reduceh">Reduce motion</h3><p data-i18n="settings.reducep">Turn off timer animation and moving demonstrations.</p></div><input type="checkbox" id="settingsReduceMotion" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.comforth">Comfort Assist</h3><p data-i18n="settings.comfortp">If we notice you increasing text size or re-reading a screen often, gently suggest larger text and simpler layout.</p></div><input type="checkbox" id="settingsComfortAssist" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.accounth">Account</h3><p id="settingsAccountP"></p></div><button class="btn btn-secondary btn-sm" id="settingsAuthBtn" type="button">Sign in</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.subh">Subscription</h3><p id="settingsSubP"></p></div><button class="btn btn-primary btn-sm" id="settingsUpgradeBtn" type="button" data-i18n="settings.manage">Manage plan</button></div>
-        <div class="settings-row" id="familyRow" style="display:none"><div><h3 data-i18n="family.h">Share with one family member</h3><p data-i18n="family.p">Your Family plan covers two people. Send this code to the person you want to share it with.</p><p style="margin-top:.4rem"><span data-i18n="family.code">Your family code</span>: <span class="id-tag" id="familyCode"></span></p></div><button class="btn btn-secondary btn-sm" id="familyShareBtn" type="button" data-i18n="friends.share">Send my invite by message</button></div>
+        <div class="settings-row" id="familyRow" style="display:none"><div><h3 data-i18n="family.h">Share with your family</h3><p data-i18n="family.p">Send this code to the people you want to share your plan with. Each person enters it once, on their own account.</p><p style="margin-top:.4rem"><span data-i18n="family.code">Your family code</span>: <span class="id-tag" id="familyCode"></span></p><p style="margin-top:.3rem;color:var(--ink-soft)" id="familySeats"></p><ul id="familyMembers" style="margin-top:.4rem;padding-left:1.1rem"></ul></div><button class="btn btn-secondary btn-sm" id="familyShareBtn" type="button" data-i18n="family.sharebtn">Send the code</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.extrash">Grandparents &amp; Grandchildren + Health AI pack</h3><p id="settingsExtrasP"></p></div><button class="btn btn-teal btn-sm" id="settingsExtrasBtn" type="button" data-i18n="extras.unlockbtn">Unlock 100+ extra exercises</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.reseth">Reset all data — this deletes the account</h3><p data-i18n="settings.resetp">Wipes this device and permanently deletes your account: plans, friends, streaks, memory, health notes and sign-in. It cannot be undone.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Erase and delete account</button></div>
       </div>
@@ -1029,7 +1036,13 @@
         <div class="field-group"><label class="field-label" for="extraOwnerEmailsInput">Extra administrator emails (optional — comma separated, e.g. for an employee)</label><input class="text-input" id="extraOwnerEmailsInput" type="text" placeholder="employee@example.com, manager@example.com"></div>
         <div class="field-group"><label class="field-label" for="stripeMonthlyInput">Stripe Payment Link — Monthly (€5.99/mo)</label><input class="text-input" id="stripeMonthlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <div class="field-group"><label class="field-label" for="stripeYearlyInput">Stripe Payment Link — Yearly (€49/yr)</label><input class="text-input" id="stripeYearlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
-        <div class="field-group"><label class="field-label" for="stripeFamilyInput">Stripe Payment Link — Family (€9.99/mo, two people)</label><input class="text-input" id="stripeFamilyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="stripeFamilyInput">Stripe Payment Link — Family (€9.99/mo, up to 4 people)</label><input class="text-input" id="stripeFamilyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="stripeFamilyBigInput">Stripe Payment Link — Large family (€15/mo, 5 to 8 people)</label><input class="text-input" id="stripeFamilyBigInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="turnUrlInput">Call relay (optional) — TURN address</label><input class="text-input" id="turnUrlInput" type="text" placeholder="turn:relay.example.com:3478"></div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <div class="field-group" style="flex:1;min-width:150px"><label class="field-label" for="turnUserInput">Relay user</label><input class="text-input" id="turnUserInput" type="text"></div>
+          <div class="field-group" style="flex:1;min-width:150px"><label class="field-label" for="turnPassInput">Relay password</label><input class="text-input" id="turnPassInput" type="text"></div>
+        </div>
         <div class="field-group"><label class="field-label" for="stripeExtrasInput">Stripe Payment Link — Grandparents &amp; Grandchildren + Health AI bonus pack (€1/mo)</label><input class="text-input" id="stripeExtrasInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <h3 style="margin-top:1.2rem;font-size:1.15rem">Return links to paste into Stripe</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">In each Stripe Payment Link, open <em>After payment &rarr; Redirect customers to a page you choose</em> and paste the matching link below. Access only switches on when the customer comes back through one of these.</p>
@@ -1101,7 +1114,14 @@
 <div class="modal-overlay" id="friendProfileOverlay">
   <div class="modal-box">
     <button class="modal-close" id="friendProfileCloseBtn" aria-label="Close">&times;</button>
-    <div class="profile-card" style="margin-bottom:1rem"><span class="avatar-lg" id="fpAvatar"></span><div><h2 id="fpName" style="margin-bottom:.2rem"></h2><span class="id-tag" id="fpId"></span></div></div>
+    <div class="profile-card" style="margin-bottom:1rem"><span class="avatar-lg" id="fpAvatar"></span><div><h2 id="fpName" style="margin-bottom:.2rem"></h2><span class="id-tag" id="fpId"></span><p id="fpRealName" style="color:var(--ink-soft);font-size:.9rem;margin-top:.2rem"></p></div></div>
+    <div class="field-group"><label class="field-label" for="fpNick" data-i18n="nick.label">What would you like to call them?</label>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <input class="text-input" id="fpNick" type="text" maxlength="24" style="flex:1;min-width:170px" placeholder="Granny Ana">
+        <button class="btn btn-teal btn-sm" id="fpNickSave" type="button" data-i18n="nick.save">Save name</button>
+      </div>
+      <p class="promo-status" id="fpNickStatus"></p>
+    </div>
     <div class="stat-row" id="fpStats"></div>
     <h3 data-i18n="fp.notesh">Your notes about them</h3>
     <textarea class="text-input" id="fpNotes" placeholder="e.g. Prefers seated sessions, birthday in March"></textarea>
@@ -1126,9 +1146,17 @@
   <div class="modal-box">
     <button class="modal-close" id="callCloseBtn" aria-label="Close">&times;</button>
     <h3 id="callWithName"></h3>
-    <p class="note-box" data-i18n="friends.callnote">Camera preview only: this shows your own camera and microphone so you can set up before a call. Connecting live to a friend's device needs a calling server, which a single web page can't provide on its own.</p>
-    <div class="call-video-wrap"><span class="call-placeholder" id="callPlaceholder">Camera off</span><video id="callVideo" autoplay playsinline muted style="display:none"></video></div>
+    <p class="note-box" id="callNote"></p>
+    <div class="call-video-wrap">
+      <span class="call-placeholder" id="callPlaceholder">Camera off</span>
+      <video id="callRemote" autoplay playsinline style="display:none"></video>
+      <video id="callVideo" autoplay playsinline muted style="display:none"></video>
+    </div>
     <div class="call-timer" id="callTimer">00:00</div>
+    <div class="call-controls" id="callAnswerRow" style="display:none">
+      <button class="btn btn-teal" id="answerCallBtn" data-i18n="call.answer">Answer</button>
+      <button class="btn btn-rose" id="declineCallBtn" data-i18n="call.decline">Decline</button>
+    </div>
     <div class="call-controls"><button class="btn btn-secondary" id="toggleCamBtn" data-i18n="friends.togglecam">Turn on camera</button><button class="btn btn-secondary" id="toggleMicBtn" data-i18n="friends.togglemic">Turn on mic</button><button class="btn btn-rose" id="endCallBtn" data-i18n="friends.endcall">End call</button></div>
   </div>
 </div>
@@ -1195,7 +1223,7 @@
     <div class="panel" style="padding:1rem 1.2rem;margin-bottom:1rem">
       <h3 style="font-size:1.05rem" data-i18n="family.have">I have a family code</h3>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <input class="text-input" id="familyCodeInput" type="text" placeholder="FAM-00000" style="flex:1;min-width:170px">
+        <input class="text-input" id="familyCodeInput" type="text" placeholder="FAM-XXXXXX" maxlength="10" style="flex:1;min-width:170px;text-transform:uppercase">
         <button class="btn btn-teal btn-sm" id="familyUseBtn" type="button" data-i18n="family.use">Use code</button>
       </div>
       <p class="promo-status" id="familyStatus"></p>
@@ -1258,7 +1286,8 @@ var PROMO_CODES = {
 var PLAN_DEFS = {
   monthly: { label:"Monthly", price:5.99,  periodKey:"pay.permonth", days:30 },
   yearly:  { label:"Yearly",  price:49.00, periodKey:"pay.peryear",  days:365 },
-  family:  { label:"Family",  price:9.99,  periodKey:"pay.permonth", days:30, seats:2 }
+  family:  { label:"Family (up to 4 people)", price:9.99, periodKey:"pay.permonth", days:30, seats:4 },
+  familybig:{label:"Large family (5 to 8 people)", price:15.00, periodKey:"pay.permonth", days:30, seats:8 }
 };
 var GRACE_DAYS = 1;      /* one missed day does not wipe out weeks of work */
 var EXTRAS_PRICE = 1.00;
@@ -1295,6 +1324,7 @@ I18N.en = {
 "stat.total":"Total sessions","stat.month":"This month","stat.week":"Per week average","stat.best":"Best streak","stat.minutes":"Minutes trained",
 "friends.h2":"Friends","friends.p":"Add friends by ID or QR code, chat with them, and see how they're doing.","friends.username":"Your display name","friends.yourid":"Your ID:","friends.save":"Save profile","friends.copyid":"Copy","friends.copied":"Copied!",
 "friends.tabmine":"My friends","friends.tabadd":"Add friend","friends.tabreq":"Requests",
+"call.calling":"Ringing {name}...","call.connecting":"Connecting...","call.connected":"Connected.","call.incoming":"{name} is calling","call.incomingp":"Answer to speak and see each other.","call.answer":"Answer","call.decline":"Decline","call.declined":"They could not take the call.","call.ended":"Call ended.","call.failed":"The two devices could not reach each other. This usually happens on a mobile network that blocks direct connections — try Wi-Fi, or add a relay in the admin panel.","call.nocam":"No camera or microphone was allowed, so the call cannot start.","call.nocloud":"Live calling needs the shared address set up in the admin panel. Until then this only shows your own camera.","chat.newmsg":"{name}:","nick.label":"What would you like to call them?","nick.save":"Save name","nick.saved":"Saved. You will see {n} everywhere.","nick.cleared":"Name cleared — their own name is back.","nick.realname":"Their own name: {n}",
 "friends.scanh":"Your QR code","friends.scanp":"Show this to a friend so they can scan it and add you instantly.",
 "friends.scancamh":"Scan a friend's QR code","friends.scancamp":"Point your camera at their code. Your browser will ask for camera permission first.",
 "friends.startscan":"Open camera & scan","friends.stopscan":"Stop camera","friends.scanphoto":"Scan a photo instead","friends.qrretry":"Redraw the code","friends.qrsave":"Save as picture",
@@ -1331,7 +1361,8 @@ I18N.en = {
 "health.hintgoal":"Tip: try things like \"I want my arm muscles to show more\", \"I want to stand up straighter\", \"I get tired on the stairs\".",
 "health.historyh":"Your reported injuries","health.historyp":"Saved to your account so your suggestions and plans can take them into account.",
 "health.nohistory":"Nothing reported yet.","health.red":"Please see a doctor first","health.matched":"What this looks like","health.helpful":"Gentle exercises often used for this","health.avoid":"Better to avoid for now",
-"health.nomatch":"I couldn't match that to a specific area","health.nomatchp":"Try naming the body part — knee, hip, lower back, shoulder, neck, wrist, ankle — and when it hurts. In the meantime, here are gentle all-round moves that suit most people.",
+"health.nomatch":"I couldn't match that to a specific area",
+"und.h":"What I understood","und.p":"If any of that is wrong, write it again in your own words and I will read it afresh.","und.ask":"It helps to name the part of the body — knee, hip, back, shoulder, neck, hand, foot — and say how long it has been going on.","und.side.left":"left side","und.side.right":"right side","und.side.both":"both sides","und.new":"started in the last day or so","und.weeks":"going on about {n} week(s)","und.long":"there for a long time","und.sev":"{n} out of 10","und.trig.stairs":"worse on stairs","und.trig.morning":"worse in the morning","und.trig.night":"worse at night","und.trig.walking":"worse when walking","und.trig.sitting":"worse when sitting","und.trig.standing":"worse standing up","health.nomatchp":"Try naming the body part — knee, hip, lower back, shoulder, neck, wrist, ankle — and when it hurts. In the meantime, here are gentle all-round moves that suit most people.",
 "health.startthese":"Start a session with these","health.savedinjury":"Saved to your injuries.","health.remove":"Remove","health.readaloud":"🔊 Read aloud","health.simplify":"Show as simple bullets",
 "health.followh":"A few questions, so I can be more useful","health.followp":"Answer as many as you like — the suggestions update as you tap.","health.refine":"Update my suggestions",
 "health.goalmatched":"Your goal","health.goalhow":"How this actually works",
@@ -1360,6 +1391,7 @@ I18N.en = {
 "memory.autoh":"Learned automatically","memory.fav":"Favourite session length: {v} minutes","memory.favfocus":"Usual focus: {v}","memory.sessions":"Sessions completed: {v}","memory.injuries":"Reported injuries: {v}","memory.goals":"Goals you asked about: {v}",
 "settings.h2":"Settings","settings.langh":"Language","settings.langp":"Menus, buttons, exercises and instructions are all translated.",
 "settings.voiceh":"Voice announcements","settings.voicep":"Read each exercise name aloud during guided sessions.",
+"vc.h":"Voice control","vc.p":"During a guided session, listen through the microphone so you can say \"next\" or \"pause\" instead of reaching for the screen.","vc.toggle":"Let me control the session with my voice","vc.list":"Say: next · pause · carry on · repeat · how long · end session","vc.listening":"Listening — say next, pause or carry on.","vc.denied":"The microphone was not allowed, so voice control is off. You can turn it back on in Settings.","vc.did.next":"Heard \"next\" — moving on.","vc.did.pause":"Heard \"pause\".","vc.did.resume":"Heard \"carry on\".","vc.did.end":"Heard \"finish\" — ending the session.","vc.did.repeat":"Reading the instructions again.","vc.did.time":"{s} seconds left.",
 "settings.reduceh":"Reduce motion","settings.reducep":"Turn off timer animation and moving demonstrations.",
 "settings.comforth":"Comfort Assist","settings.comfortp":"If we notice you increasing text size or re-reading a screen often, gently suggest larger text and simpler layout.",
 "settings.accounth":"Account","settings.subh":"Subscription","settings.manage":"Manage plan","settings.extrash":"Grandparents & Grandchildren + Health AI pack",
@@ -1449,7 +1481,7 @@ I18N.en = {
 "fall.q":"Are you all right? You stopped a while ago.","fall.ok":"I'm fine","report.btn":"Print my month","report.title":"My month — Steady & Strong",
 "report.days":"Days trained","report.minutes":"Minutes","report.sessions":"Sessions","report.steps":"Steps","report.note":"Bring this to your doctor or show it to your family.",
 "prog.h":"Ready for a little more","prog.p":"You have kept the same session for two weeks. Try adding five seconds to each exercise, or the standing version.",
-"family.h":"Share with one family member","family.p":"Your Family plan covers two people. Send this code to the person you want to share it with.","family.code":"Your family code","family.have":"I have a family code","family.use":"Use code","family.ok":"Family plan shared with you — enjoy.","family.bad":"That code is not valid or has already been used.","family.limit":"This family plan already has its second person.",
+"family.h":"Share with your family","family.p":"Send this code to the people you want to share your plan with. Each person enters it once, on their own account.","family.code":"Your family code","family.seats":"{used} of {total} places used","family.you":"you","family.removemember":"Remove","family.sharebtn":"Send the code","family.sharemsg":"Join my Steady & Strong family plan: open {url}, sign in, then enter the code {code}.","family.have":"I have a family code","family.use":"Use code","family.ok":"You are in — {n} places left on this plan.","family.bad":"That code is not valid.","family.expired":"That family plan has run out.","family.full":"This plan is full: all {n} places are taken.","family.signin":"Sign in first, then enter the code.","family.limit":"This family plan is full.",
 "refer.earned":"A friend joined through your link — a week has been added to your trial.",
 "readaloud":"🔊 Read this aloud","auth.bademail":"That does not look like a real email address.","auth.disposable":"Throw-away email addresses are not accepted — please use your usual one.",
 "auth.nomx":"No mail service answers for \"{d}\". Check the spelling of the part after the @.","auth.checking":"Checking the address…","auth.typo":"Did you mean {s}?","undo.action":"Undo",
@@ -1485,6 +1517,7 @@ I18N.pt = {
 "stat.total":"Sessões no total","stat.month":"Este mês","stat.week":"Média por semana","stat.best":"Melhor sequência","stat.minutes":"Minutos treinados",
 "friends.h2":"Amigos","friends.p":"Adicione amigos por ID ou código QR, converse com eles e veja como lhes está a correr.","friends.username":"O seu nome visível","friends.yourid":"O seu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"Copiado!",
 "friends.tabmine":"Os meus amigos","friends.tabadd":"Adicionar amigo","friends.tabreq":"Pedidos",
+"call.calling":"A tocar em {name}...","call.connecting":"A ligar...","call.connected":"Ligados.","call.incoming":"{name} está a ligar","call.incomingp":"Atenda para se ouvirem e verem.","call.answer":"Atender","call.decline":"Recusar","call.declined":"Não puderam atender.","call.ended":"Chamada terminada.","call.failed":"Os dois aparelhos não se conseguiram alcançar. Costuma acontecer em redes móveis que bloqueiam ligações diretas — experimente Wi-Fi, ou acrescente um retransmissor no painel de administração.","call.nocam":"Não foi autorizada a câmara nem o microfone, por isso a chamada não pode começar.","call.nocloud":"As chamadas em direto precisam da lista partilhada configurada no painel de administração. Até lá, isto mostra apenas a sua própria câmara.","chat.newmsg":"{name}:","nick.label":"Como lhe quer chamar?","nick.save":"Guardar nome","nick.saved":"Guardado. Passa a ver {n} em todo o lado.","nick.cleared":"Nome apagado — volta o nome próprio dele.","nick.realname":"Nome dele: {n}",
 "friends.scanh":"O seu código QR","friends.scanp":"Mostre isto a um amigo para ele o ler e adicioná-lo num instante.",
 "friends.scancamh":"Ler o código QR de um amigo","friends.scancamp":"Aponte a câmara ao código dele. O navegador vai pedir-lhe permissão para a câmara.",
 "friends.startscan":"Abrir câmara e ler","friends.stopscan":"Parar câmara","friends.scanphoto":"Ler a partir de uma foto","friends.qrretry":"Desenhar o código outra vez","friends.qrsave":"Guardar como imagem",
@@ -1521,7 +1554,8 @@ I18N.pt = {
 "health.hintgoal":"Dica: experimente algo como \"quero que os músculos dos braços se vejam mais\", \"quero ficar mais direito\", \"canso-me nas escadas\".",
 "health.historyh":"As lesões que registou","health.historyp":"Guardadas na sua conta para que as sugestões e os planos as tenham em conta.",
 "health.nohistory":"Ainda não registou nada.","health.red":"Consulte primeiro um médico","health.matched":"O que isto parece ser","health.helpful":"Exercícios suaves habitualmente usados para isto","health.avoid":"Melhor evitar por agora",
-"health.nomatch":"Não consegui identificar uma zona específica","health.nomatchp":"Tente indicar a parte do corpo — joelho, anca, zona lombar, ombro, pescoço, punho, tornozelo — e quando dói. Entretanto, aqui ficam movimentos suaves que servem à maioria das pessoas.",
+"health.nomatch":"Não consegui identificar uma zona específica",
+"und.h":"O que percebi","und.p":"Se alguma coisa aí não está certa, escreva outra vez pelas suas palavras e eu leio de novo.","und.ask":"Ajuda dizer a parte do corpo — joelho, anca, costas, ombro, pescoço, mão, pé — e há quanto tempo é que anda assim.","und.side.left":"lado esquerdo","und.side.right":"lado direito","und.side.both":"os dois lados","und.new":"começou no último dia","und.weeks":"há cerca de {n} semana(s)","und.long":"já vem de longe","und.sev":"{n} em 10","und.trig.stairs":"pior nas escadas","und.trig.morning":"pior de manhã","und.trig.night":"pior à noite","und.trig.walking":"pior a andar","und.trig.sitting":"pior sentado","und.trig.standing":"pior ao levantar-se","health.nomatchp":"Tente indicar a parte do corpo — joelho, anca, zona lombar, ombro, pescoço, punho, tornozelo — e quando dói. Entretanto, aqui ficam movimentos suaves que servem à maioria das pessoas.",
 "health.startthese":"Começar uma sessão com estes","health.savedinjury":"Guardado nas suas lesões.","health.remove":"Remover","health.readaloud":"🔊 Ler em voz alta","health.simplify":"Mostrar em pontos simples",
 "health.followh":"Algumas perguntas, para eu ser mais útil","health.followp":"Responda às que quiser — as sugestões atualizam-se à medida que toca.","health.refine":"Atualizar as minhas sugestões",
 "health.goalmatched":"O seu objetivo","health.goalhow":"Como isto funciona na prática",
@@ -1550,6 +1584,7 @@ I18N.pt = {
 "memory.autoh":"Aprendido automaticamente","memory.fav":"Duração de sessão preferida: {v} minutos","memory.favfocus":"Foco habitual: {v}","memory.sessions":"Sessões concluídas: {v}","memory.injuries":"Lesões registadas: {v}","memory.goals":"Objetivos que pediu: {v}",
 "settings.h2":"Definições","settings.langh":"Idioma","settings.langp":"Menus, botões, exercícios e instruções estão todos traduzidos.",
 "settings.voiceh":"Anúncios por voz","settings.voicep":"Ler o nome de cada exercício em voz alta durante as sessões guiadas.",
+"vc.h":"Comando por voz","vc.p":"Durante uma sessão guiada, ouvir pelo microfone para poder dizer \"passa\" ou \"pausa\" em vez de ter de chegar ao ecrã.","vc.toggle":"Deixar-me comandar a sessão pela voz","vc.list":"Diga: passa · pausa · continua · repete · quanto tempo · termina","vc.listening":"À escuta — diga passa, pausa ou continua.","vc.denied":"O microfone não foi autorizado, por isso o comando por voz ficou desligado. Pode voltar a ligá-lo nas Definições.","vc.did.next":"Ouvi \"passa\" — a seguir.","vc.did.pause":"Ouvi \"pausa\".","vc.did.resume":"Ouvi \"continua\".","vc.did.end":"Ouvi \"termina\" — a acabar a sessão.","vc.did.repeat":"A ler as instruções outra vez.","vc.did.time":"Faltam {s} segundos.",
 "settings.reduceh":"Reduzir movimento","settings.reducep":"Desligar a animação do temporizador e as demonstrações animadas.",
 "settings.comforth":"Apoio de Conforto","settings.comfortp":"Se notarmos que aumenta o tamanho do texto ou relê o ecrã com frequência, sugerimos com calma texto maior e um esquema mais simples.",
 "settings.accounth":"Conta","settings.subh":"Subscrição","settings.manage":"Gerir plano","settings.extrash":"Pacote Avós e Netos + IA de Saúde",
@@ -1639,7 +1674,7 @@ I18N.pt = {
 "fall.q":"Está tudo bem? Parou há algum tempo.","fall.ok":"Estou bem","report.btn":"Imprimir o meu mês","report.title":"O meu mês — Steady & Strong",
 "report.days":"Dias treinados","report.minutes":"Minutos","report.sessions":"Sessões","report.steps":"Passos","report.note":"Leve isto ao seu médico ou mostre à família.",
 "prog.h":"Pronto para um pouco mais","prog.p":"Já leva duas semanas com a mesma sessão. Experimente juntar cinco segundos a cada exercício, ou a versão de pé.",
-"family.h":"Partilhar com um familiar","family.p":"O seu plano Família serve duas pessoas. Envie este código a quem quiser partilhar.","family.code":"O seu código de família","family.have":"Tenho um código de família","family.use":"Usar código","family.ok":"Plano Família partilhado consigo — bom proveito.","family.bad":"Esse código não é válido ou já foi usado.","family.limit":"Este plano Família já tem a segunda pessoa.",
+"family.h":"Partilhar com a família","family.p":"Envie este código às pessoas com quem quer partilhar o plano. Cada uma introduz o código uma vez, na sua própria conta.","family.code":"O seu código de família","family.seats":"{used} de {total} lugares ocupados","family.you":"você","family.removemember":"Remover","family.sharebtn":"Enviar o código","family.sharemsg":"Entre no meu plano Família do Steady & Strong: abra {url}, inicie sessão e escreva o código {code}.","family.have":"Tenho um código de família","family.use":"Usar código","family.ok":"Está dentro — sobram {n} lugares neste plano.","family.bad":"Esse código não é válido.","family.expired":"Esse plano de família terminou.","family.full":"Este plano está cheio: os {n} lugares estão todos ocupados.","family.signin":"Inicie sessão primeiro e depois escreva o código.","family.limit":"Este plano de família está cheio.",
 "refer.earned":"Um amigo entrou pelo seu link — foi acrescentada uma semana ao seu período experimental.",
 "readaloud":"🔊 Ler isto em voz alta","auth.bademail":"Isso não parece um endereço de e-mail verdadeiro.","auth.disposable":"Não são aceites e-mails descartáveis — use o seu e-mail do costume.",
 "auth.nomx":"Nenhum serviço de correio responde por \"{d}\". Confirme o que está depois do @.","auth.checking":"A verificar o endereço…","auth.typo":"Queria dizer {s}?","undo.action":"Desfazer",
@@ -1675,6 +1710,7 @@ I18N.es = {
 "stat.total":"Sesiones en total","stat.month":"Este mes","stat.week":"Media por semana","stat.best":"Mejor racha","stat.minutes":"Minutos entrenados",
 "friends.h2":"Amigos","friends.p":"Añade amigos por ID o código QR, chatea con ellos y mira cómo les va.","friends.username":"Tu nombre visible","friends.yourid":"Tu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"¡Copiado!",
 "friends.tabmine":"Mis amigos","friends.tabadd":"Añadir amigo","friends.tabreq":"Solicitudes",
+"call.calling":"Llamando a {name}...","call.connecting":"Conectando...","call.connected":"Conectados.","call.incoming":"{name} te está llamando","call.incomingp":"Contesta para hablar y veros.","call.answer":"Contestar","call.decline":"Rechazar","call.declined":"No han podido contestar.","call.ended":"Llamada terminada.","call.failed":"Los dos dispositivos no han logrado alcanzarse. Suele pasar en redes móviles que bloquean las conexiones directas — prueba con Wi-Fi, o añade un repetidor en el panel.","call.nocam":"No se autorizó la cámara ni el micrófono, así que la llamada no puede empezar.","call.nocloud":"Las llamadas en directo necesitan la libreta compartida configurada en el panel. Hasta entonces esto solo muestra tu propia cámara.","chat.newmsg":"{name}:","nick.label":"¿Cómo quieres llamarle?","nick.save":"Guardar nombre","nick.saved":"Guardado. Verás {n} en todas partes.","nick.cleared":"Nombre borrado — vuelve su propio nombre.","nick.realname":"Su nombre: {n}",
 "friends.scanh":"Tu código QR","friends.scanp":"Enséñaselo a un amigo para que lo escanee y te añada al instante.",
 "friends.scancamh":"Escanear el código QR de un amigo","friends.scancamp":"Apunta la cámara a su código. El navegador te pedirá permiso para la cámara.",
 "friends.startscan":"Abrir cámara y escanear","friends.stopscan":"Parar cámara","friends.scanphoto":"Escanear una foto","friends.qrretry":"Volver a dibujar el código","friends.qrsave":"Guardar como imagen",
@@ -1711,7 +1747,8 @@ I18N.es = {
 "health.hintgoal":"Consejo: prueba con algo como \"quiero que se me marquen más los brazos\", \"quiero estar más erguido\", \"me canso en las escaleras\".",
 "health.historyh":"Las lesiones que has registrado","health.historyp":"Guardadas en tu cuenta para que las sugerencias y los planes las tengan en cuenta.",
 "health.nohistory":"Todavía no has registrado nada.","health.red":"Consulta antes a un médico","health.matched":"Qué parece ser esto","health.helpful":"Ejercicios suaves que se usan a menudo para esto","health.avoid":"Mejor evitar por ahora",
-"health.nomatch":"No he podido identificar una zona concreta","health.nomatchp":"Prueba a nombrar la parte del cuerpo — rodilla, cadera, zona lumbar, hombro, cuello, muñeca, tobillo — y cuándo duele. Mientras tanto, aquí tienes movimientos suaves que van bien a casi todo el mundo.",
+"health.nomatch":"No he podido identificar una zona concreta",
+"und.h":"Lo que he entendido","und.p":"Si algo de eso no es así, escríbelo otra vez con tus palabras y lo leo de nuevo.","und.ask":"Ayuda decir la parte del cuerpo — rodilla, cadera, espalda, hombro, cuello, mano, pie — y cuánto tiempo llevas así.","und.side.left":"lado izquierdo","und.side.right":"lado derecho","und.side.both":"los dos lados","und.new":"empezó en el último día","und.weeks":"desde hace unas {n} semana(s)","und.long":"viene de lejos","und.sev":"{n} sobre 10","und.trig.stairs":"peor en las escaleras","und.trig.morning":"peor por la mañana","und.trig.night":"peor por la noche","und.trig.walking":"peor al caminar","und.trig.sitting":"peor sentado","und.trig.standing":"peor al levantarse","health.nomatchp":"Prueba a nombrar la parte del cuerpo — rodilla, cadera, zona lumbar, hombro, cuello, muñeca, tobillo — y cuándo duele. Mientras tanto, aquí tienes movimientos suaves que van bien a casi todo el mundo.",
 "health.startthese":"Empezar una sesión con estos","health.savedinjury":"Guardado en tus lesiones.","health.remove":"Quitar","health.readaloud":"🔊 Leer en voz alta","health.simplify":"Mostrar en puntos sencillos",
 "health.followh":"Unas preguntas, para poder ayudarte mejor","health.followp":"Responde a las que quieras — las sugerencias se actualizan a medida que pulsas.","health.refine":"Actualizar mis sugerencias",
 "health.goalmatched":"Tu objetivo","health.goalhow":"Cómo funciona esto de verdad",
@@ -1740,6 +1777,7 @@ I18N.es = {
 "memory.autoh":"Aprendido automáticamente","memory.fav":"Duración de sesión preferida: {v} minutos","memory.favfocus":"Enfoque habitual: {v}","memory.sessions":"Sesiones completadas: {v}","memory.injuries":"Lesiones registradas: {v}","memory.goals":"Objetivos que has pedido: {v}",
 "settings.h2":"Ajustes","settings.langh":"Idioma","settings.langp":"Menús, botones, ejercicios e instrucciones están todos traducidos.",
 "settings.voiceh":"Anuncios por voz","settings.voicep":"Leer el nombre de cada ejercicio en voz alta durante las sesiones guiadas.",
+"vc.h":"Control por voz","vc.p":"Durante una sesión guiada, escuchar por el micrófono para poder decir \"siguiente\" o \"pausa\" en vez de tener que tocar la pantalla.","vc.toggle":"Déjame controlar la sesión con la voz","vc.list":"Di: siguiente · pausa · continúa · repite · cuánto tiempo · termina","vc.listening":"Escuchando — di siguiente, pausa o continúa.","vc.denied":"No se autorizó el micrófono, así que el control por voz está apagado. Puedes volver a encenderlo en Ajustes.","vc.did.next":"He oído \"siguiente\" — vamos allá.","vc.did.pause":"He oído \"pausa\".","vc.did.resume":"He oído \"continúa\".","vc.did.end":"He oído \"termina\" — cerrando la sesión.","vc.did.repeat":"Leyendo las instrucciones otra vez.","vc.did.time":"Quedan {s} segundos.",
 "settings.reduceh":"Reducir movimiento","settings.reducep":"Desactivar la animación del temporizador y las demostraciones animadas.",
 "settings.comforth":"Ayuda de Confort","settings.comfortp":"Si notamos que aumentas el tamaño del texto o relees la pantalla a menudo, te sugerimos con calma texto más grande y un diseño más sencillo.",
 "settings.accounth":"Cuenta","settings.subh":"Suscripción","settings.manage":"Gestionar plan","settings.extrash":"Pack Abuelos y Nietos + IA de Salud",
@@ -1829,7 +1867,7 @@ I18N.es = {
 "fall.q":"¿Va todo bien? Paraste hace un rato.","fall.ok":"Estoy bien","report.btn":"Imprimir mi mes","report.title":"Mi mes — Steady & Strong",
 "report.days":"Días entrenados","report.minutes":"Minutos","report.sessions":"Sesiones","report.steps":"Pasos","report.note":"Llévalo a tu médico o enséñaselo a tu familia.",
 "prog.h":"Listo para un poco más","prog.p":"Llevas dos semanas con la misma sesión. Prueba a añadir cinco segundos a cada ejercicio, o la versión de pie.",
-"family.h":"Compartir con un familiar","family.p":"Tu plan Familia cubre a dos personas. Envía este código a quien quieras compartirlo.","family.code":"Tu código de familia","family.have":"Tengo un código de familia","family.use":"Usar código","family.ok":"Plan Familia compartido contigo — que lo disfrutes.","family.bad":"Ese código no es válido o ya se ha usado.","family.limit":"Este plan Familia ya tiene su segunda persona.",
+"family.h":"Compartir con la familia","family.p":"Envía este código a las personas con las que quieras compartir el plan. Cada una lo introduce una vez, en su propia cuenta.","family.code":"Tu código de familia","family.seats":"{used} de {total} plazas ocupadas","family.you":"tú","family.removemember":"Quitar","family.sharebtn":"Enviar el código","family.sharemsg":"Únete a mi plan Familia de Steady & Strong: abre {url}, inicia sesión y escribe el código {code}.","family.have":"Tengo un código de familia","family.use":"Usar código","family.ok":"Ya estás dentro — quedan {n} plazas en este plan.","family.bad":"Ese código no es válido.","family.expired":"Ese plan de familia ha caducado.","family.full":"Este plan está lleno: las {n} plazas están ocupadas.","family.signin":"Inicia sesión primero y luego escribe el código.","family.limit":"Este plan de familia está lleno.",
 "refer.earned":"Un amigo ha entrado por tu enlace — se ha añadido una semana a tu prueba.",
 "readaloud":"🔊 Leer esto en voz alta","auth.bademail":"Eso no parece una dirección de correo real.","auth.disposable":"No se aceptan correos desechables — usa el tuyo de siempre.",
 "auth.nomx":"Ningún servicio de correo responde por \"{d}\". Comprueba lo que va después de la @.","auth.checking":"Comprobando la dirección…","auth.typo":"¿Querías decir {s}?","undo.action":"Deshacer",
@@ -1865,6 +1903,7 @@ I18N.fr = {
 "stat.total":"Séances au total","stat.month":"Ce mois-ci","stat.week":"Moyenne par semaine","stat.best":"Meilleure série","stat.minutes":"Minutes d'entraînement",
 "friends.h2":"Amis","friends.p":"Ajoutez des amis par identifiant ou QR code, discutez avec eux et voyez comment ils avancent.","friends.username":"Votre nom affiché","friends.yourid":"Votre identifiant :","friends.save":"Enregistrer le profil","friends.copyid":"Copier","friends.copied":"Copié !",
 "friends.tabmine":"Mes amis","friends.tabadd":"Ajouter un ami","friends.tabreq":"Demandes",
+"call.calling":"Appel de {name}...","call.connecting":"Connexion...","call.connected":"Connectés.","call.incoming":"{name} vous appelle","call.incomingp":"Répondez pour vous parler et vous voir.","call.answer":"Répondre","call.decline":"Refuser","call.declined":"Ils n'ont pas pu répondre.","call.ended":"Appel terminé.","call.failed":"Les deux appareils n'ont pas réussi à se joindre. Cela arrive souvent sur un réseau mobile qui bloque les connexions directes — essayez le Wi-Fi, ou ajoutez un relais dans le panneau.","call.nocam":"La caméra et le micro n'ont pas été autorisés : l'appel ne peut pas commencer.","call.nocloud":"Les appels en direct nécessitent le carnet partagé configuré dans le panneau. En attendant, ceci n'affiche que votre propre caméra.","chat.newmsg":"{name} :","nick.label":"Comment voulez-vous l'appeler ?","nick.save":"Enregistrer le nom","nick.saved":"Enregistré. Vous verrez {n} partout.","nick.cleared":"Nom effacé — son propre nom revient.","nick.realname":"Son nom : {n}",
 "friends.scanh":"Votre QR code","friends.scanp":"Montrez-le à un ami pour qu'il le scanne et vous ajoute aussitôt.",
 "friends.scancamh":"Scanner le QR code d'un ami","friends.scancamp":"Pointez votre caméra sur son code. Le navigateur vous demandera d'abord l'autorisation.",
 "friends.startscan":"Ouvrir la caméra et scanner","friends.stopscan":"Arrêter la caméra","friends.scanphoto":"Scanner une photo","friends.qrretry":"Redessiner le code","friends.qrsave":"Enregistrer en image",
@@ -1901,7 +1940,8 @@ I18N.fr = {
 "health.hintgoal":"Astuce : essayez par exemple « je veux que mes bras se dessinent plus », « je veux me tenir plus droit », « je suis essoufflé dans les escaliers ».",
 "health.historyh":"Les douleurs que vous avez signalées","health.historyp":"Enregistrées dans votre compte pour que les conseils et les programmes en tiennent compte.",
 "health.nohistory":"Rien de signalé pour l'instant.","health.red":"Consultez d'abord un médecin","health.matched":"Ce à quoi cela ressemble","health.helpful":"Exercices doux souvent utilisés pour cela","health.avoid":"Mieux vaut éviter pour l'instant",
-"health.nomatch":"Je n'ai pas pu identifier une zone précise","health.nomatchp":"Essayez de nommer la partie du corps — genou, hanche, bas du dos, épaule, nuque, poignet, cheville — et quand ça fait mal. En attendant, voici des mouvements doux qui conviennent à presque tout le monde.",
+"health.nomatch":"Je n'ai pas pu identifier une zone précise",
+"und.h":"Ce que j'ai compris","und.p":"Si quelque chose est faux, réécrivez-le avec vos mots et je relis tout.","und.ask":"Cela aide de nommer la partie du corps — genou, hanche, dos, épaule, cou, main, pied — et depuis combien de temps cela dure.","und.side.left":"côté gauche","und.side.right":"côté droit","und.side.both":"les deux côtés","und.new":"commencé depuis un jour environ","und.weeks":"depuis environ {n} semaine(s)","und.long":"cela dure depuis longtemps","und.sev":"{n} sur 10","und.trig.stairs":"pire dans les escaliers","und.trig.morning":"pire le matin","und.trig.night":"pire la nuit","und.trig.walking":"pire en marchant","und.trig.sitting":"pire assis","und.trig.standing":"pire en se levant","health.nomatchp":"Essayez de nommer la partie du corps — genou, hanche, bas du dos, épaule, nuque, poignet, cheville — et quand ça fait mal. En attendant, voici des mouvements doux qui conviennent à presque tout le monde.",
 "health.startthese":"Commencer une séance avec ceux-ci","health.savedinjury":"Enregistré dans vos douleurs.","health.remove":"Retirer","health.readaloud":"🔊 Lire à voix haute","health.simplify":"Afficher en points simples",
 "health.followh":"Quelques questions, pour être plus utile","health.followp":"Répondez à celles que vous voulez — les conseils se mettent à jour au fur et à mesure.","health.refine":"Mettre à jour mes conseils",
 "health.goalmatched":"Votre objectif","health.goalhow":"Comment cela fonctionne vraiment",
@@ -1930,6 +1970,7 @@ I18N.fr = {
 "memory.autoh":"Appris automatiquement","memory.fav":"Durée de séance préférée : {v} minutes","memory.favfocus":"Objectif habituel : {v}","memory.sessions":"Séances terminées : {v}","memory.injuries":"Douleurs signalées : {v}","memory.goals":"Objectifs demandés : {v}",
 "settings.h2":"Réglages","settings.langh":"Langue","settings.langp":"Menus, boutons, exercices et consignes sont tous traduits.",
 "settings.voiceh":"Annonces vocales","settings.voicep":"Lire le nom de chaque exercice à voix haute pendant les séances guidées.",
+"vc.h":"Commande vocale","vc.p":"Pendant une séance guidée, écouter par le micro pour pouvoir dire \"suivant\" ou \"pause\" au lieu d'aller toucher l'écran.","vc.toggle":"Me laisser commander la séance à la voix","vc.list":"Dites : suivant · pause · continue · répète · combien de temps · termine","vc.listening":"À l'écoute — dites suivant, pause ou continue.","vc.denied":"Le micro n'a pas été autorisé, la commande vocale est donc désactivée. Vous pouvez la réactiver dans les Réglages.","vc.did.next":"J'ai entendu \"suivant\" — on avance.","vc.did.pause":"J'ai entendu \"pause\".","vc.did.resume":"J'ai entendu \"continue\".","vc.did.end":"J'ai entendu \"termine\" — fin de la séance.","vc.did.repeat":"Je relis les consignes.","vc.did.time":"Il reste {s} secondes.",
 "settings.reduceh":"Réduire les animations","settings.reducep":"Désactiver l'animation du minuteur et les démonstrations animées.",
 "settings.comforth":"Assistance Confort","settings.comfortp":"Si nous remarquons que vous agrandissez souvent le texte ou relisez l'écran, nous vous proposons calmement un texte plus grand et une mise en page plus simple.",
 "settings.accounth":"Compte","settings.subh":"Abonnement","settings.manage":"Gérer l'abonnement","settings.extrash":"Pack Grands-parents et petits-enfants + IA Santé",
@@ -2019,7 +2060,7 @@ I18N.fr = {
 "fall.q":"Tout va bien ? Vous vous êtes arrêté depuis un moment.","fall.ok":"Je vais bien","report.btn":"Imprimer mon mois","report.title":"Mon mois — Steady & Strong",
 "report.days":"Jours d'entraînement","report.minutes":"Minutes","report.sessions":"Séances","report.steps":"Pas","report.note":"Apportez ceci à votre médecin ou montrez-le à votre famille.",
 "prog.h":"Prêt pour un peu plus","prog.p":"Vous gardez la même séance depuis deux semaines. Essayez d'ajouter cinq secondes par exercice, ou la version debout.",
-"family.h":"Partager avec un proche","family.p":"Votre formule Famille couvre deux personnes. Envoyez ce code à la personne concernée.","family.code":"Votre code famille","family.have":"J'ai un code famille","family.use":"Utiliser le code","family.ok":"Formule Famille partagée avec vous — profitez-en.","family.bad":"Ce code n'est pas valable ou a déjà été utilisé.","family.limit":"Cette formule Famille a déjà sa deuxième personne.",
+"family.h":"Partager avec la famille","family.p":"Envoyez ce code aux personnes avec qui vous voulez partager la formule. Chacune le saisit une fois, sur son propre compte.","family.code":"Votre code famille","family.seats":"{used} places sur {total} occupées","family.you":"vous","family.removemember":"Retirer","family.sharebtn":"Envoyer le code","family.sharemsg":"Rejoignez ma formule Famille Steady & Strong : ouvrez {url}, connectez-vous, puis saisissez le code {code}.","family.have":"J'ai un code famille","family.use":"Utiliser le code","family.ok":"C'est bon — il reste {n} places sur cette formule.","family.bad":"Ce code n'est pas valable.","family.expired":"Cette formule famille est arrivée à terme.","family.full":"Cette formule est complète : les {n} places sont prises.","family.signin":"Connectez-vous d'abord, puis saisissez le code.","family.limit":"Cette formule famille est complète.",
 "refer.earned":"Un ami a rejoint par votre lien — une semaine a été ajoutée à votre essai.",
 "readaloud":"🔊 Lire à voix haute","auth.bademail":"Cela ne ressemble pas à une vraie adresse e-mail.","auth.disposable":"Les adresses jetables ne sont pas acceptées — utilisez votre adresse habituelle.",
 "auth.nomx":"Aucun service de messagerie ne répond pour « {d} ». Vérifiez ce qui suit le @.","auth.checking":"Vérification de l\'adresse…","auth.typo":"Vouliez-vous dire {s} ?","undo.action":"Annuler",
@@ -2687,7 +2728,7 @@ function colorFor(seed){
 function defaultState(){
   return {
     profile: { id: randomId(), name: "You" },
-    settings: { lang:"en", voice:false, reduceMotion:false, extrasPrefs:[], comfortAssist:false },
+    settings: { lang:"en", voice:false, voiceCmd:false, reduceMotion:false, extrasPrefs:[], comfortAssist:false },
     plans: [], friends: [], workoutLog: [], sessionLog: [],
     memory: { notes:[], facts:{} },
     injuries: [], goals: [],
@@ -2753,8 +2794,9 @@ function applyExerciseOverrides(){
    ====================================================================== */
 var BUILT_IN = {
   cloudUrl: "",                 /* https://xxxx-default-rtdb.firebaseio.com  */
+  turn: { url:"", user:"", pass:"" },  /* optional relay for stubborn networks   */
   googleClientId: "",           /* 1234-abc.apps.googleusercontent.com       */
-  stripe: { monthly:"", yearly:"", family:"", extras:"" }
+  stripe: { monthly:"", yearly:"", family:"", familybig:"", extras:"" }
 };
 /* --- The shared address book ------------------------------------------
    A page on its own cannot post a friend request to another phone: there is
@@ -2777,7 +2819,7 @@ function cloudNormalise(u){
   }catch(e){}
   CLOUD.base = cloudNormalise(u || BUILT_IN.cloudUrl);
 })();
-var SOCIAL_RE = /^(directory:|public:|requests:|chat:)/;
+var SOCIAL_RE = /^(directory:|public:|requests:|chat:|call:|family:)/;
 function cloudKey(key){ return key.replace(/[^A-Za-z0-9_-]/g, "_"); }
 function cloudUrlFor(key){ return CLOUD.base + "/ss/social/" + cloudKey(key) + ".json"; }
 async function cloudGet(key){
@@ -3478,8 +3520,9 @@ document.getElementById("settingsUpgradeBtn").addEventListener("click", function
 var SPEC_KEYS = ["physio","ortho","gp","rheum","neuro","cardio","pulmo","podiat","ent","trainer","nutri","other"];
 function specLabel(k){ return t("doc.spec." + (k || "other")); }
 var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[],
-  stripe:{ monthly: BUILT_IN.stripe.monthly, yearly: BUILT_IN.stripe.yearly, family: BUILT_IN.stripe.family, extras: BUILT_IN.stripe.extras },
-  liveMode:true, contacts: [], supportPhone: "", googleClientId: BUILT_IN.googleClientId, cloudUrl: CLOUD.base, captureGuard: true };
+  stripe:{ monthly: BUILT_IN.stripe.monthly, yearly: BUILT_IN.stripe.yearly, family: BUILT_IN.stripe.family, familybig: BUILT_IN.stripe.familybig, extras: BUILT_IN.stripe.extras },
+  liveMode:true, contacts: [], supportPhone: "", googleClientId: BUILT_IN.googleClientId, cloudUrl: CLOUD.base,
+  turn: { url: BUILT_IN.turn.url, user: BUILT_IN.turn.user, pass: BUILT_IN.turn.pass }, captureGuard: true };
 var ownerLoaded = false;
 async function loadOwnerSettings(){
   if(ownerLoaded) return ownerSettings;
@@ -3492,6 +3535,7 @@ async function loadOwnerSettings(){
     if(saved.supportPhone) ownerSettings.supportPhone = saved.supportPhone;
     if(saved.googleClientId) ownerSettings.googleClientId = saved.googleClientId;
     if(saved.cloudUrl) ownerSettings.cloudUrl = saved.cloudUrl;
+    if(saved.turn) ownerSettings.turn = Object.assign(ownerSettings.turn, saved.turn);
     if(saved.captureGuard !== undefined) ownerSettings.captureGuard = !!saved.captureGuard;
   }
   ownerLoaded = true;
@@ -3507,7 +3551,7 @@ function renderReturnUrls(){
   var wrap = document.getElementById("returnUrlList");
   if(!wrap) return;
   var rows = '<table class="code-table"><thead><tr><th>Product</th><th>Paste this as the Stripe return link</th></tr></thead><tbody>';
-  ["monthly","yearly","family","extras"].forEach(function(k){
+  ["monthly","yearly","family","familybig","extras"].forEach(function(k){
     rows += '<tr><td>' + productLabel(k) + '</td><td><code>' + returnUrlFor(k) + '</code></td></tr>';
   });
   wrap.innerHTML = rows + '</tbody></table>';
@@ -3699,6 +3743,10 @@ async function renderOwnerPanel(){
   document.getElementById("stripeMonthlyInput").value = ownerSettings.stripe.monthly || "";
   document.getElementById("stripeYearlyInput").value = ownerSettings.stripe.yearly || "";
   document.getElementById("stripeFamilyInput").value = ownerSettings.stripe.family || "";
+  document.getElementById("stripeFamilyBigInput").value = ownerSettings.stripe.familybig || "";
+  document.getElementById("turnUrlInput").value = (ownerSettings.turn && ownerSettings.turn.url) || "";
+  document.getElementById("turnUserInput").value = (ownerSettings.turn && ownerSettings.turn.user) || "";
+  document.getElementById("turnPassInput").value = (ownerSettings.turn && ownerSettings.turn.pass) || "";
   document.getElementById("stripeExtrasInput").value = ownerSettings.stripe.extras || "";
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
   document.getElementById("googleClientIdInput").value = ownerSettings.googleClientId || "";
@@ -3709,7 +3757,8 @@ async function renderOwnerPanel(){
       '  cloudUrl: "' + (ownerSettings.cloudUrl || CLOUD.base || "") + '",\n' +
       '  googleClientId: "' + (ownerSettings.googleClientId || "") + '",\n' +
       '  stripe: { monthly:"' + (ownerSettings.stripe.monthly || "") + '", yearly:"' + (ownerSettings.stripe.yearly || "") +
-      '", family:"' + (ownerSettings.stripe.family || "") + '", extras:"' + (ownerSettings.stripe.extras || "") + '" }\n};';
+      '", family:"' + (ownerSettings.stripe.family || "") + '", familybig:"' + (ownerSettings.stripe.familybig || "") +
+      '", extras:"' + (ownerSettings.stripe.extras || "") + '" }\n};';
   }
   document.getElementById("guardToggle").checked = ownerSettings.captureGuard !== false;
   document.getElementById("packState").textContent = extrasActive() ? "Currently unlocked on your account." : "Currently locked.";
@@ -3744,6 +3793,12 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   ownerSettings.stripe.monthly = document.getElementById("stripeMonthlyInput").value.trim();
   ownerSettings.stripe.yearly  = document.getElementById("stripeYearlyInput").value.trim();
   ownerSettings.stripe.family  = document.getElementById("stripeFamilyInput").value.trim();
+  ownerSettings.stripe.familybig = document.getElementById("stripeFamilyBigInput").value.trim();
+  ownerSettings.turn = {
+    url:  document.getElementById("turnUrlInput").value.trim(),
+    user: document.getElementById("turnUserInput").value.trim(),
+    pass: document.getElementById("turnPassInput").value.trim()
+  };
   ownerSettings.stripe.extras  = document.getElementById("stripeExtrasInput").value.trim();
   ownerSettings.supportPhone = document.getElementById("admSupportPhone").value.trim();
   ownerSettings.googleClientId = document.getElementById("googleClientIdInput").value.trim();
@@ -3996,6 +4051,7 @@ async function grantProduct(key, amount){
     STATE.auth.paid = true;
     STATE.auth.plan = key;
     STATE.auth.planExpiry = PLAN_DEFS[key].days ? (Date.now() + PLAN_DEFS[key].days * 86400000) : null;
+    if(PLAN_DEFS[key].seats) await createFamily(key);   /* a brand new code, every purchase */
   } else { return false; }
   saveState();
   await saveAccount();
@@ -4025,6 +4081,13 @@ function openPaymentModal(){
   paymentOverlay.classList.add("active");
 }
 document.getElementById("paymentCloseBtn").addEventListener("click", function(){ paymentOverlay.classList.remove("active"); });
+document.getElementById("familyShareBtn").addEventListener("click", function(){
+  var code = myFamilyCode();
+  if(!code) return;
+  var msg = t("family.sharemsg", { code: code, url: location.href.split("?")[0] });
+  if(navigator.share) navigator.share({ text: msg });
+  else if(navigator.clipboard){ navigator.clipboard.writeText(msg); showUndoToast(t("friends.invitecopied"), function(){}); }
+});
 document.getElementById("familyUseBtn").addEventListener("click", function(){
   useFamilyCode(document.getElementById("familyCodeInput").value, document.getElementById("familyStatus"));
 });
@@ -4350,12 +4413,19 @@ ringProgress.style.strokeDasharray = CIRC;
 var sequence = [], currentIndex = 0, phase = "work", secondsLeft = 0, phaseTotal = 0;
 var timerId = null, isPaused = false, activeSessionLength = 0;
 function speechLang(){ return { en:"en-US", pt:"pt-PT", es:"es-ES", fr:"fr-FR" }[STATE.settings.lang] || "en-US"; }
+var appIsSpeaking = false, speakingUntil = 0;
+function markSpeaking(u){
+  appIsSpeaking = true;
+  speakingUntil = Date.now() + 6000;
+  u.onend = u.onerror = function(){ appIsSpeaking = false; speakingUntil = 0; };
+}
 function speak(text){
   if(!STATE.settings.voice || !("speechSynthesis" in window)) return;
   try{
     window.speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 0.95; u.lang = speechLang();
+    markSpeaking(u);
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -4365,8 +4435,132 @@ function readAloud(text){
     window.speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 0.92; u.lang = speechLang();
+    markSpeaking(u);
     window.speechSynthesis.speak(u);
   }catch(e){}
+}
+/* --- Hands-free ---------------------------------------------------------
+   Standing on one leg with a chair in one hand, nobody wants to reach for a
+   phone. With this on, the microphone listens only while a guided session is
+   playing, only for a short list of words, and nothing is recorded or sent
+   anywhere: the browser does the recognition and hands us the word.
+   Two things it deliberately will NOT do: place the emergency call (a
+   misheard word must never ring somebody) and listen outside a session. */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var recog = null, recogWanted = false, recogRunning = false, lastCmdAt = 0;
+var VOICE_CMDS = {
+  en: { next:["next","skip","forward","move on","go on to the next"], pause:["pause","hold on","wait","stop for a moment"],
+        resume:["carry on","continue","resume","keep going","go again"], end:["end session","finish","i am done","im done","that is enough"],
+        repeat:["repeat","say again","again please","what do i do"], time:["how long","time left","how much time"] },
+  pt: { next:["passa","proximo","proxima","seguinte","salta","avanca","passar"], pause:["pausa","espera","para um bocado","parar"],
+        resume:["continua","continuar","retoma","vamos","segue"], end:["termina","terminar","acabar","acabou","chega","fim da sessao"],
+        repeat:["repete","outra vez","o que faco","repetir"], time:["quanto tempo","quanto falta","tempo"] },
+  es: { next:["siguiente","pasa","salta","avanza","siguiente ejercicio"], pause:["pausa","espera","para un momento","parar"],
+        resume:["continua","sigue","seguir","vamos","reanuda"], end:["termina","terminar","acabar","ya esta","fin de la sesion"],
+        repeat:["repite","otra vez","que hago","repetir"], time:["cuanto tiempo","cuanto falta","tiempo"] },
+  fr: { next:["suivant","passe","saute","avance","exercice suivant"], pause:["pause","attends","arrete un instant"],
+        resume:["continue","reprends","on continue","allez"], end:["termine","terminer","fini","c est fini","fin de la seance"],
+        repeat:["repete","encore une fois","je fais quoi","repeter"], time:["combien de temps","il reste combien","temps"] }
+};
+function plainWords(str){
+  return (str || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+}
+function matchCommand(heard){
+  var set = VOICE_CMDS[STATE.settings.lang] || VOICE_CMDS.en;
+  var text = plainWords(heard), found = null, bestLen = 0;
+  Object.keys(set).forEach(function(cmd){
+    set[cmd].forEach(function(word){
+      var w = plainWords(word);
+      if(text === w || text.indexOf(w) !== -1){
+        if(w.length > bestLen){ bestLen = w.length; found = cmd; }
+      }
+    });
+  });
+  return found;
+}
+function vcStatus(msg, keep){
+  var el = document.getElementById("vcStatus");
+  if(!el) return;
+  el.style.display = msg ? "block" : "none";
+  el.textContent = msg || "";
+  if(msg && !keep) setTimeout(function(){ if(recogWanted) vcStatus(t("vc.listening"), true); }, 2500);
+}
+function voiceAvailable(){ return !!SR; }
+function runCommand(cmd){
+  var now = Date.now();
+  if(now - lastCmdAt < 900) return;      /* one word, one action */
+  lastCmdAt = now;
+  var pauseBtn = document.getElementById("pauseBtn");
+  if(cmd === "next"){ vcStatus(t("vc.did.next"), false); noteSkip(); advance(); return; }
+  if(cmd === "pause"){ if(!isPaused){ pauseBtn.click(); } vcStatus(t("vc.did.pause"), false); return; }
+  if(cmd === "resume"){ if(isPaused){ pauseBtn.click(); } vcStatus(t("vc.did.resume"), false); return; }
+  if(cmd === "end"){ vcStatus(t("vc.did.end"), false); document.getElementById("endBtn").click(); return; }
+  if(cmd === "repeat"){
+    var ex = EXERCISES[sequence[currentIndex]];
+    if(ex) readAloud(L(ex.name) + ". " + L(ex.instr));
+    vcStatus(t("vc.did.repeat"), false);
+    return;
+  }
+  if(cmd === "time"){
+    var line = t("vc.did.time", { s: secondsLeft });
+    readAloud(line); vcStatus(line, false);
+  }
+}
+function startVoiceCommands(){
+  if(!SR || !STATE.settings.voiceCmd) return;
+  recogWanted = true;
+  if(recogRunning) return;
+  try{
+    recog = new SR();
+    recog.lang = speechLang();
+    recog.continuous = true;
+    recog.interimResults = false;
+    recog.maxAlternatives = 3;
+    recog.onstart = function(){ recogRunning = true; vcStatus(t("vc.listening"), true); };
+    recog.onresult = function(ev){
+      /* ignore whatever the app itself just said out loud */
+      if(appIsSpeaking && Date.now() < speakingUntil) return;
+      for(var i = ev.resultIndex; i < ev.results.length; i++){
+        var res = ev.results[i];
+        if(!res.isFinal) continue;
+        for(var a = 0; a < res.length; a++){
+          var cmd = matchCommand(res[a].transcript);
+          if(cmd){ runCommand(cmd); return; }
+        }
+      }
+    };
+    recog.onerror = function(ev){
+      if(ev.error === "not-allowed" || ev.error === "service-not-allowed"){
+        recogWanted = false;
+        STATE.settings.voiceCmd = false; saveState(); syncVoiceCmdCheckboxes();
+        vcStatus(t("vc.denied"), true);
+      }
+    };
+    recog.onend = function(){
+      recogRunning = false;
+      if(recogWanted) setTimeout(function(){
+        if(recogWanted && !recogRunning){ try{ recog.start(); }catch(e){} }
+      }, 500);
+    };
+    recog.start();
+  }catch(e){ recogWanted = false; recogRunning = false; }
+}
+function stopVoiceCommands(){
+  recogWanted = false;
+  vcStatus("", true);
+  try{ if(recog) recog.stop(); }catch(e){}
+  recogRunning = false;
+}
+function syncVoiceCmdCheckboxes(){
+  var on = !!STATE.settings.voiceCmd;
+  var a = document.getElementById("settingsVoiceCmd"), b = document.getElementById("voiceCmdToggle");
+  if(a) a.checked = on;
+  if(b) b.checked = on;
+  var row = document.getElementById("voiceCmdRow"), hint = document.getElementById("voiceCmdHint");
+  if(row) row.style.display = voiceAvailable() ? "" : "none";
+  if(hint) hint.style.display = voiceAvailable() ? "" : "none";
 }
 function formatTime(s){ var m = Math.floor(s/60), sec = s % 60; return m + ":" + (sec < 10 ? "0" : "") + sec; }
 function buildDots(){
@@ -4524,6 +4718,7 @@ function startSequenceSession(seq, minutesLabel){
   document.getElementById("pauseBtn").textContent = t("session.pause");
   document.getElementById("session").scrollIntoView({ behavior: STATE.settings.reduceMotion ? "auto" : "smooth" });
   keepAwake(true);
+  startVoiceCommands();
   runCountdown(function(){
     startPhase("work");
     runTimer();
@@ -4533,6 +4728,7 @@ function startSequenceSession(seq, minutesLabel){
 function finishSession(){
   clearInterval(timerId);
   keepAwake(false);
+  stopVoiceCommands();
   document.getElementById("howThanks").textContent = "";
   STATE.openSession = null; saveState();
   playerEl.classList.remove("active");
@@ -4557,6 +4753,7 @@ document.getElementById("skipBtn").addEventListener("click", function(){ noteSki
 document.getElementById("endBtn").addEventListener("click", function(){
   clearInterval(timerId);
   keepAwake(false);
+  stopVoiceCommands();
   playerEl.classList.remove("active");
   builderEl.style.display = "block";
   sequence = []; STATE.openSession = null; saveState();
@@ -4698,7 +4895,7 @@ function renderLeaderboard(){
   body.innerHTML = "";
   var rows = [{ name: STATE.profile.name + " (" + meLabel() + ")",
                 sessions: sessionsThisMonth(), streak: computeStreak(), me:true }];
-  STATE.friends.forEach(function(f){ rows.push({ name:f.name, sessions:f.sessions || 0, streak:f.streak || 0, me:false }); });
+  STATE.friends.forEach(function(f){ rows.push({ name:displayName(f), sessions:f.sessions || 0, streak:f.streak || 0, me:false }); });
   rows.sort(function(a,b){ return b.sessions - a.sessions; });
   rows.forEach(function(r, i){
     var tr = document.createElement("tr");
@@ -4720,7 +4917,7 @@ async function refreshFriendStats(){
         f.sessions = pub.sessions || 0; f.streak = pub.streak || 0;
         f.total = pub.total || 0; f.avgWeek = pub.avgWeek || 0; f.minutes = pub.minutes || 0;
         f.updated = pub.updated || f.updated;
-        if(pub.name) f.name = pub.name;
+        if(pub.name) f.name = pub.name;   /* the nickname you gave stays put */
         changed = true;
       }
     }
@@ -5028,6 +5225,8 @@ document.getElementById("dayModalStartBtn").addEventListener("click", function()
 });
 /* ============ 11. PROFILE, FRIENDS, QR, CHAT ============ */
 function initials(n){ return (n || "?").trim().charAt(0).toUpperCase(); }
+/* The name you gave them wins over the name they chose for themselves. */
+function displayName(f){ return (f && (f.nick || f.name)) || ""; }
 function renderProfileChrome(){
   var pa = document.getElementById("pillAvatar");
   pa.textContent = initials(STATE.profile.name);
@@ -5174,8 +5373,8 @@ function renderMyFriends(){
     var card = document.createElement("div");
     card.className = "friend-card";
     card.innerHTML =
-      '<span class="avatar-sm" style="background:' + colorFor(f.id) + '">' + initials(f.name) + '</span>' +
-      '<div class="friend-info"><h3>' + f.name + '</h3>' +
+      '<span class="avatar-sm" style="background:' + colorFor(f.id) + '">' + initials(displayName(f)) + '</span>' +
+      '<div class="friend-info"><h3>' + displayName(f) + (f.nick ? ' <span style="font-weight:400;color:var(--ink-soft);font-size:.85rem">(' + f.name + ')</span>' : '') + '</h3>' +
       '<div class="friend-meta"><span>🔥 ' + (f.streak || 0) + '</span><span>📅 ' + (f.sessions || 0) + '</span><span class="id-tag">' + f.id + '</span>' +
       (staleDays(f) >= 5 ? '<span class="stale-badge">' + staleDays(f) + ' d</span>' : '') + '</div>' +
       '<div class="friend-actions">' +
@@ -5198,7 +5397,7 @@ function renderMyFriends(){
       if(STATE.auth.loggedIn) saveAccount();
       renderMyFriends();
       if(removed){
-        showUndoToast(t("friends.remove") + " — " + removed.name, function(){
+        showUndoToast(t("friends.remove") + " — " + displayName(removed), function(){
           STATE.friends.push(removed);
           saveState();
           if(STATE.auth.loggedIn) saveAccount();
@@ -5528,8 +5727,11 @@ function openFriendProfile(id){
   if(!f) return;
   fpCurrentId = id;
   var av = document.getElementById("fpAvatar");
-  av.textContent = initials(f.name); av.style.background = colorFor(f.id);
-  document.getElementById("fpName").textContent = f.name;
+  av.textContent = initials(displayName(f)); av.style.background = colorFor(f.id);
+  document.getElementById("fpName").textContent = displayName(f);
+  document.getElementById("fpRealName").textContent = f.nick ? t("nick.realname", { n: f.name }) : "";
+  document.getElementById("fpNick").value = f.nick || "";
+  document.getElementById("fpNickStatus").textContent = "";
   document.getElementById("fpId").textContent = f.id;
   document.getElementById("fpStats").innerHTML =
     statBox(f.streak || 0, "streaks.streak") + statBox(f.sessions || 0, "stat.month") +
@@ -5540,6 +5742,19 @@ function openFriendProfile(id){
   refreshFriendStats().then(function(changed){ if(changed){ renderMyFriends(); } });
 }
 document.getElementById("friendProfileCloseBtn").addEventListener("click", function(){ document.getElementById("friendProfileOverlay").classList.remove("active"); });
+document.getElementById("fpNickSave").addEventListener("click", async function(){
+  if(!fpCurrentId) return;
+  var f = STATE.friends.filter(function(x){ return x.id === fpCurrentId; })[0];
+  if(!f) return;
+  var v = document.getElementById("fpNick").value.trim();
+  f.nick = v || null;
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  document.getElementById("fpName").textContent = displayName(f);
+  document.getElementById("fpRealName").textContent = f.nick ? t("nick.realname", { n: f.name }) : "";
+  document.getElementById("fpNickStatus").textContent = v ? t("nick.saved", { n: v }) : t("nick.cleared");
+  renderMyFriends();
+});
 document.getElementById("fpSaveNotes").addEventListener("click", async function(){
   if(!fpCurrentId) return;
   STATE.friendNotes[fpCurrentId] = document.getElementById("fpNotes").value;
@@ -5557,25 +5772,86 @@ function pairKey(a,b){ return [a,b].sort().join("__"); }
 function openChat(friendId){
   currentChatId = friendId;
   var f = STATE.friends.filter(function(x){ return x.id === friendId; })[0];
-  document.getElementById("chatWithName").textContent = t("friends.chat") + " — " + (f ? f.name : friendId);
+  document.getElementById("chatWithName").textContent = t("friends.chat") + " — " + (f ? displayName(f) : friendId);
   loadChat();
   clearInterval(chatPollId);
-  chatPollId = setInterval(loadChat, 4000);
+  chatSig = "";
+  unreadByFriend[friendId] = 0;
+  renderChatBadges();
+  chatPollId = setInterval(loadChat, 3000);
   chatOverlay.classList.add("active");
+}
+var chatSig = "";
+function chatTime(ts){
+  try{ return new Date(ts).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }); }catch(e){ return ""; }
 }
 async function loadChat(){
   if(!currentChatId) return;
   var msgs = await Store.getJSON("chat:" + pairKey(STATE.profile.id, currentChatId), []);
+  var sig = msgs.length + "|" + (msgs.length ? msgs[msgs.length-1].ts : 0);
+  if(sig === chatSig) return;                 /* nothing new: leave the scroll alone */
+  var grew = chatSig && msgs.length;
+  chatSig = sig;
   var wrap = document.getElementById("chatMessages");
   wrap.innerHTML = "";
   msgs.forEach(function(m){
     var div = document.createElement("div");
     div.className = "msg " + (m.from === STATE.profile.id ? "me" : "them");
-    div.textContent = m.text;
+    div.innerHTML = '<span></span><span class="msg-time">' + chatTime(m.ts) + '</span>';
+    div.firstChild.textContent = m.text;
     wrap.appendChild(div);
   });
   wrap.scrollTop = wrap.scrollHeight;
+  var last = msgs[msgs.length-1];
+  if(grew && last && last.from !== STATE.profile.id){
+    markChatSeen(currentChatId, last.ts);
+    try{ if(navigator.vibrate) navigator.vibrate(120); }catch(e){}
+  } else if(last){ markChatSeen(currentChatId, last.ts); }
 }
+/* Messages sent while you were elsewhere: a quiet check of each conversation,
+   a count on the friend and one message on screen when something new lands. */
+function markChatSeen(id, ts){
+  STATE.chatSeen = STATE.chatSeen || {};
+  if((STATE.chatSeen[id] || 0) < ts){ STATE.chatSeen[id] = ts; saveState(); }
+}
+var unreadByFriend = {};
+async function pollChats(){
+  if(!STATE.auth.loggedIn || document.hidden) return;
+  STATE.chatSeen = STATE.chatSeen || {};
+  var friends = STATE.friends.slice(0, 10);
+  for(var i = 0; i < friends.length; i++){
+    var f = friends[i];
+    if(f.id === currentChatId) continue;
+    var msgs = await Store.getJSON("chat:" + pairKey(STATE.profile.id, f.id), []);
+    var theirs = msgs.filter(function(m){ return m.from !== STATE.profile.id; });
+    if(!theirs.length) continue;
+    var last = theirs[theirs.length-1];
+    var seen = STATE.chatSeen[f.id] || 0;
+    var n = theirs.filter(function(m){ return m.ts > seen; }).length;
+    unreadByFriend[f.id] = n;
+    if(n && last.ts > (unreadByFriend["_told:" + f.id] || 0)){
+      unreadByFriend["_told:" + f.id] = last.ts;
+      var el = showUndoToast(t("chat.newmsg", { name: displayName(f) }) + " " + last.text.slice(0, 60), function(){});
+      if(el){
+        var open = document.createElement("button");
+        open.type = "button"; open.textContent = t("friends.chat"); open.style.marginLeft = ".4rem";
+        open.addEventListener("click", function(){ openChat(f.id); if(el.parentNode) el.parentNode.removeChild(el); });
+        el.appendChild(open);
+      }
+    }
+  }
+  renderChatBadges();
+}
+function renderChatBadges(){
+  document.querySelectorAll("[data-chat]").forEach(function(b){
+    var id = b.getAttribute("data-chat");
+    var n = unreadByFriend[id] || 0;
+    b.textContent = t("friends.chat") + (n ? " (" + n + ")" : "");
+    b.classList.toggle("btn-teal", true);
+  });
+}
+setInterval(pollChats, 12000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollChats(); });
 async function sendChat(){
   var input = document.getElementById("chatInput");
   var text = input.value.trim();
@@ -5586,6 +5862,7 @@ async function sendChat(){
   if(msgs.length > 300) msgs = msgs.slice(-300);
   await Store.setJSON(key, msgs);
   input.value = "";
+  chatSig = "";
   loadChat();
 }
 document.getElementById("chatSendBtn").addEventListener("click", sendChat);
@@ -5596,11 +5873,36 @@ document.getElementById("chatCloseBtn").addEventListener("click", function(){
   currentChatId = null;
 });
 var callOverlay = document.getElementById("callOverlay");
-var callStream = null, camOn = false, micOn = false, callTimerId = null, callSeconds = 0;
-function openCall(friendId, wantsVideo){
-  var f = STATE.friends.filter(function(x){ return x.id === friendId; })[0];
-  document.getElementById("callWithName").textContent = (wantsVideo ? t("friends.video") : t("friends.audio")) + " · " + (f ? f.name : friendId);
-  callSeconds = 0;
+/* --- Real calls ---------------------------------------------------------
+   Two browsers can talk to each other directly with WebRTC, but they must
+   first swap a short description of themselves, and for that they need a
+   letterbox somewhere both can reach. The shared database is that letterbox:
+   the caller leaves an offer at call:<their id>, the person called leaves an
+   answer at call:<caller id>:ans, and each side drops its network candidates
+   into its own key so the two never write over one another.
+   Voice and picture then flow straight between the two devices — nothing
+   passes through the database except those few lines of text.
+   Without a shared database configured, this falls back to showing your own
+   camera, which is all a lone page can do. */
+var callStream = null, remoteStream = null, camOn = false, micOn = false;
+var callTimerId = null, callSeconds = 0, callTicking = false;
+var pc = null, callPeer = null, callRole = null, callType = "video";
+var callPollId = null, callSentCands = [], callTakenCands = 0, callLive = false;
+var incoming = null, incomingSeenAt = 0, ringPollId = null;
+function iceConfig(){
+  var list = [{ urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"] }];
+  var turn = (ownerSettings && ownerSettings.turn) || BUILT_IN.turn || {};
+  if(turn.url) list.push({ urls: turn.url, username: turn.user || "", credential: turn.pass || "" });
+  return { iceServers: list };
+}
+function callsPossible(){ return !!CLOUD.base && !!window.RTCPeerConnection; }
+function myCallKey(){ return "call:" + STATE.profile.id; }
+function offerKeyFor(id){ return "call:" + id; }
+function answerKeyFor(id){ return "call:" + id + ":ans"; }
+function setCallNote(msg){ var el = document.getElementById("callNote"); if(el) el.textContent = msg; }
+function startCallTimer(){
+  if(callTicking) return;
+  callTicking = true; callSeconds = 0;
   document.getElementById("callTimer").textContent = "00:00";
   clearInterval(callTimerId);
   callTimerId = setInterval(function(){
@@ -5608,53 +5910,218 @@ function openCall(friendId, wantsVideo){
     document.getElementById("callTimer").textContent =
       String(Math.floor(callSeconds/60)).padStart(2,"0") + ":" + String(callSeconds%60).padStart(2,"0");
   }, 1000);
-  callOverlay.classList.add("active");
-  if(wantsVideo) toggleCam();
+}
+async function getLocalMedia(wantsVideo){
+  if(callStream) return callStream;
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("nomedia");
+  callStream = await navigator.mediaDevices.getUserMedia({ video: !!wantsVideo, audio: true });
+  var v = document.getElementById("callVideo");
+  v.srcObject = callStream;
+  v.style.display = "block";
+  v.classList.toggle("pip", !!wantsVideo);
+  document.getElementById("callPlaceholder").style.display = "none";
+  camOn = !!wantsVideo; micOn = true;
+  document.getElementById("toggleCamBtn").textContent = camOn ? t("friends.togglecamoff") : t("friends.togglecam");
+  document.getElementById("toggleMicBtn").textContent = t("friends.togglemicoff");
+  return callStream;
+}
+function newPeer(){
+  var p = new RTCPeerConnection(iceConfig());
+  remoteStream = new MediaStream();
+  var rv = document.getElementById("callRemote");
+  rv.srcObject = remoteStream;
+  p.ontrack = function(ev){
+    ev.streams[0].getTracks().forEach(function(tr){ remoteStream.addTrack(tr); });
+    rv.style.display = "block";
+    document.getElementById("callPlaceholder").style.display = "none";
+    document.getElementById("callVideo").classList.add("pip");
+  };
+  p.onicecandidate = function(ev){
+    if(ev.candidate) { callSentCands.push(ev.candidate.toJSON()); pushSignal(); }
+  };
+  p.onconnectionstatechange = function(){
+    if(p.connectionState === "connected"){
+      callLive = true; startCallTimer(); setCallNote(t("call.connected"));
+    }
+    if(p.connectionState === "failed"){ setCallNote(t("call.failed")); }
+    if(p.connectionState === "disconnected" || p.connectionState === "closed"){
+      if(callLive) setCallNote(t("call.ended"));
+    }
+  };
+  return p;
+}
+var signalBusy = false, signalAgain = false;
+async function pushSignal(extra){
+  if(!callPeer) return;
+  if(signalBusy){ signalAgain = true; return; }
+  signalBusy = true;
+  try{
+    var key = callRole === "caller" ? offerKeyFor(callPeer) : answerKeyFor(callPeer);
+    var rec = await Store.getJSON(key, {}) || {};
+    rec.from = STATE.profile.id;
+    rec.name = STATE.profile.name;
+    rec.type = callType;
+    rec.ts = Date.now();
+    rec.cands = callSentCands;
+    if(extra) Object.keys(extra).forEach(function(k){ rec[k] = extra[k]; });
+    if(!rec.state) rec.state = "ringing";
+    await Store.setJSON(key, rec);
+  }catch(e){}
+  signalBusy = false;
+  if(signalAgain){ signalAgain = false; pushSignal(); }
+}
+async function pullSignal(){
+  if(!pc || !callPeer) return;
+  var key = callRole === "caller" ? answerKeyFor(STATE.profile.id) : offerKeyFor(STATE.profile.id);
+  var rec = await Store.getJSON(key, null);
+  if(!rec) return;
+  if(rec.state === "ended" || rec.state === "declined"){
+    setCallNote(rec.state === "declined" ? t("call.declined") : t("call.ended"));
+    setTimeout(hangUp, 1200);
+    return;
+  }
+  if(callRole === "caller" && rec.answer && !pc.currentRemoteDescription){
+    try{ await pc.setRemoteDescription(new RTCSessionDescription(rec.answer)); }catch(e){}
+  }
+  var cands = rec.cands || [];
+  for(var i = callTakenCands; i < cands.length; i++){
+    try{ await pc.addIceCandidate(new RTCIceCandidate(cands[i])); }catch(e){}
+  }
+  callTakenCands = Math.max(callTakenCands, cands.length);
+}
+function startCallPolling(){
+  clearInterval(callPollId);
+  callPollId = setInterval(pullSignal, 1500);
+}
+async function placeCall(friendId, wantsVideo){
+  callPeer = friendId; callRole = "caller"; callType = wantsVideo ? "video" : "audio";
+  callSentCands = []; callTakenCands = 0; callLive = false;
+  document.getElementById("callAnswerRow").style.display = "none";
+  setCallNote(t("call.calling", { name: friendName(friendId) }));
+  try{ await getLocalMedia(wantsVideo); }
+  catch(e){ setCallNote(t("call.nocam")); return; }
+  try{ await Store.setJSON(answerKeyFor(STATE.profile.id), {}); }catch(e){}
+  pc = newPeer();
+  callStream.getTracks().forEach(function(tr){ pc.addTrack(tr, callStream); });
+  var offer = await pc.createOffer({ offerToReceiveAudio:true, offerToReceiveVideo:true });
+  await pc.setLocalDescription(offer);
+  await pushSignal({ offer: { type: offer.type, sdp: offer.sdp }, state:"ringing", to: friendId });
+  startCallPolling();
+}
+async function answerCall(){
+  if(!incoming) return;
+  callPeer = incoming.from; callRole = "callee"; callType = incoming.type || "video";
+  callSentCands = []; callTakenCands = 0; callLive = false;
+  document.getElementById("callAnswerRow").style.display = "none";
+  setCallNote(t("call.connecting"));
+  try{ await getLocalMedia(callType === "video"); }
+  catch(e){ setCallNote(t("call.nocam")); return; }
+  pc = newPeer();
+  callStream.getTracks().forEach(function(tr){ pc.addTrack(tr, callStream); });
+  try{ await pc.setRemoteDescription(new RTCSessionDescription(incoming.offer)); }catch(e){ setCallNote(t("call.failed")); return; }
+  var answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  await pushSignal({ answer: { type: answer.type, sdp: answer.sdp }, state:"live", to: callPeer });
+  (incoming.cands || []).forEach(async function(c){ try{ await pc.addIceCandidate(new RTCIceCandidate(c)); }catch(e){} });
+  startCallPolling();
+}
+async function declineCall(){
+  if(incoming){
+    try{ await Store.setJSON(answerKeyFor(incoming.from), { from: STATE.profile.id, state:"declined", ts: Date.now() }); }catch(e){}
+    try{ await Store.setJSON(myCallKey(), {}); }catch(e){}
+  }
+  incoming = null;
+  closeCallWindow();
 }
 function stopCallStream(){
   if(callStream){ callStream.getTracks().forEach(function(tr){ tr.stop(); }); callStream = null; }
-  document.getElementById("callVideo").style.display = "none";
+  var v = document.getElementById("callVideo");
+  v.srcObject = null; v.style.display = "none"; v.classList.remove("pip");
+  var rv = document.getElementById("callRemote");
+  rv.srcObject = null; rv.style.display = "none";
   document.getElementById("callPlaceholder").style.display = "block";
   camOn = false; micOn = false;
   document.getElementById("toggleCamBtn").textContent = t("friends.togglecam");
   document.getElementById("toggleMicBtn").textContent = t("friends.togglemic");
 }
-function toggleCam(){
-  if(camOn){ stopCallStream(); return; }
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    document.getElementById("callPlaceholder").textContent = t("friends.scannocam");
-    return;
+function closeCallWindow(){
+  clearInterval(callTimerId); callTicking = false;
+  clearInterval(callPollId);
+  stopCallStream();
+  callOverlay.classList.remove("active");
+  document.getElementById("callAnswerRow").style.display = "none";
+}
+async function hangUp(){
+  try{
+    if(callPeer){
+      var mine = callRole === "caller" ? offerKeyFor(callPeer) : answerKeyFor(callPeer);
+      await Store.setJSON(mine, { from: STATE.profile.id, state:"ended", ts: Date.now() });
+      await Store.setJSON(callRole === "caller" ? answerKeyFor(STATE.profile.id) : offerKeyFor(STATE.profile.id), {});
+    }
+  }catch(e){}
+  if(pc){ try{ pc.close(); }catch(e){} pc = null; }
+  callPeer = null; callRole = null; callLive = false; incoming = null;
+  closeCallWindow();
+}
+function friendName(id){
+  var f = STATE.friends.filter(function(x){ return x.id === id; })[0];
+  return f ? displayName(f) : id;
+}
+function openCall(friendId, wantsVideo){
+  document.getElementById("callWithName").textContent =
+    (wantsVideo ? t("friends.video") : t("friends.audio")) + " · " + friendName(friendId);
+  document.getElementById("callTimer").textContent = "00:00";
+  callOverlay.classList.add("active");
+  if(callsPossible()) placeCall(friendId, wantsVideo);
+  else {
+    setCallNote(t("call.nocloud"));
+    getLocalMedia(wantsVideo).catch(function(){ setCallNote(t("call.nocam")); });
   }
-  navigator.mediaDevices.getUserMedia({ video:true, audio:true }).then(function(stream){
-    callStream = stream;
-    var v = document.getElementById("callVideo");
-    v.srcObject = stream; v.style.display = "block";
-    document.getElementById("callPlaceholder").style.display = "none";
-    camOn = true; micOn = true;
-    document.getElementById("toggleCamBtn").textContent = t("friends.togglecamoff");
-    document.getElementById("toggleMicBtn").textContent = t("friends.togglemicoff");
-  }).catch(function(){
-    document.getElementById("callPlaceholder").textContent = t("friends.scanperm");
-  });
+}
+/* Somebody ringing: one small read every five seconds, and only while the
+   page is open and signed in. */
+async function pollIncoming(){
+  if(!callsPossible() || !STATE.auth.loggedIn || pc || document.hidden) return;
+  var rec = await Store.getJSON(myCallKey(), null);
+  if(!rec || !rec.offer || rec.state !== "ringing") return;
+  if(Date.now() - (rec.ts || 0) > 60000) return;          /* stale ring */
+  if(incoming && incoming.from === rec.from && incoming.ts === rec.ts) return;
+  incoming = rec;
+  document.getElementById("callWithName").textContent =
+    t("call.incoming", { name: rec.name || friendName(rec.from) });
+  setCallNote(t("call.incomingp"));
+  document.getElementById("callAnswerRow").style.display = "flex";
+  document.getElementById("callTimer").textContent = "00:00";
+  callOverlay.classList.add("active");
+  try{ if(navigator.vibrate) navigator.vibrate([400,200,400]); }catch(e){}
+}
+document.getElementById("answerCallBtn").addEventListener("click", answerCall);
+document.getElementById("declineCallBtn").addEventListener("click", declineCall);
+function toggleCam(){
+  if(!callStream){ getLocalMedia(true).catch(function(){ setCallNote(t("call.nocam")); }); return; }
+  var tracks = callStream.getVideoTracks();
+  if(!tracks.length){ return; }
+  camOn = !camOn;
+  tracks.forEach(function(tr){ tr.enabled = camOn; });
+  document.getElementById("toggleCamBtn").textContent = camOn ? t("friends.togglecamoff") : t("friends.togglecam");
 }
 document.getElementById("toggleCamBtn").addEventListener("click", toggleCam);
 document.getElementById("toggleMicBtn").addEventListener("click", function(){
-  if(callStream){
-    micOn = !micOn;
-    callStream.getAudioTracks().forEach(function(tr){ tr.enabled = micOn; });
-    this.textContent = micOn ? t("friends.togglemicoff") : t("friends.togglemic");
-  } else toggleCam();
+  if(!callStream){ getLocalMedia(true).catch(function(){ setCallNote(t("call.nocam")); }); return; }
+  micOn = !micOn;
+  callStream.getAudioTracks().forEach(function(tr){ tr.enabled = micOn; });
+  this.textContent = micOn ? t("friends.togglemicoff") : t("friends.togglemic");
 });
 ["endCallBtn","callCloseBtn"].forEach(function(id){
   document.getElementById(id).addEventListener("click", function(){
-    clearInterval(callTimerId);
-    stopCallStream();
-    callOverlay.classList.remove("active");
+    if(incoming && !pc) declineCall(); else hangUp();
   });
 });
+ringPollId = setInterval(pollIncoming, 5000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollIncoming(); });
 /* ============ 12. HEALTH AI ============ */
 var RED_FLAGS = {
-  keys:["chest pain","chest pains","can't breathe","cannot breathe","shortness of breath","numb","numbness","tingling in both","lost feeling","can't feel","cannot feel","weakness on one side","slurred","fainted","fainting","blackout","black out","fever","swollen and hot","can't bear weight","cannot bear weight","cannot walk","can't walk","broken","fracture","after a fall","fell yesterday","fell today","bleeding","dor no peito","não consigo respirar","falta de ar","adormecido","formigueiro","não sinto","desmaiei","febre","não consigo andar","fratura","caí","dolor en el pecho","no puedo respirar","falta de aire","entumecido","hormigueo","no siento","me desmayé","fiebre","no puedo caminar","fractura","me caí","douleur à la poitrine","je ne peux pas respirer","engourdi","fourmillement","évanoui","fièvre","fracture","je suis tombé"],
+  keys:["chest pain","chest pains","can't breathe","cannot breathe","shortness of breath","numb","numbness","tingling in both","lost feeling","can't feel","cannot feel","weakness on one side","slurred","fainted","fainting","blackout","black out","fever","swollen and hot","can't bear weight","cannot bear weight","cannot walk","can't walk","broken","fracture","after a fall","fell yesterday","fell today","fell over","had a fall","cannot stand up","bleeding","dor no peito","não consigo respirar","falta de ar","adormecido","formigueiro","não sinto","desmaiei","febre","não consigo andar","não consegue andar","não consigo levantar","fratura","caí","caiu","teve uma queda","levou uma queda","queda","partiu","dolor en el pecho","no puedo respirar","falta de aire","entumecido","hormigueo","no siento","me desmayé","fiebre","no puedo caminar","no puede caminar","fractura","me caí","se cayó","una caída","douleur à la poitrine","je ne peux pas respirer","engourdi","fourmillement","évanoui","fièvre","fracture","je suis tombé","elle est tombée","il est tombé","une chute","ne peut pas marcher"],
   msg:{
     en:"Some of what you described needs a person, not an exercise plan. Please contact your doctor, or urgent care if it's sudden or severe. Chest pain, numbness, loss of feeling or strength, a fall, fever with a hot swollen joint, or being unable to put weight on a limb all need proper assessment first. Exercise can wait — this shouldn't.",
     pt:"Parte do que descreveu precisa de uma pessoa, não de um plano de exercícios. Contacte o seu médico, ou o serviço de urgência se for súbito ou grave. Dor no peito, adormecimento, perda de sensibilidade ou de força, uma queda, febre com uma articulação quente e inchada, ou não conseguir apoiar um membro — tudo isto precisa primeiro de ser avaliado. O exercício pode esperar; isto não.",
@@ -6126,11 +6593,157 @@ function injuryAvoidSet(){
   });
   return out;
 }
+/* --- Reading what somebody actually wrote -------------------------------
+   The first version looked for letters inside letters, so "arm" matched
+   "warm" and "hip" matched "ship". This version strips accents, tolerates
+   plurals, matches on whole words, understands the words people really use
+   at the kitchen table, and notices a "not" in front of a symptom before
+   raising an alarm. */
+function normText(str){
+  return " " + (str || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim() + " ";
+}
+function looseForms(word){
+  var w = normText(word).trim();
+  var out = [w];
+  if(/[a-z]s$/.test(w) && w.length > 3) out.push(w.slice(0, -1));    /* joelhos → joelho */
+  else out.push(w + "s");
+  if(/es$/.test(w) && w.length > 4) out.push(w.slice(0, -2));
+  if(/ao$/.test(w)) out.push(w.slice(0, -2) + "oes");                /* mao → maos */
+  return out;
+}
+/* Everyday words that never appear in a textbook but are exactly what people
+   type. Each list points at the condition or goal keywords already in use. */
+var PLAIN_WORDS = {
+  knee:["joelho","joelhos","rotula","menisco","knee","knees","kneecap","rodilla","genou","genoux","perna dobra","cruzado"],
+  hip:["anca","ancas","bacia","virilha","quadril","hip","hips","cadera","hanche","femur"],
+  back:["costas","coluna","lombar","rins","dor de costas","back","lower back","spine","espalda","lumbar","mal au dos","bas du dos","mal de dos","douleur au dos","reins","hernia","ciatica","sciatica","sciatique"],
+  shoulder:["ombro","ombros","omoplata","shoulder","shoulders","hombro","epaule","rotator","manguito"],
+  neck:["pescoco","cervical","nuca","neck","cuello","cou","nuque","torcicolo"],
+  balance:["equilibrio","tonto","tonturas","desequilibrio","zonzo","balance","dizzy","dizziness","unsteady","wobbly","mareo","vertige","etourdi","medo de cair","fear of falling","miedo a caerme","peur de tomber"],
+  hand:["mao","maos","dedos","punho","pulso","hand","hands","wrist","fingers","grip","mano","muneca","main","poignet","artrite","arthritis","arthrite"],
+  foot:["pe","pes","tornozelo","calcanhar","planta do pe","foot","feet","ankle","heel","plantar","pie","tobillo","talon","cheville","joanete"],
+  breath:["falta de ar","cansaco","canso","sem folego","folego","breath","breathless","stamina","winded","aliento","cansancio","souffle","essouffle","fatigue","fadiga"],
+  weight:["peso","emagrecer","barriga","gordura","weight","belly","fat","slim","adelgazar","maigrir","ventre"],
+  muscle:["musculo","musculos","forca","fraco","bracos finos","forte","fortes","mais forte","musculado","biceps","muscle","muscles","strength","weak","stronger","strong","tone","toned","fuerza","fuerte","force","fort","muscler","definicao"],
+  posture:["postura","curvado","corcunda","encolhido","posture","hunched","stooped","slouch","postura","encorvado","voute"]
+};
+function expandWithPlainWords(keys){
+  var out = keys.slice();
+  Object.keys(PLAIN_WORDS).forEach(function(group){
+    var touches = keys.some(function(k){ return normText(k).indexOf(" " + group) !== -1 || group.indexOf(normText(k).trim()) !== -1; });
+    if(touches) PLAIN_WORDS[group].forEach(function(w){ if(out.indexOf(w) === -1) out.push(w); });
+  });
+  return out;
+}
 function scoreKeywords(text, keys){
-  var lower = " " + text.toLowerCase() + " ";
-  var score = 0;
-  keys.forEach(function(k){ if(lower.indexOf(k) !== -1) score += k.length; });
+  var hay = normText(text);
+  var score = 0, seen = {};
+  expandWithPlainWords(keys).forEach(function(k){
+    var phrase = normText(k).trim();
+    if(!phrase || seen[phrase]) return;
+    seen[phrase] = true;
+    var words = phrase.split(" ");
+    var hit = false;
+    if(words.length > 1){
+      hit = phraseFound(hay, phrase);
+      if(hit) score += phrase.length * 2;          /* a whole phrase means more */
+    } else {
+      hit = looseForms(phrase).some(function(f){ return hay.indexOf(" " + f + " ") !== -1; });
+      if(hit) score += phrase.length;
+    }
+  });
   return score;
+}
+/* "dores no peito" is the same complaint as "dor no peito": let every word in
+   a phrase carry an optional plural. */
+var phraseCache = {};
+function phraseRegex(phrase){
+  if(phraseCache[phrase]) return phraseCache[phrase];
+  var body = phrase.split(" ").map(function(w){
+    return w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + (w.length > 2 ? "e?s?" : "");
+  }).join(" ");
+  var re = new RegExp(" " + body + " ");
+  phraseCache[phrase] = re;
+  return re;
+}
+function phraseFound(hay, phrase){ return phraseRegex(phrase).test(hay); }
+/* "I do not have a fever" must not set off the fever alarm. */
+var NEGATIONS = ["nao","sem","nunca","not","no","without","never","dont","doesnt","havent","hasnt","sin","ni","pas","aucun","sans","jamais"];
+function isNegated(hay, at){
+  var before = hay.slice(Math.max(0, at - 28), at).trim().split(" ");
+  return before.slice(-4).some(function(w){ return NEGATIONS.indexOf(w) !== -1; });
+}
+/* What else the sentence tells us: which side, how long, how bad, what
+   brings it on. Repeating this back is how somebody knows they were heard. */
+var SIDE_WORDS = { left:["esquerdo","esquerda","left","izquierdo","izquierda","gauche"],
+                   right:["direito","direita","right","derecho","derecha","droit","droite"],
+                   both:["ambos","os dois","as duas","both","los dos","las dos","les deux","tous les deux"] };
+var TRIGGER_WORDS = {
+  stairs:["escadas","escada","stairs","staircase","escaleras","escalier"],
+  morning:["de manha","manha","morning","por la manana","le matin"],
+  night:["a noite","noite","night","por la noche","la nuit","deitado","lying down"],
+  walking:["andar","caminhar","walking","walk","caminar","marcher"],
+  sitting:["sentado","sentada","sitting","sentarme","assis"],
+  standing:["de pe","levantar","standing","stand up","de pie","debout"]
+};
+/* People write "uma semana", not "1 semana". */
+var WORD_NUMBERS = { um:1, uma:1, one:1, un:1, une:1, dois:2, duas:2, two:2, dos:2, deux:2,
+  tres:3, three:3, trois:3, quatro:4, four:4, cuatro:4, quatre:4, cinco:5, five:5, cinq:5,
+  seis:6, six:6, sete:7, seven:7, sept:7, oito:8, eight:8, huit:8, nove:9, nine:9, neuf:9,
+  dez:10, ten:10, diez:10, dix:10, quinze:15, fifteen:15 };
+function numberish(word){
+  if(/^\d+$/.test(word)) return parseInt(word, 10);
+  return WORD_NUMBERS[word] || null;
+}
+function parseComplaint(text){
+  var hay = normText(text);
+  var info = { side:null, days:null, severity:null, triggers:[] };
+  Object.keys(SIDE_WORDS).forEach(function(k){
+    SIDE_WORDS[k].forEach(function(w){ if(hay.indexOf(" " + normText(w).trim() + " ") !== -1) info.side = info.side || k; });
+  });
+  Object.keys(TRIGGER_WORDS).forEach(function(k){
+    TRIGGER_WORDS[k].forEach(function(w){
+      if(hay.indexOf(" " + normText(w).trim() + " ") !== -1 && info.triggers.indexOf(k) === -1) info.triggers.push(k);
+    });
+  });
+  var dur = hay.match(/ ([a-z0-9]+) (dias?|days?|jours?|semanas?|semaines?|weeks?|meses|mois|months?|anos?|ans?|annees?|years?)/);
+  if(dur && !numberish(dur[1])) dur = null;
+  if(dur){
+    var n = numberish(dur[1]), unit = dur[2];
+    if(/^sem|week/.test(unit)) n *= 7;
+    else if(/^mes|^mois|month/.test(unit)) n *= 30;
+    else if(/^ano|^ans|^annee|year/.test(unit)) n *= 365;
+    info.days = n;
+  } else if(/ (ontem|yesterday|ayer|hier) /.test(hay)) info.days = 1;
+  else if(/ (hoje|today|hoy|aujourd hui) /.test(hay)) info.days = 0;
+  else if(/ (ha muito|anos|years|desde sempre|toujours|siempre) /.test(hay)) info.days = 400;
+  var sev = hay.match(/ (\d{1,2}) (de|em|sur|out of|\/) ?10 /) || hay.match(/ dor (\d{1,2}) /) || hay.match(/ pain (\d{1,2}) /);
+  if(sev){ var v = parseInt(sev[1], 10); if(v >= 0 && v <= 10) info.severity = v; }
+  else {
+    /* only read words like "strong" as pain intensity when pain is mentioned */
+    var painWord = / (dor|dores|doi|doe|doem|doia|hurt|hurts|pain|painful|sore|duele|dolor|mal|douleur|souffre) /.test(hay);
+    if(painWord){
+      if(/ (insuportavel|horrivel|terrible|unbearable|insoportable|atroce) /.test(hay)) info.severity = 9;
+      else if(/ (forte|muita dor|severe|bad|fuerte|intense) /.test(hay)) info.severity = 7;
+      else if(/ (leve|ligeira|mild|slight|legere) /.test(hay)) info.severity = 3;
+    }
+  }
+  return info;
+}
+function understoodLine(info, items){
+  var bits = [];
+  if(items && items.length) bits.push(L(items[0].n));
+  if(info.side) bits.push(t("und.side." + info.side));
+  if(info.days !== null){
+    if(info.days <= 1) bits.push(t("und.new"));
+    else if(info.days < 42) bits.push(t("und.weeks", { n: Math.max(1, Math.round(info.days / 7)) }));
+    else bits.push(t("und.long"));
+  }
+  if(info.severity !== null) bits.push(t("und.sev", { n: info.severity }));
+  info.triggers.forEach(function(tr){ bits.push(t("und.trig." + tr)); });
+  return bits.join(" · ");
 }
 function matchConditions(text){
   var hits = [];
@@ -6151,8 +6764,14 @@ function matchGoals(text){
   return hits.slice(0,2).map(function(h){ return h.g; });
 }
 function hasRedFlag(text){
-  var lower = " " + text.toLowerCase() + " ";
-  return RED_FLAGS.keys.some(function(k){ return lower.indexOf(k) !== -1; });
+  var hay = normText(text);
+  return RED_FLAGS.keys.some(function(k){
+    var phrase = normText(k).trim();
+    if(!phrase) return false;
+    var m = phraseRegex(phrase).exec(hay);
+    if(!m) return false;
+    return !isNegated(hay, m.index);
+  });
 }
 var PART_FOCUS = {
   arm:["arm","upper","tone","shoulder"], legs:["legs","knee","glute","calf"],
@@ -6219,7 +6838,13 @@ function ideaListHTML(ideas){
   return html + '</div>';
 }
 function followupsHTML(mode){
-  var list = FOLLOWUPS[mode] || [];
+  var list = (FOLLOWUPS[mode] || []).filter(function(q){
+    var info = (lastAnalysis && lastAnalysis.info) || {};
+    if(q.id === "when" && info.days !== null && info.days !== undefined) return false;
+    if(q.id === "level" && info.severity !== null && info.severity !== undefined) return false;
+    return true;
+  });
+  if(!list.length) return "";
   var html = '<div class="panel"><h3>' + t("health.followh") + '</h3><p style="color:var(--ink-soft)">' + t("health.followp") + '</p><div class="followups">';
   list.forEach(function(q){
     html += '<div class="followup"><div class="q">' + L(q.q) + '</div><div class="followup-opts">';
@@ -6288,9 +6913,17 @@ function renderHealthAnswer(){
   var html = '<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem">' +
     '<button class="btn btn-secondary btn-sm" id="healthReadAloudBtn" type="button">' + t("health.readaloud") + '</button>' +
     '<button class="btn btn-secondary btn-sm" id="healthSimplifyBtn" type="button">' + t("health.simplify") + '</button></div>';
+  var info = lastAnalysis.info || { triggers: [] };
+  var line = understoodLine(info, items);
+  if(line){
+    html += '<div class="panel" style="padding:1rem 1.2rem"><h3 style="font-size:1.05rem">' + t("und.h") + '</h3><p>' + line + '</p>' +
+      '<p style="color:var(--ink-soft);font-size:.92rem">' + t("und.p") + '</p></div>';
+    spoken.push(t("und.h") + ": " + line);
+  }
   if(!items.length){
     var fallback = ["shoulderRolls","seatedMarching","breathingReach","catCow","chairSquat","hamstringStretch"];
-    html += '<div class="panel"><h3>' + t("health.nomatch") + '</h3><p>' + t("health.nomatchp") + '</p>' + exListHTML(fallback) +
+    html += '<div class="panel"><h3>' + t("health.nomatch") + '</h3><p>' + t("health.nomatchp") + '</p>' +
+      '<p style="color:var(--ink-soft)">' + t("und.ask") + '</p>' + exListHTML(fallback) +
       '<button class="btn btn-primary" style="margin-top:1rem" data-startthese="' + fallback.join(",") + '">' + t("health.startthese") + '</button></div>';
     spoken.push(t("health.nomatch") + ". " + t("health.nomatchp"));
     lastSpecs = ["gp","physio"];
@@ -6380,7 +7013,7 @@ document.getElementById("analyseBtn").addEventListener("click", function(){
     followAnswers = {};
     if(healthMode === "pain"){
       var matches = matchConditions(text);
-      lastAnalysis = { mode:"pain", items:matches, text:text };
+      lastAnalysis = { mode:"pain", items:matches, text:text, info: parseComplaint(text) };
       matches.forEach(function(c){
         if(!STATE.injuries.some(function(i){ return i.condition === c.id; })){
           STATE.injuries.push({ condition:c.id, text:text, ts:Date.now() });
@@ -6389,7 +7022,7 @@ document.getElementById("analyseBtn").addEventListener("click", function(){
       if(matches.length){ renderInjuryHistory(); }
     } else {
       var goals = matchGoals(text);
-      lastAnalysis = { mode:"goal", items:goals, text:text };
+      lastAnalysis = { mode:"goal", items:goals, text:text, info: parseComplaint(text) };
       goals.forEach(function(g){
         if(!STATE.goals.some(function(x){ return x.goal === g.id; })){
           STATE.goals.push({ goal:g.id, text:text, ts:Date.now() });
@@ -6678,40 +7311,113 @@ function printReport(){
 }
 document.getElementById("printReportBtn").addEventListener("click", printReport);
 /* Family plan: one code, one extra person, checked before it is honoured. */
-function familyCode(){ return "FAM-" + STATE.profile.id.replace("SS-",""); }
-function renderFamilyRow(){
-  var row = document.getElementById("familyRow");
-  if(!row) return;
-  var on = STATE.auth.loggedIn && STATE.auth.plan === "family" && STATE.auth.paid;
-  row.style.display = on ? "flex" : "none";
-  if(on) document.getElementById("familyCode").textContent = familyCode();
+/* --- The family plan ----------------------------------------------------
+   A fresh code every time somebody buys, so an old code never keeps working.
+   The code carries the number of places with it: four for the small plan,
+   eight for the large one. Places are counted on the shared record, not on
+   the device, so nobody can hand the code round to a whole street. */
+var FAM_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";   /* no O/0, no I/1 */
+function newFamilyCode(){
+  var out = "";
+  for(var i = 0; i < 6; i++) out += FAM_ALPHABET.charAt(Math.floor(Math.random() * FAM_ALPHABET.length));
+  return "FAM-" + out;
 }
-document.getElementById("familyShareBtn").addEventListener("click", function(){
-  var msg = t("family.p") + " " + familyCode();
-  if(navigator.share){ navigator.share({ text: msg }); }
-  else if(navigator.clipboard){ navigator.clipboard.writeText(msg); }
-  this.textContent = t("friends.invitecopied");
-});
-async function useFamilyCode(code, statusEl){
-  code = String(code || "").trim().toUpperCase();
-  if(!/^FAM-\d{5}$/.test(code)){ statusEl.textContent = t("family.bad"); return; }
-  if(code === familyCode()){ statusEl.textContent = t("family.bad"); return; }
-  var rec = await Store.getJSON("family:" + code, { members: [] });
-  if((rec.members || []).length >= 1 && rec.members.indexOf(normEmail(STATE.auth.email)) === -1){
-    statusEl.textContent = t("family.limit"); return;
-  }
-  var ownerId = "SS-" + code.replace("FAM-","");
-  var pub = await Store.getJSON("public:" + ownerId, null);
-  if(!pub){ statusEl.textContent = t("family.bad"); return; }
-  rec.members = [normEmail(STATE.auth.email)];
+function familySeats(plan){ return (PLAN_DEFS[plan] && PLAN_DEFS[plan].seats) || 1; }
+function myFamilyCode(){ return (STATE.auth && STATE.auth.familyCode) || ""; }
+async function createFamily(planKey){
+  var code = newFamilyCode();
+  var rec = {
+    code: code, plan: planKey, seats: familySeats(planKey),
+    ownerId: STATE.profile.id, ownerName: STATE.profile.name,
+    expiry: Date.now() + 30 * 86400000, created: Date.now(),
+    members: [{ id: STATE.profile.id, name: STATE.profile.name, owner: true, ts: Date.now() }]
+  };
+  /* astronomically unlikely, but never hand out a code twice */
+  var clash = await Store.getJSON("family:" + code, null);
+  if(clash) return createFamily(planKey);
   await Store.setJSON("family:" + code, rec);
+  STATE.auth.familyCode = code;
+  STATE.auth.familyOwner = true;
+  saveState();
+  await saveAccount();
+  renderFamilyRow();
+  return code;
+}
+async function useFamilyCode(code, statusEl){
+  function say(msg){ if(statusEl) statusEl.textContent = msg; }
+  code = String(code || "").trim().toUpperCase().replace(/\s/g, "");
+  if(!/^FAM-[A-Z0-9]{6}$/.test(code)){ say(t("family.bad")); return false; }
+  if(!STATE.auth.loggedIn){ say(t("family.signin")); return false; }
+  var rec = await Store.getJSON("family:" + code, null);
+  if(!rec || !rec.members){ say(t("family.bad")); return false; }
+  if(rec.expiry && Date.now() > rec.expiry){ say(t("family.expired")); return false; }
+  var already = rec.members.filter(function(m){ return m.id === STATE.profile.id; })[0];
+  if(!already){
+    var seats = rec.seats || familySeats(rec.plan);
+    if(rec.members.length >= seats){ say(t("family.full", { n: seats })); return false; }
+    rec.members.push({ id: STATE.profile.id, name: STATE.profile.name, owner:false, ts: Date.now() });
+    await Store.setJSON("family:" + code, rec);
+  }
   STATE.auth.paid = true;
-  STATE.auth.plan = "family";
-  STATE.auth.planExpiry = Date.now() + 30 * 86400000;
+  STATE.auth.plan = rec.plan || "family";
+  STATE.auth.planExpiry = rec.expiry;
+  STATE.auth.familyCode = code;
+  STATE.auth.familyOwner = false;
   saveState();
   await saveAccount();
   refreshChrome();
-  statusEl.textContent = t("family.ok");
+  renderFamilyRow();
+  say(t("family.ok", { n: (rec.seats || 4) - rec.members.length }));
+  return true;
+}
+/* If the person who paid stops paying, or takes you off the list, your own
+   access follows theirs. Checked quietly whenever the app opens. */
+async function refreshFamilyMembership(){
+  var code = myFamilyCode();
+  if(!code || STATE.auth.familyOwner) return;
+  var rec = await Store.getJSON("family:" + code, null);
+  var mine = rec && (rec.members || []).some(function(m){ return m.id === STATE.profile.id; });
+  if(!rec || !mine || (rec.expiry && Date.now() > rec.expiry)){
+    if(STATE.auth.plan === "family" || STATE.auth.plan === "familybig"){
+      STATE.auth.paid = false; STATE.auth.plan = null; STATE.auth.planExpiry = null;
+    }
+    STATE.auth.familyCode = null;
+    saveState(); await saveAccount(); refreshChrome();
+  } else if(rec.expiry !== STATE.auth.planExpiry){
+    STATE.auth.planExpiry = rec.expiry; saveState();
+  }
+  renderFamilyRow();
+}
+async function renderFamilyRow(){
+  var row = document.getElementById("familyRow");
+  if(!row) return;
+  var code = myFamilyCode();
+  var on = STATE.auth.loggedIn && !!code && STATE.auth.familyOwner;
+  row.style.display = on ? "flex" : "none";
+  if(!on) return;
+  document.getElementById("familyCode").textContent = code;
+  var rec = await Store.getJSON("family:" + code, null);
+  var seats = (rec && rec.seats) || familySeats(STATE.auth.plan);
+  var used = (rec && rec.members ? rec.members.length : 1);
+  document.getElementById("familySeats").textContent = t("family.seats", { used: used, total: seats });
+  var list = document.getElementById("familyMembers");
+  list.innerHTML = "";
+  (rec && rec.members || []).forEach(function(m){
+    var li = document.createElement("li");
+    li.textContent = m.name + (m.owner ? " — " + t("family.you") : "");
+    if(!m.owner){
+      var b = document.createElement("button");
+      b.className = "btn btn-secondary btn-sm"; b.type = "button";
+      b.style.marginLeft = ".5rem"; b.textContent = t("family.removemember");
+      b.addEventListener("click", async function(){
+        rec.members = rec.members.filter(function(x){ return x.id !== m.id; });
+        await Store.setJSON("family:" + code, rec);
+        renderFamilyRow();
+      });
+      li.appendChild(b);
+    }
+    list.appendChild(li);
+  });
 }
 /* ============ 13. MEMORY ============ */
 function learnFromSessions(){
@@ -7045,6 +7751,26 @@ var FEATURES = [
    pt:"Um resumo mensal de uma página, para imprimir e levar ao médico ou mostrar à família",
    es:"Un resumen mensual de una página, para imprimir y llevar al médico o enseñar a la familia",
    fr:"Un bilan mensuel d'une page à imprimer pour le médecin ou la famille"},
+  {en:"Say \"next\", \"pause\" or \"carry on\" during a session and the app obeys, so nobody has to reach for the screen mid-exercise",
+   pt:"Diga \"passa\", \"pausa\" ou \"continua\" durante a sessão e a aplicação obedece, para não ter de chegar ao ecrã a meio do exercício",
+   es:"Di \"siguiente\", \"pausa\" o \"continúa\" durante la sesión y la aplicación obedece, sin tener que tocar la pantalla a media serie",
+   fr:"Dites \"suivant\", \"pause\" ou \"continue\" pendant la séance et l'application obéit, sans avoir à toucher l'écran"},
+  {en:"Real voice and video calls between two devices, and messages that arrive while you are on another page",
+   pt:"Chamadas de voz e vídeo a sério entre dois aparelhos, e mensagens que chegam mesmo quando está noutra página",
+   es:"Llamadas de voz y vídeo de verdad entre dos dispositivos, y mensajes que llegan aunque estés en otra página",
+   fr:"De vrais appels audio et vidéo entre deux appareils, et des messages qui arrivent même sur une autre page"},
+  {en:"Give each friend the name you actually use for them — Granny Ana, not their username",
+   pt:"Dar a cada amigo o nome por que realmente lhe chama — Avó Ana, e não o nome de utilizador",
+   es:"Dar a cada amigo el nombre con el que de verdad le llamas — Abuela Ana, no su nombre de usuario",
+   fr:"Donner à chaque ami le nom que vous employez vraiment — Mamie Ana, pas son pseudo"},
+  {en:"Family plan with a fresh code at every purchase: four places for €9.99, or eight for €15, counted on the shared record so the code cannot go round a whole street",
+   pt:"Plano Família com código novo a cada compra: quatro lugares por 9,99 €, ou oito por 15 €, contados no registo partilhado para o código não andar pela rua toda",
+   es:"Plan Familia con código nuevo en cada compra: cuatro plazas por 9,99 €, u ocho por 15 €, contadas en el registro compartido para que el código no circule por todo el barrio",
+   fr:"Formule Famille avec un code neuf à chaque achat : quatre places à 9,99 €, ou huit à 15 €, comptées sur le registre partagé pour que le code ne circule pas dans tout le quartier"},
+  {en:"The Health AI reads what you wrote far more carefully: whole words instead of letters inside words, everyday language, which side, how long, how bad, and a \"not\" before a symptom is respected",
+   pt:"A IA de Saúde lê muito melhor o que escreveu: palavras inteiras em vez de letras dentro de palavras, linguagem do dia-a-dia, que lado, há quanto tempo, com que intensidade — e um \"não\" antes de um sintoma é respeitado",
+   es:"La IA de Salud lee mucho mejor lo que escribes: palabras enteras en vez de letras dentro de palabras, lenguaje corriente, qué lado, cuánto tiempo, qué intensidad — y un \"no\" delante de un síntoma se respeta",
+   fr:"L'IA Santé lit bien mieux ce que vous écrivez : des mots entiers plutôt que des lettres dans des mots, le langage courant, quel côté, depuis quand, à quel point — et un \"pas\" devant un symptôme est respecté"},
   {en:"Friend requests really reach the other person's phone once a shared address book is set up in the admin panel",
    pt:"Os pedidos de amizade chegam mesmo ao telemóvel da outra pessoa, assim que a lista partilhada estiver ligada no painel de administração",
    es:"Las solicitudes de amistad llegan de verdad al móvil de la otra persona, en cuanto la libreta compartida esté activada en el panel",
@@ -7356,6 +8082,15 @@ document.getElementById("voiceToggle").addEventListener("change", function(e){
 document.getElementById("settingsVoiceToggle").addEventListener("change", function(e){
   STATE.settings.voice = e.target.checked; saveState(); syncVoiceCheckboxes();
 });
+function setVoiceCmd(on){
+  STATE.settings.voiceCmd = !!on;
+  saveState();
+  syncVoiceCmdCheckboxes();
+  if(!on) stopVoiceCommands();
+  else if(playerEl.classList.contains("active")) startVoiceCommands();
+}
+document.getElementById("settingsVoiceCmd").addEventListener("change", function(e){ setVoiceCmd(e.target.checked); });
+document.getElementById("voiceCmdToggle").addEventListener("change", function(e){ setVoiceCmd(e.target.checked); });
 document.getElementById("settingsReduceMotion").addEventListener("change", function(e){
   STATE.settings.reduceMotion = e.target.checked; saveState(); renderLibrary(); renderGG();
 });
@@ -7451,6 +8186,7 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   applyExerciseOverrides();
   document.getElementById("langSelect").value = STATE.settings.lang || "en";
   syncVoiceCheckboxes();
+  syncVoiceCmdCheckboxes();
   document.getElementById("settingsReduceMotion").checked = !!STATE.settings.reduceMotion;
   applyI18n();
   setHealthMode("pain");
@@ -7483,6 +8219,7 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
     guardOn = ownerSettings.captureGuard !== false;
     applyGuard();
     revokeUnpaidExtras();
+    refreshFamilyMembership();
     setupGoogleSignIn();
     handleReturnFromStripe();
     handleInviteLink();
