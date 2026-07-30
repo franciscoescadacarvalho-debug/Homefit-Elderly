@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v3 — Home Workouts for You</title>
+<title>Steady &amp; Strong v4 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
+<meta name="theme-color" content="#1F5C54">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Steady &amp; Strong">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -41,6 +45,13 @@
   .build-tag{font-family:var(--font-body);font-size:.62em;font-weight:700;background:var(--teal);color:#fff;
     border-radius:999px;padding:.15em .55em;margin-left:.45em;vertical-align:middle;letter-spacing:.04em}
   nav.main-nav{display:flex;gap:.2rem;flex-wrap:wrap}
+  @media (max-width:900px){
+    nav.main-nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;max-width:100%;padding-bottom:.2rem}
+    nav.main-nav::-webkit-scrollbar{display:none}
+    nav.main-nav button{white-space:nowrap;flex:0 0 auto}
+    .header-inner{gap:.6rem;padding:.7rem 1rem}
+    .text-size-controls{border-left:none;padding-left:0}
+  }
   nav.main-nav button{color:var(--ink);font-weight:700;padding:.55rem .7rem;border:none;background:transparent;border-bottom:3px solid transparent;font-family:var(--font-body);font-size:.95rem;cursor:pointer;border-radius:8px 8px 0 0;display:inline-flex;align-items:center;gap:.35rem}
   nav.main-nav button:hover{border-bottom-color:var(--marigold)}
   nav.main-nav button.active{border-bottom-color:var(--teal);color:var(--teal-dark);background:var(--teal-tint)}
@@ -345,6 +356,15 @@
   .loc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
   .loc-row>div{flex:1;min-width:170px}
   .idea-card{border-style:dashed!important}
+  body.high-contrast{--bg:#FFFFFF;--bg-card:#FFFFFF;--ink:#000000;--ink-soft:#2B2A28;--line:#6B7268;
+    --teal:#0C3F38;--teal-dark:#06251F;--teal-tint:#DCE9E5;--marigold:#B96E00;--marigold-dark:#7A4700}
+  body.high-contrast .btn{border-width:3px}
+  body.high-contrast .exercise-card,body.high-contrast .panel{border-width:2px;box-shadow:none}
+  body.high-contrast p,body.high-contrast li{color:#000}
+  .whatsnew li{margin-bottom:.35rem}
+  .whatsnew .tick{color:var(--teal);font-weight:700;margin-right:.4rem}
+  .welcome-grid{display:flex;gap:.6rem;flex-wrap:wrap;margin:.6rem 0 1.4rem}
+  .welcome-grid button{flex:1;min-width:110px}
   /* --- Capture protection ------------------------------------------------
      A web page cannot switch off the operating system's screenshot key. What
      it can do: refuse to print, refuse copy/drag of the content, blank itself
@@ -372,7 +392,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v3</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v4</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -804,6 +824,14 @@
         <div class="settings-row"><div><h3 data-i18n="settings.reseth">Reset all data</h3><p data-i18n="settings.resetp">Clears plans, friends, streaks, and settings from this browser.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Reset data</button></div>
       </div>
       <div class="panel">
+        <div class="settings-row"><div><h3 data-i18n="settings.contrasth">Extra contrast</h3><p data-i18n="settings.contrastp">Stronger black-on-white colours, for tired eyes or bright rooms.</p></div><input type="checkbox" id="settingsContrast" style="width:26px;height:26px"></div>
+      </div>
+      <div class="panel">
+        <h3 data-i18n="whatsnew.h">What's in this version</h3>
+        <p style="color:var(--ink-soft)" id="whatsnewBuild"></p>
+        <ul class="whatsnew" id="whatsnewList"></ul>
+      </div>
+      <div class="panel">
         <h3 data-i18n="memory.h">Memory</h3>
         <p style="color:var(--ink-soft)" data-i18n="memory.p">Things the app remembers about you, saved to your account so they follow you to any device you sign in on.</p>
         <div id="memoryAuto"></div>
@@ -905,7 +933,23 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 3.0 · build 2026-07-30 · 73 animations · capture protection · personal watermark · resume session · Stripe checkout · real Google sign-in</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 4.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<!-- ============ WELCOME MODAL ============ -->
+<div class="modal-overlay" id="welcomeOverlay">
+  <div class="modal-box" style="max-width:520px;text-align:center">
+    <h2 data-i18n="welcome.h">Welcome — let's set two things up</h2>
+    <p style="color:var(--ink-soft)" data-i18n="welcome.p">You can change both of these later in Settings.</p>
+    <h3 style="font-size:1.15rem;margin-top:1.4rem" data-i18n="welcome.lang">Which language do you read most easily?</h3>
+    <div class="welcome-grid" id="welcomeLangs"></div>
+    <h3 style="font-size:1.15rem" data-i18n="welcome.size">How big should the writing be?</h3>
+    <div class="welcome-grid">
+      <button class="btn btn-secondary" data-wsize="0" style="font-size:1rem">A</button>
+      <button class="btn btn-secondary" data-wsize="1" style="font-size:1.3rem">A</button>
+      <button class="btn btn-secondary" data-wsize="2" style="font-size:1.7rem">A</button>
+    </div>
+    <button class="btn btn-primary" id="welcomeDone" type="button" style="width:100%" data-i18n="welcome.start">Start using Steady &amp; Strong</button>
+  </div>
+</div>
 <!-- ============ WIZARD MODAL ============ -->
 <div class="modal-overlay" id="wizardOverlay">
   <div class="modal-box">
@@ -1243,6 +1287,10 @@ I18N.en = {
 "pay.unlocked":"Payment received — your access is on. Thank you!",
 "guard.blocked":"Screen hidden — this page is protected.","guard.why":"Screenshots and recordings of other people's health information are not allowed here.",
 "resume.q":"You left a session unfinished. Carry on where you stopped?","resume.yes":"Carry on","resume.no":"Start fresh",
+"settings.contrasth":"Extra contrast","settings.contrastp":"Stronger black-on-white colours, for tired eyes or bright rooms.",
+"whatsnew.h":"What's in this version","whatsnew.build":"Version {v} · built {d} · {n} exercises · {a} moving demonstrations",
+"welcome.h":"Welcome — let's set two things up","welcome.p":"You can change both of these later in Settings.",
+"welcome.lang":"Which language do you read most easily?","welcome.size":"How big should the writing be?","welcome.start":"Start using Steady & Strong",
 "undo.action":"Undo",
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
@@ -1400,6 +1448,10 @@ I18N.pt = {
 "pay.unlocked":"Pagamento recebido — o seu acesso está ativo. Obrigado!",
 "guard.blocked":"Ecrã escondido — esta página está protegida.","guard.why":"Não são permitidas capturas nem gravações de informação de saúde de outras pessoas.",
 "resume.q":"Deixou uma sessão a meio. Quer continuar de onde parou?","resume.yes":"Continuar","resume.no":"Começar de novo",
+"settings.contrasth":"Contraste reforçado","settings.contrastp":"Cores mais fortes, preto sobre branco, para olhos cansados ou salas muito claras.",
+"whatsnew.h":"O que tem esta versão","whatsnew.build":"Versão {v} · criada em {d} · {n} exercícios · {a} demonstrações animadas",
+"welcome.h":"Bem-vindo — vamos só acertar duas coisas","welcome.p":"Pode mudar as duas mais tarde nas Definições.",
+"welcome.lang":"Em que idioma lê com mais facilidade?","welcome.size":"De que tamanho quer a letra?","welcome.start":"Começar a usar o Steady & Strong",
 "undo.action":"Desfazer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
@@ -1557,6 +1609,10 @@ I18N.es = {
 "pay.unlocked":"Pago recibido — tu acceso está activo. ¡Gracias!",
 "guard.blocked":"Pantalla oculta — esta página está protegida.","guard.why":"No se permiten capturas ni grabaciones de información de salud de otras personas.",
 "resume.q":"Dejaste una sesión a medias. ¿Sigues donde lo dejaste?","resume.yes":"Continuar","resume.no":"Empezar de nuevo",
+"settings.contrasth":"Contraste reforzado","settings.contrastp":"Colores más fuertes, negro sobre blanco, para ojos cansados o salas muy iluminadas.",
+"whatsnew.h":"Qué trae esta versión","whatsnew.build":"Versión {v} · creada el {d} · {n} ejercicios · {a} demostraciones animadas",
+"welcome.h":"Bienvenido — vamos a ajustar dos cosas","welcome.p":"Puedes cambiar las dos más tarde en Ajustes.",
+"welcome.lang":"¿En qué idioma lees con más facilidad?","welcome.size":"¿De qué tamaño quieres la letra?","welcome.start":"Empezar a usar Steady & Strong",
 "undo.action":"Deshacer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
@@ -1714,6 +1770,10 @@ I18N.fr = {
 "pay.unlocked":"Paiement reçu — votre accès est actif. Merci !",
 "guard.blocked":"Écran masqué — cette page est protégée.","guard.why":"Les captures et enregistrements d'informations de santé d'autrui ne sont pas autorisés ici.",
 "resume.q":"Vous avez laissé une séance en cours. Reprendre où vous vous étiez arrêté ?","resume.yes":"Reprendre","resume.no":"Recommencer",
+"settings.contrasth":"Contraste renforcé","settings.contrastp":"Des couleurs plus franches, noir sur blanc, pour les yeux fatigués ou les pièces très éclairées.",
+"whatsnew.h":"Ce que contient cette version","whatsnew.build":"Version {v} · créée le {d} · {n} exercices · {a} démonstrations animées",
+"welcome.h":"Bienvenue — réglons deux choses","welcome.p":"Vous pourrez changer les deux plus tard dans les Réglages.",
+"welcome.lang":"Dans quelle langue lisez-vous le plus facilement ?","welcome.size":"Quelle taille de texte ?","welcome.start":"Commencer à utiliser Steady & Strong",
 "undo.action":"Annuler",
 "common.cancel":"Annuler","common.save":"Enregistrer","common.close":"Fermer","common.yes":"Oui","common.no":"Non"
 };
@@ -2473,7 +2533,7 @@ function showView(name){
   if(name === "streaks")  renderStreaksView();
   if(name === "friends")  renderFriendsView();
   if(name === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); }
-  if(name === "settings"){ renderAccountSettings(); renderMemory(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
+  if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
 }
 function tryShowView(target){
   requireAccess(function(){
@@ -2694,6 +2754,7 @@ async function completeSignIn(email, opts){
     if(opts.name) STATE.profile.name = opts.name;
     STATE.plans = []; STATE.friends = []; STATE.workoutLog = []; STATE.sessionLog = [];
     STATE.injuries = []; STATE.goals = []; STATE.memory = { notes:[], facts:{} };
+    STATE.settings.welcomed = false;
   }
   saveState();
   await saveAccount();
@@ -2891,6 +2952,7 @@ function finishAuthSuccess(){
   if(typeof pollRequests === "function") pollRequests();
   if(isLocked()){ renderLock(); }
   else if(cb){ cb(); }
+  if(STATE.auth.loggedIn && !STATE.settings.welcomed && typeof openWelcome === "function") openWelcome();
 }
 function doLogout(){
   STATE.auth = defaultState().auth;
@@ -5911,6 +5973,130 @@ document.getElementById("settingsComfortAssist").addEventListener("change", func
   saveState();
   applyComfortAssist();
 });
+/* ============ 17b. VERSION, FEATURE LIST, WELCOME, CONTRAST ============ */
+var APP_VERSION = "4.0", APP_BUILD = "2026-07-30";
+var FEATURES = [
+  {en:"Sign-in wall: the app only opens with a free account, and a 7-day trial starts then",
+   pt:"Entrada com conta: a aplicação só abre com conta gratuita, e os 7 dias grátis começam aí",
+   es:"Entrada con cuenta: la aplicación solo abre con cuenta gratuita, y los 7 días gratis empiezan ahí",
+   fr:"Compte obligatoire : l'application ne s'ouvre qu'avec un compte gratuit, l'essai de 7 jours démarre alors"},
+  {en:"Real Google sign-in once a Client ID is pasted in the administrator panel",
+   pt:"Início de sessão real com a Google assim que colar um Client ID no painel de administrador",
+   es:"Inicio de sesión real con Google en cuanto pegues un Client ID en el panel de administrador",
+   fr:"Connexion Google réelle dès qu'un Client ID est collé dans le panneau d'administration"},
+  {en:"Bonus pack stays locked (🔒 on the menu) until it is actually paid for",
+   pt:"Pacote bónus fica bloqueado (🔒 no menu) até ser mesmo pago",
+   es:"El pack de regalo queda bloqueado (🔒 en el menú) hasta que se pague de verdad",
+   fr:"Le pack bonus reste verrouillé (🔒 dans le menu) jusqu'au paiement réel"},
+  {en:"Every payment goes through Stripe's own checkout, so the money lands in your Stripe account",
+   pt:"Todos os pagamentos passam pelo checkout da própria Stripe, para o dinheiro entrar na sua conta Stripe",
+   es:"Todos los pagos pasan por el checkout de la propia Stripe, para que el dinero entre en tu cuenta Stripe",
+   fr:"Tous les paiements passent par le checkout de Stripe, l'argent arrive sur votre compte Stripe"},
+  {en:"No Unlimited plan — Monthly and Yearly only, with the bonus pack sold separately",
+   pt:"Sem plano Unlimited — só Mensal e Anual, com o pacote bónus vendido à parte",
+   es:"Sin plan Unlimited — solo Mensual y Anual, con el pack de regalo aparte",
+   fr:"Pas de formule Unlimited — mensuelle et annuelle seulement, pack bonus vendu à part"},
+  {en:"73 different moving demonstrations — one per exercise, none repeated",
+   pt:"73 demonstrações animadas diferentes — uma por exercício, nenhuma repetida",
+   es:"73 demostraciones animadas distintas — una por ejercicio, ninguna repetida",
+   fr:"73 démonstrations animées différentes — une par exercice, aucune répétée"},
+  {en:"Grandparents & Grandchildren: 12 activities, each with its own drawing of that activity",
+   pt:"Avós e Netos: 12 atividades, cada uma com o seu próprio desenho dessa atividade",
+   es:"Abuelos y Nietos: 12 actividades, cada una con su propio dibujo de esa actividad",
+   fr:"Grands-parents et petits-enfants : 12 activités, chacune avec son propre dessin"},
+  {en:"Health AI works for pain and for goals, asks follow-up questions, and invents new exercises",
+   pt:"IA de Saúde serve para dores e para objetivos, faz perguntas de seguimento e inventa exercícios novos",
+   es:"IA de Salud sirve para dolores y para objetivos, hace preguntas de seguimiento e inventa ejercicios nuevos",
+   fr:"L'IA Santé traite douleurs et objectifs, pose des questions de suivi et invente de nouveaux exercices"},
+  {en:"Care finder: emergency number for your country, verified contacts, and map searches by speciality",
+   pt:"Procura de ajuda: número de emergência do seu país, contactos verificados e pesquisas de mapa por especialidade",
+   es:"Buscador de ayuda: número de emergencias de tu país, contactos verificados y búsquedas de mapa por especialidad",
+   fr:"Recherche de soins : numéro d'urgence de votre pays, contacts vérifiés et recherches cartographiques par spécialité"},
+  {en:"Steps count by themselves from the phone's motion sensor — nothing typed by hand",
+   pt:"Os passos contam-se sozinhos pelo sensor de movimento do telemóvel — nada escrito à mão",
+   es:"Los pasos se cuentan solos con el sensor de movimiento del móvil — nada escrito a mano",
+   fr:"Les pas se comptent seuls grâce au capteur du téléphone — rien à saisir"},
+  {en:"Friend requests really arrive: invite links, QR codes, a counter on the Requests tab and a message",
+   pt:"Os pedidos de amigo chegam mesmo: links de convite, códigos QR, contador no separador Pedidos e aviso",
+   es:"Las solicitudes de amistad llegan de verdad: enlaces de invitación, QR, contador en Solicitudes y aviso",
+   fr:"Les demandes d'amis arrivent vraiment : liens d'invitation, QR codes, compteur et notification"},
+  {en:"QR code redrawn reliably, saveable as a picture, and a scanner that also reads photos",
+   pt:"Código QR desenhado de forma fiável, pode guardar como imagem, e leitor que também lê fotografias",
+   es:"Código QR dibujado de forma fiable, se puede guardar como imagen, y lector que también lee fotos",
+   fr:"QR code fiable, enregistrable en image, et un lecteur qui lit aussi les photos"},
+  {en:"Customers can suggest exercises; every suggestion lands in the administrator panel",
+   pt:"Os clientes podem sugerir exercícios; todas as sugestões aparecem no painel de administrador",
+   es:"Los clientes pueden sugerir ejercicios; todas las sugerencias llegan al panel de administrador",
+   fr:"Les clients peuvent suggérer des exercices ; tout arrive dans le panneau d'administration"},
+  {en:"Printing and PDF export blocked, capture shortcuts blank the screen, personal watermark on every screen",
+   pt:"Impressão e PDF bloqueados, os atalhos de captura apagam o ecrã, marca de água pessoal em todos os ecrãs",
+   es:"Impresión y PDF bloqueados, los atajos de captura apagan la pantalla, marca de agua personal en cada pantalla",
+   fr:"Impression et PDF bloqués, les raccourcis de capture masquent l'écran, filigrane personnel partout"},
+  {en:"An unfinished session offers to carry on where you stopped; the space bar pauses",
+   pt:"Uma sessão a meio oferece continuar de onde parou; a barra de espaço pausa",
+   es:"Una sesión a medias ofrece seguir donde lo dejaste; la barra espaciadora pausa",
+   fr:"Une séance interrompue propose de reprendre ; la barre d'espace met en pause"},
+  {en:"Portuguese, Spanish and French fully translated — nothing falls back to English",
+   pt:"Português, espanhol e francês totalmente traduzidos — nada fica em inglês",
+   es:"Portugués, español y francés totalmente traducidos — nada queda en inglés",
+   fr:"Portugais, espagnol et français entièrement traduits — rien ne reste en anglais"},
+  {en:"Extra contrast mode, text in three sizes, and a menu that slides sideways on a phone",
+   pt:"Modo de contraste reforçado, letra em três tamanhos, e menu que desliza de lado no telemóvel",
+   es:"Modo de contraste reforzado, letra en tres tamaños, y menú deslizante en el móvil",
+   fr:"Mode contraste renforcé, texte en trois tailles, et menu qui défile sur téléphone"}
+];
+function renderWhatsNew(){
+  var wrap = document.getElementById("whatsnewList");
+  if(!wrap) return;
+  document.getElementById("whatsnewBuild").textContent = t("whatsnew.build", {
+    v: APP_VERSION, d: APP_BUILD,
+    n: countFree() + countExtras(),
+    a: (typeof DEMO_KEYS !== "undefined" ? DEMO_KEYS.length : 0)
+  });
+  wrap.innerHTML = FEATURES.map(function(f){ return '<li><span class="tick">✓</span>' + L(f) + '</li>'; }).join("");
+}
+function applyContrast(){
+  document.body.classList.toggle("high-contrast", !!STATE.settings.highContrast);
+  var box = document.getElementById("settingsContrast");
+  if(box) box.checked = !!STATE.settings.highContrast;
+}
+document.getElementById("settingsContrast").addEventListener("change", function(e){
+  STATE.settings.highContrast = e.target.checked;
+  saveState();
+  applyContrast();
+});
+/* First run: two questions that matter most for older eyes. */
+var welcomeOverlay = document.getElementById("welcomeOverlay");
+function openWelcome(){
+  var wrap = document.getElementById("welcomeLangs");
+  wrap.innerHTML = "";
+  [["en","English"],["pt","Português"],["es","Español"],["fr","Français"]].forEach(function(p){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "btn btn-secondary"; b.textContent = p[1];
+    b.addEventListener("click", function(){
+      STATE.settings.lang = p[0];
+      saveState(); applyI18n(); renderAllVisible();
+      wrap.querySelectorAll("button").forEach(function(x){ x.classList.remove("btn-teal"); x.classList.add("btn-secondary"); });
+      b.classList.remove("btn-secondary"); b.classList.add("btn-teal");
+    });
+    wrap.appendChild(b);
+  });
+  welcomeOverlay.querySelectorAll("[data-wsize]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var i = b.getAttribute("data-wsize");
+      var target = document.querySelector('.size-btn[data-size="' + i + '"]');
+      if(target) target.click();
+      welcomeOverlay.querySelectorAll("[data-wsize]").forEach(function(x){ x.classList.remove("btn-teal"); x.classList.add("btn-secondary"); });
+      b.classList.remove("btn-secondary"); b.classList.add("btn-teal");
+    });
+  });
+  welcomeOverlay.classList.add("active");
+}
+document.getElementById("welcomeDone").addEventListener("click", function(){
+  welcomeOverlay.classList.remove("active");
+  STATE.settings.welcomed = true;
+  saveState();
+});
 /* ============ 18. SETTINGS + INIT ============ */
 function syncVoiceCheckboxes(){
   document.getElementById("settingsVoiceToggle").checked = !!STATE.settings.voice;
@@ -5948,7 +6134,7 @@ function renderAllVisible(){
   if(id === "streaks")  renderStreaksView();
   if(id === "friends")  renderFriendsView();
   if(id === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); if(lastAnalysis) renderHealthAnswer(); }
-  if(id === "settings"){ renderMemory(); renderOwnerPanel(); }
+  if(id === "settings"){ renderMemory(); renderOwnerPanel(); renderWhatsNew(); }
 }
 document.querySelectorAll(".modal-overlay").forEach(function(ov){
   ov.addEventListener("click", function(e){ if(e.target === ov) ov.classList.remove("active"); });
@@ -5986,6 +6172,8 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   renderMemory();
   buildWizButtons();
   applyComfortAssist();
+  applyContrast();
+  renderWhatsNew();
   autoStartStepsIfPossible();
   offerResume();
   loadOwnerSettings().then(function(){
