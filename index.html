@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v5 — Home Workouts for You</title>
+<title>Steady &amp; Strong v6 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -413,7 +413,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v5</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v6</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -958,6 +958,9 @@
         <button class="btn btn-secondary btn-sm" id="admContactAddBtn" type="button">Add contact</button>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">"Talk to a real person" button</h3>
         <div class="field-group"><label class="field-label" for="admSupportPhone">Support phone number (shown to every visitor)</label><input class="text-input" id="admSupportPhone" type="tel" placeholder="+351 000 000 000"></div>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Bonus pack on this account</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">Handy while testing: lock the pack again so you can see exactly what a customer sees before paying.</p>
+        <p><button class="btn btn-rose btn-sm" id="lockPackBtn" type="button">Lock the bonus pack again</button> <span id="packState" style="font-weight:700"></span></p>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Content protection</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">No website can truly disable a screenshot — the operating system owns that key. What this does: blocks printing and PDF export, blocks copying and dragging the content, blanks the screen the moment a capture shortcut is pressed, and stamps every screen with the viewer's name and ID so a leaked picture can be traced back.</p>
         <label style="display:flex;gap:.6rem;align-items:center;font-weight:700;margin-bottom:1rem"><input type="checkbox" id="guardToggle" style="width:22px;height:22px"> Turn on capture protection and watermark</label>
@@ -987,7 +990,7 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 5.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 6.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
 <!-- ============ WELCOME MODAL ============ -->
 <div class="modal-overlay" id="welcomeOverlay">
   <div class="modal-box" style="max-width:520px;text-align:center">
@@ -2518,7 +2521,7 @@ function defaultState(){
     friendNotes: {},
     reminders: { enabled:false, days:[], time:"09:00", lastFired:null },
     /* paid and extras always start false: signing in never grants a pack. */
-    auth: { loggedIn:false, email:null, name:null, trialStart:null, paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null },
+    auth: { loggedIn:false, email:null, name:null, trialStart:null, paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null, extrasSource:null },
     steps: { goal: STEP_GOAL_DEFAULT, byDate: {} },
     location: { country:"", city:"", coords:null },
     reviews: [],
@@ -2607,7 +2610,7 @@ async function saveAccount(){
     memory: STATE.memory, injuries: STATE.injuries, goals: STATE.goals, friendNotes: STATE.friendNotes,
     reminders: STATE.reminders, trialStart: STATE.auth.trialStart, paid: STATE.auth.paid,
     plan: STATE.auth.plan, planExpiry: STATE.auth.planExpiry,
-    extras: STATE.auth.extras, extrasExpiry: STATE.auth.extrasExpiry,
+    extras: STATE.auth.extras, extrasExpiry: STATE.auth.extrasExpiry, extrasSource: STATE.auth.extrasSource,
     steps: STATE.steps, location: STATE.location
   };
   await Store.setJSON("account:" + normEmail(STATE.auth.email), blob);
@@ -2732,11 +2735,29 @@ function extrasDaysLeft(){
 /* The bonus pack is only ever active when this account actually bought it and
    it hasn't run out. Signing in, starting a trial, or buying a subscription
    plan never turns it on. */
+/* The bonus pack counts as unlocked only when this account carries a real
+   record of having bought it. Anything inherited from an older build, where
+   the pack opened by itself, is treated as not bought. */
 function extrasActive(){
   if(!STATE.auth.loggedIn) return false;
   if(!STATE.auth.extras) return false;
+  if(STATE.auth.extrasSource !== "paid") return false;
   var d = extrasDaysLeft();
   return d === Infinity || d > 0;
+}
+/* One-off clean-up: revoke any pack that was switched on without a purchase. */
+async function revokeUnpaidExtras(){
+  if(!STATE.auth.loggedIn) return;
+  if(STATE.auth.extras && STATE.auth.extrasSource !== "paid"){
+    STATE.auth.extras = false;
+    STATE.auth.extrasExpiry = null;
+    saveState();
+    await saveAccount();
+    renderNavLocks();
+    renderLibrary();
+    renderAccountSettings();
+    if(EXTRAS_GATED_VIEWS.indexOf((document.querySelector(".app-view.active")||{}).id) !== -1) showView("home");
+  }
 }
 function accessState(){
   if(!STATE.auth.loggedIn) return "signed-out";
@@ -2831,7 +2852,7 @@ async function completeSignIn(email, opts){
   if(acc && !opts.forceCreate){
     STATE.auth = { loggedIn:true, email:email, name:acc.name, trialStart:acc.trialStart,
                    paid:!!acc.paid, plan:acc.plan || null, planExpiry:acc.planExpiry || null,
-                   extras:!!acc.extras, extrasExpiry:acc.extrasExpiry || null,
+                   extras:!!acc.extras, extrasExpiry:acc.extrasExpiry || null, extrasSource:acc.extrasSource || null,
                    _passHash:acc.passHash, google:!!acc.google };
     if(acc.profile)     STATE.profile = acc.profile;
     if(acc.settings)    STATE.settings = Object.assign(STATE.settings, acc.settings);
@@ -2849,7 +2870,7 @@ async function completeSignIn(email, opts){
   } else {
     /* Brand-new account: free trial only. No plan, and definitely no bonus pack. */
     STATE.auth = { loggedIn:true, email:email, name:opts.name || "You", trialStart:Date.now(),
-                   paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null,
+                   paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null, extrasSource:null,
                    _passHash:opts.passHash || null, google:!!opts.google };
     if(opts.name) STATE.profile.name = opts.name;
     STATE.plans = []; STATE.friends = []; STATE.workoutLog = []; STATE.sessionLog = [];
@@ -3052,6 +3073,7 @@ function finishAuthSuccess(){
   if(typeof pollRequests === "function") pollRequests();
   if(isLocked()){ renderLock(); }
   else if(cb){ cb(); }
+  revokeUnpaidExtras();
   if(STATE.auth.loggedIn && !STATE.settings.welcomed && typeof openWelcome === "function") openWelcome();
 }
 function doLogout(){
@@ -3338,6 +3360,7 @@ async function renderOwnerPanel(){
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
   document.getElementById("googleClientIdInput").value = ownerSettings.googleClientId || "";
   document.getElementById("guardToggle").checked = ownerSettings.captureGuard !== false;
+  document.getElementById("packState").textContent = extrasActive() ? "Currently unlocked on your account." : "Currently locked.";
   var oh = document.getElementById("googleOriginHint");
   if(oh) oh.textContent = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://your-site";
   renderReturnUrls();
@@ -3350,6 +3373,19 @@ async function renderOwnerPanel(){
   renderSkipList();
   renderOwnerReviews();
 }
+document.getElementById("lockPackBtn").addEventListener("click", async function(){
+  STATE.auth.extras = false;
+  STATE.auth.extrasSource = null;
+  STATE.auth.extrasExpiry = null;
+  saveState();
+  await saveAccount();
+  restoreGatedViews();
+  refreshChrome();
+  renderLibrary();
+  renderGG();
+  showView("home");
+  renderOwnerPanel();
+});
 document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async function(){
   ownerSettings.ownerEmail = normEmail(document.getElementById("ownerEmailInput").value) || ownerSettings.ownerEmail;
   ownerSettings.extraEmails = document.getElementById("extraOwnerEmailsInput").value.split(",").map(function(s){ return normEmail(s); }).filter(Boolean);
@@ -3541,6 +3577,7 @@ function goToStripe(key, errEl){
 async function grantProduct(key, amount){
   if(key === "extras"){
     STATE.auth.extras = true;
+    STATE.auth.extrasSource = "paid";
     STATE.auth.extrasExpiry = Date.now() + 30 * 86400000;
   } else if(PLAN_DEFS[key]){
     STATE.auth.paid = true;
@@ -6540,6 +6577,7 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
     renderHealthContacts();
     guardOn = ownerSettings.captureGuard !== false;
     applyGuard();
+    revokeUnpaidExtras();
     setupGoogleSignIn();
     handleReturnFromStripe();
     handleInviteLink();
