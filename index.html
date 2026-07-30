@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v2 — Home Workouts for You</title>
+<title>Steady &amp; Strong v3 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -345,13 +345,34 @@
   .loc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
   .loc-row>div{flex:1;min-width:170px}
   .idea-card{border-style:dashed!important}
+  /* --- Capture protection ------------------------------------------------
+     A web page cannot switch off the operating system's screenshot key. What
+     it can do: refuse to print, refuse copy/drag of the content, blank itself
+     the instant a capture shortcut is pressed, and stamp every screen with the
+     name of the person looking at it so a leaked picture is traceable. --- */
+  body.guarded main, body.guarded .site-header, body.guarded footer{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  body.guarded img, body.guarded svg{-webkit-user-drag:none;user-drag:none}
+  body.capture-blank .site-header, body.capture-blank main, body.capture-blank footer,
+  body.capture-blank .modal-overlay, body.capture-blank .lockscreen{filter:blur(26px) contrast(.2);opacity:.04!important}
+  .capture-note{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;
+    background:var(--teal-dark);color:#fff;text-align:center;padding:2rem;font-family:var(--font-display);font-size:1.5rem;line-height:1.4}
+  body.capture-blank .capture-note{display:flex}
+  .watermark{position:fixed;inset:0;pointer-events:none;z-index:320;display:none;overflow:hidden}
+  .watermark.on{display:block}
+  .watermark b{position:absolute;font-family:var(--font-body);font-weight:700;font-size:.95rem;
+    color:var(--teal-dark);opacity:.055;transform:rotate(-28deg);white-space:nowrap}
+  @media print{
+    body > *{display:none!important}
+    body::after{content:"Steady & Strong — printing and PDF export are turned off.";
+      display:block;font-family:Georgia,serif;font-size:20pt;padding:4cm 2cm;text-align:center}
+  }
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v2</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v3</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -395,6 +416,8 @@
 </div>
 <a class="support-fab" id="supportFab" href="#" target="_blank" rel="noopener">📞 <span id="supportFabLabel">Talk to a real person</span></a>
 <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<div class="watermark" id="watermark" aria-hidden="true"></div>
+<div class="capture-note" id="captureNote"><span data-i18n="guard.blocked">Screen hidden — this page is protected.</span></div>
 <main id="main">
 <!-- ============ HOME ============ -->
 <div class="app-view active" id="view-home">
@@ -853,6 +876,9 @@
         <button class="btn btn-secondary btn-sm" id="admContactAddBtn" type="button">Add contact</button>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">"Talk to a real person" button</h3>
         <div class="field-group"><label class="field-label" for="admSupportPhone">Support phone number (shown to every visitor)</label><input class="text-input" id="admSupportPhone" type="tel" placeholder="+351 000 000 000"></div>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Content protection</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">No website can truly disable a screenshot — the operating system owns that key. What this does: blocks printing and PDF export, blocks copying and dragging the content, blanks the screen the moment a capture shortcut is pressed, and stamps every screen with the viewer's name and ID so a leaked picture can be traced back.</p>
+        <label style="display:flex;gap:.6rem;align-items:center;font-weight:700;margin-bottom:1rem"><input type="checkbox" id="guardToggle" style="width:22px;height:22px"> Turn on capture protection and watermark</label>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Sign in with Google (real accounts)</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">Paste an OAuth Client ID here and the sign-in screen shows Google's own button, with real Google accounts. Leave it empty and the built-in account chooser is used instead.</p>
         <ol style="color:var(--ink-soft);font-size:.95rem;padding-left:1.2rem">
@@ -879,7 +905,7 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 2.0 · build 2026-07-30 · 73 animations · bonus pack locked until paid · Stripe checkout · real Google sign-in</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 3.0 · build 2026-07-30 · 73 animations · capture protection · personal watermark · resume session · Stripe checkout · real Google sign-in</p></div></footer>
 <!-- ============ WIZARD MODAL ============ -->
 <div class="modal-overlay" id="wizardOverlay">
   <div class="modal-box">
@@ -1215,6 +1241,8 @@ I18N.en = {
 "pay.afterpay":"You'll pay on Stripe's own secure page. As soon as you come back here, your access switches on.",
 "pay.notsetup":"Payments aren't switched on yet — the site owner still has to paste the Stripe link in the administrator panel.",
 "pay.unlocked":"Payment received — your access is on. Thank you!",
+"guard.blocked":"Screen hidden — this page is protected.","guard.why":"Screenshots and recordings of other people's health information are not allowed here.",
+"resume.q":"You left a session unfinished. Carry on where you stopped?","resume.yes":"Carry on","resume.no":"Start fresh",
 "undo.action":"Undo",
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
@@ -1370,6 +1398,8 @@ I18N.pt = {
 "pay.afterpay":"Vai pagar na página segura da própria Stripe. Assim que voltar aqui, o seu acesso é ativado.",
 "pay.notsetup":"Os pagamentos ainda não estão ligados — o proprietário do site tem de colar o link da Stripe no painel de administrador.",
 "pay.unlocked":"Pagamento recebido — o seu acesso está ativo. Obrigado!",
+"guard.blocked":"Ecrã escondido — esta página está protegida.","guard.why":"Não são permitidas capturas nem gravações de informação de saúde de outras pessoas.",
+"resume.q":"Deixou uma sessão a meio. Quer continuar de onde parou?","resume.yes":"Continuar","resume.no":"Começar de novo",
 "undo.action":"Desfazer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
@@ -1525,6 +1555,8 @@ I18N.es = {
 "pay.afterpay":"Pagarás en la página segura de la propia Stripe. En cuanto vuelvas aquí, tu acceso se activa.",
 "pay.notsetup":"Los pagos aún no están activados — el propietario del sitio todavía tiene que pegar el enlace de Stripe en el panel de administrador.",
 "pay.unlocked":"Pago recibido — tu acceso está activo. ¡Gracias!",
+"guard.blocked":"Pantalla oculta — esta página está protegida.","guard.why":"No se permiten capturas ni grabaciones de información de salud de otras personas.",
+"resume.q":"Dejaste una sesión a medias. ¿Sigues donde lo dejaste?","resume.yes":"Continuar","resume.no":"Empezar de nuevo",
 "undo.action":"Deshacer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
@@ -1680,6 +1712,8 @@ I18N.fr = {
 "pay.afterpay":"Vous payez sur la page sécurisée de Stripe. Dès votre retour ici, votre accès s'active.",
 "pay.notsetup":"Les paiements ne sont pas encore activés — le propriétaire doit coller le lien Stripe dans le panneau d'administration.",
 "pay.unlocked":"Paiement reçu — votre accès est actif. Merci !",
+"guard.blocked":"Écran masqué — cette page est protégée.","guard.why":"Les captures et enregistrements d'informations de santé d'autrui ne sont pas autorisés ici.",
+"resume.q":"Vous avez laissé une séance en cours. Reprendre où vous vous étiez arrêté ?","resume.yes":"Reprendre","resume.no":"Recommencer",
 "undo.action":"Annuler",
 "common.cancel":"Annuler","common.save":"Enregistrer","common.close":"Fermer","common.yes":"Oui","common.no":"Non"
 };
@@ -2330,6 +2364,7 @@ function defaultState(){
     steps: { goal: STEP_GOAL_DEFAULT, byDate: {} },
     location: { country:"", city:"", coords:null },
     reviews: [],
+    openSession: null,
     customExercises: {},
     hiddenExercises: [],
     a11y: { sizeBumps:0, comfortSuggested:false }
@@ -2867,6 +2902,7 @@ function doLogout(){
 }
 function refreshChrome(){
   renderProfileChrome();
+  buildWatermark();
   renderTrialBanner();
   renderAccountSettings();
   renderNavLocks();
@@ -2916,7 +2952,7 @@ document.getElementById("settingsUpgradeBtn").addEventListener("click", function
 var SPEC_KEYS = ["physio","ortho","gp","rheum","neuro","cardio","pulmo","podiat","ent","trainer","nutri","other"];
 function specLabel(k){ return t("doc.spec." + (k || "other")); }
 var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[], stripe:{ monthly:"", yearly:"", extras:"" }, liveMode:true,
-  contacts: [], supportPhone: "", googleClientId: "" };
+  contacts: [], supportPhone: "", googleClientId: "", captureGuard: true };
 var ownerLoaded = false;
 async function loadOwnerSettings(){
   if(ownerLoaded) return ownerSettings;
@@ -2928,6 +2964,7 @@ async function loadOwnerSettings(){
     if(saved.contacts) ownerSettings.contacts = saved.contacts;
     if(saved.supportPhone) ownerSettings.supportPhone = saved.supportPhone;
     if(saved.googleClientId) ownerSettings.googleClientId = saved.googleClientId;
+    if(saved.captureGuard !== undefined) ownerSettings.captureGuard = !!saved.captureGuard;
   }
   ownerLoaded = true;
   return ownerSettings;
@@ -3136,6 +3173,7 @@ async function renderOwnerPanel(){
   document.getElementById("stripeExtrasInput").value = ownerSettings.stripe.extras || "";
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
   document.getElementById("googleClientIdInput").value = ownerSettings.googleClientId || "";
+  document.getElementById("guardToggle").checked = ownerSettings.captureGuard !== false;
   var oh = document.getElementById("googleOriginHint");
   if(oh) oh.textContent = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://your-site";
   renderReturnUrls();
@@ -3155,6 +3193,9 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   ownerSettings.stripe.extras  = document.getElementById("stripeExtrasInput").value.trim();
   ownerSettings.supportPhone = document.getElementById("admSupportPhone").value.trim();
   ownerSettings.googleClientId = document.getElementById("googleClientIdInput").value.trim();
+  ownerSettings.captureGuard = document.getElementById("guardToggle").checked;
+  guardOn = ownerSettings.captureGuard;
+  applyGuard();
   await Store.setJSON("business:settings", ownerSettings);
   var c = document.getElementById("ownerSaveConfirm");
   c.classList.add("show");
@@ -3747,6 +3788,7 @@ function startPhase(newPhase){
 }
 function tick(){ secondsLeft--; if(secondsLeft < 0){ advance(); return; } updateRing(); }
 function advance(){
+  saveSessionProgress();
   if(phase === "work"){ startPhase("rest"); }
   else {
     currentIndex++;
@@ -3755,6 +3797,32 @@ function advance(){
   }
 }
 function runTimer(){ clearInterval(timerId); timerId = setInterval(tick, 1000); }
+function saveSessionProgress(){
+  if(!sequence.length){ STATE.openSession = null; }
+  else {
+    STATE.openSession = { seq: sequence, at: currentIndex, len: activeSessionLength, ts: Date.now() };
+  }
+  saveState();
+}
+function offerResume(){
+  var o = STATE.openSession;
+  if(!o || !o.seq || !o.seq.length) return;
+  if(Date.now() - (o.ts || 0) > 86400000){ STATE.openSession = null; saveState(); return; }
+  if(!o.seq.every(function(id){ return EXERCISES[id]; })){ STATE.openSession = null; saveState(); return; }
+  var el = showUndoToast(t("resume.q"), function(){ STATE.openSession = null; saveState(); });
+  if(!el) return;
+  el.querySelector("button").textContent = t("resume.no");
+  var yes = document.createElement("button");
+  yes.type = "button"; yes.textContent = t("resume.yes"); yes.style.marginLeft = ".4rem";
+  yes.addEventListener("click", function(){
+    if(el.parentNode) el.parentNode.removeChild(el);
+    showView("home");
+    startSequenceSession(o.seq, o.len);
+    currentIndex = Math.min(o.at, o.seq.length - 1);
+    startPhase("work");
+  });
+  el.appendChild(yes);
+}
 function startSequenceSession(seq, minutesLabel){
   if(!seq || !seq.length) return;
   sequence = seq.slice();
@@ -3766,9 +3834,11 @@ function startSequenceSession(seq, minutesLabel){
   document.getElementById("session").scrollIntoView({ behavior: STATE.settings.reduceMotion ? "auto" : "smooth" });
   startPhase("work");
   runTimer();
+  saveSessionProgress();
 }
 function finishSession(){
   clearInterval(timerId);
+  sequence = []; STATE.openSession = null; saveState();
   playerEl.classList.remove("active");
   completeEl.classList.add("active");
   document.getElementById("completeSummary").textContent = t("session.summary", { min: activeSessionLength || "", n: sequence.length });
@@ -3791,6 +3861,7 @@ document.getElementById("endBtn").addEventListener("click", function(){
   clearInterval(timerId);
   playerEl.classList.remove("active");
   builderEl.style.display = "block";
+  sequence = []; STATE.openSession = null; saveState();
 });
 document.getElementById("restartBtn").addEventListener("click", function(){
   completeEl.classList.remove("active");
@@ -5736,6 +5807,67 @@ function showUndoToast(label, undoFn){
   wrap.appendChild(el);
   return el;
 }
+/* ============ 15b. CAPTURE PROTECTION ============
+   Honest about its limits: the operating system owns the screenshot key, so
+   nothing here can truly forbid one. This blocks the things a page really can
+   block — printing, PDF export, copying, dragging — blanks the screen on the
+   usual capture shortcuts, and watermarks every screen with who is looking,
+   which is what actually discourages sharing. */
+var guardOn = true, guardTimer = null;
+function buildWatermark(){
+  var wm = document.getElementById("watermark");
+  if(!wm) return;
+  if(!guardOn || !STATE.auth.loggedIn){ wm.classList.remove("on"); wm.innerHTML = ""; return; }
+  var label = (STATE.profile.name || "") + " · " + STATE.profile.id + " · " + new Date().toLocaleDateString();
+  var html = "";
+  for(var y = -10; y < 130; y += 13){
+    for(var x = -10; x < 130; x += 34){
+      html += '<b style="left:' + x + '%;top:' + y + '%">' + label + '</b>';
+    }
+  }
+  wm.innerHTML = html;
+  wm.classList.add("on");
+}
+function blankScreen(ms){
+  if(!guardOn) return;
+  document.body.classList.add("capture-blank");
+  clearTimeout(guardTimer);
+  guardTimer = setTimeout(function(){ document.body.classList.remove("capture-blank"); }, ms || 1600);
+}
+function applyGuard(){
+  document.body.classList.toggle("guarded", !!guardOn);
+  if(!guardOn) document.body.classList.remove("capture-blank");
+  buildWatermark();
+}
+/* macOS ⌘⇧3 / ⌘⇧4 / ⌘⇧5, Windows PrintScreen and Win+Shift+S all pass through
+   the keyboard first, so we can blank before the picture is taken. */
+document.addEventListener("keydown", function(e){
+  if(!guardOn) return;
+  var k = e.key;
+  var mac = (e.metaKey && e.shiftKey && ["3","4","5","6"].indexOf(k) !== -1);
+  var win = (k === "PrintScreen") || (e.shiftKey && (e.metaKey || e.ctrlKey) && (k === "S" || k === "s"));
+  if(mac || win){ blankScreen(2200); }
+}, true);
+document.addEventListener("keyup", function(e){
+  if(guardOn && e.key === "PrintScreen"){
+    blankScreen(1200);
+    try{ if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(""); }catch(err){}
+  }
+}, true);
+/* Recording tools and screen pickers steal focus; hide while we are not it. */
+document.addEventListener("visibilitychange", function(){
+  if(!guardOn) return;
+  if(document.hidden) document.body.classList.add("capture-blank");
+  else document.body.classList.remove("capture-blank");
+});
+["copy","cut","contextmenu","dragstart"].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    if(!guardOn) return;
+    if(e.target.closest("input, textarea, .modal-box")) return; /* forms stay usable */
+    e.preventDefault();
+  });
+});
+window.addEventListener("beforeprint", function(){ if(guardOn) blankScreen(4000); });
 /* ============ 16. SUPPORT SHORTCUT ============ */
 function renderSupportFab(){
   var fab = document.getElementById("supportFab");
@@ -5822,6 +5954,12 @@ document.querySelectorAll(".modal-overlay").forEach(function(ov){
   ov.addEventListener("click", function(e){ if(e.target === ov) ov.classList.remove("active"); });
 });
 document.addEventListener("keydown", function(e){
+  if(e.code === "Space" && playerEl.classList.contains("active") &&
+     !e.target.closest("input, textarea, select, button")){
+    e.preventDefault();
+    document.getElementById("pauseBtn").click();
+    return;
+  }
   if(e.key === "Escape"){
     document.querySelectorAll(".modal-overlay.active").forEach(function(ov){ ov.classList.remove("active"); });
     if(scanStream) stopScan();
@@ -5849,11 +5987,14 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   buildWizButtons();
   applyComfortAssist();
   autoStartStepsIfPossible();
+  offerResume();
   loadOwnerSettings().then(function(){
     renderOwnerPanel();
     renderLock();
     renderSupportFab();
     renderHealthContacts();
+    guardOn = ownerSettings.captureGuard !== false;
+    applyGuard();
     setupGoogleSignIn();
     handleReturnFromStripe();
     handleInviteLink();
