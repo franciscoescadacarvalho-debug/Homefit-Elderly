@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v4 — Home Workouts for You</title>
+<title>Steady &amp; Strong v5 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -356,6 +356,27 @@
   .loc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
   .loc-row>div{flex:1;min-width:170px}
   .idea-card{border-style:dashed!important}
+  .help-fab{position:fixed;left:1.2rem;bottom:1.2rem;z-index:410;background:var(--rose);color:#fff;border:none;
+    border-radius:999px;padding:1rem 1.5rem;font-family:var(--font-body);font-weight:700;font-size:1.15rem;
+    cursor:pointer;box-shadow:0 6px 20px rgba(201,112,95,.45);display:none;align-items:center;gap:.6rem}
+  .help-fab.show{display:inline-flex}
+  .help-fab:hover{background:#B45A49}
+  .simple-mode{position:fixed;inset:0;background:var(--bg);z-index:880;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:1.4rem;padding:2rem;text-align:center}
+  .simple-mode.on{display:flex}
+  .simple-mode h1{font-size:clamp(2rem,6vw,3rem);margin-bottom:.2rem}
+  .simple-btn{width:min(460px,92vw);min-height:104px;font-size:1.6rem;border-radius:20px;border:3px solid transparent;
+    font-family:var(--font-body);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.8rem}
+  .simple-btn.a{background:var(--marigold);color:#3A2708}
+  .simple-btn.b{background:var(--teal);color:#fff}
+  .simple-btn.c{background:var(--rose);color:#fff}
+  .simple-exit{background:none;border:none;color:var(--ink-soft);font-family:var(--font-body);font-weight:700;
+    font-size:1.05rem;text-decoration:underline;cursor:pointer;margin-top:.6rem}
+  .legal-box{max-height:340px;overflow-y:auto;background:var(--bg);border:2px solid var(--line);
+    border-radius:12px;padding:1.1rem 1.3rem;font-size:.98rem;line-height:1.65}
+  .legal-box h4{font-family:var(--font-display);color:var(--teal-dark);margin:1rem 0 .3rem;font-size:1.05rem}
+  .legal-box h4:first-child{margin-top:0}
+  .stale-badge{background:#FDECE8;color:#8C3A28;border-radius:999px;padding:.15rem .7rem;font-size:.8rem;font-weight:700}
   body.high-contrast{--bg:#FFFFFF;--bg-card:#FFFFFF;--ink:#000000;--ink-soft:#2B2A28;--line:#6B7268;
     --teal:#0C3F38;--teal-dark:#06251F;--teal-tint:#DCE9E5;--marigold:#B96E00;--marigold-dark:#7A4700}
   body.high-contrast .btn{border-width:3px}
@@ -392,7 +413,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v4</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v5</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -432,6 +453,28 @@
       <button class="btn btn-primary" id="lockPrimaryBtn" type="button">Create free account</button>
       <button class="btn btn-secondary" id="lockSecondaryBtn" type="button" style="border-color:#fff;color:#fff">Sign in</button>
     </div>
+  </div>
+</div>
+<button class="help-fab" id="helpFab" type="button">🆘 <span data-i18n="help.btn">I need help</span></button>
+<div class="simple-mode" id="simpleMode">
+  <h1 data-i18n="simple.h">What would you like to do?</h1>
+  <button class="simple-btn a" id="simpleTrain" type="button" data-i18n="simple.train">Train today</button>
+  <button class="simple-btn b" id="simplePlan" type="button" data-i18n="simple.plan">My plan</button>
+  <button class="simple-btn c" id="simpleHelp" type="button" data-i18n="simple.help">I need help</button>
+  <button class="simple-exit" id="simpleExit" type="button" data-i18n="simple.full">Show me everything</button>
+</div>
+<div class="modal-overlay" id="helpOverlay">
+  <div class="modal-box" style="max-width:560px">
+    <button class="modal-close" id="helpCloseBtn" aria-label="Close">&times;</button>
+    <h2 data-i18n="help.h">Getting help</h2>
+    <p style="color:var(--ink-soft)" data-i18n="help.p">If you have fallen, feel unwell, or something frightens you, call someone now. Do not wait.</p>
+    <div id="helpList"></div>
+    <h3 style="font-size:1.15rem;margin-top:1.4rem" data-i18n="help.setup">Your own emergency contact</h3>
+    <div class="card-row">
+      <div class="field-group"><label class="field-label" for="helpName" data-i18n="help.contactname">Name</label><input class="text-input" id="helpName" type="text" placeholder="e.g. Ana (daughter)"></div>
+      <div class="field-group"><label class="field-label" for="helpPhone" data-i18n="help.contactphone">Phone</label><input class="text-input" id="helpPhone" type="tel" placeholder="+351 000 000 000"></div>
+    </div>
+    <button class="btn btn-teal btn-sm" id="helpSave" type="button" data-i18n="help.save">Save this contact</button>
   </div>
 </div>
 <a class="support-fab" id="supportFab" href="#" target="_blank" rel="noopener">📞 <span id="supportFabLabel">Talk to a real person</span></a>
@@ -776,6 +819,7 @@
       <div class="friends-tabpanel active" data-panel="mine"><div class="card-grid" id="myFriendsGrid"></div></div>
       <div class="friends-tabpanel" data-panel="add">
         <div class="panel">
+          <p class="note-box" id="friendsHowto"></p>
           <h3 data-i18n="friends.addbyidh">Add a friend by ID</h3>
           <p data-i18n="friends.addbyidp">Type their ID exactly as it appears on their profile — for example SS-48213.</p>
           <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem">
@@ -788,6 +832,7 @@
           <h3 data-i18n="friends.scanh">Your QR code</h3>
           <p data-i18n="friends.scanp">Show this to a friend so they can scan it and add you instantly.</p>
           <div class="qr-box" id="qrBox"></div>
+          <p><button class="btn btn-primary" id="shareInviteBtn" type="button" data-i18n="friends.share">Send my invite by message</button></p>
           <div><button class="btn btn-secondary btn-sm" id="qrRetryBtn" type="button" data-i18n="friends.qrretry">Redraw the code</button> <button class="btn btn-secondary btn-sm" id="qrSaveBtn" type="button" data-i18n="friends.qrsave">Save as picture</button></div>
           <h3 style="margin-top:1.4rem" data-i18n="friends.scancamh">Scan a friend's QR code</h3>
           <p data-i18n="friends.scancamp">Point your camera at their code. Your browser will ask for camera permission first.</p>
@@ -824,7 +869,13 @@
         <div class="settings-row"><div><h3 data-i18n="settings.reseth">Reset all data</h3><p data-i18n="settings.resetp">Clears plans, friends, streaks, and settings from this browser.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Reset data</button></div>
       </div>
       <div class="panel">
+        <div class="settings-row"><div><h3 data-i18n="settings.simpleh">Simple mode</h3><p data-i18n="settings.simplep">One screen, three big buttons. Everything else stays one tap away.</p></div><input type="checkbox" id="settingsSimple" style="width:26px;height:26px"></div>
+        <div class="settings-row"><div><h3 data-i18n="settings.offlineh">Works without Internet</h3><p id="offlineStatus"></p></div><span></span></div>
         <div class="settings-row"><div><h3 data-i18n="settings.contrasth">Extra contrast</h3><p data-i18n="settings.contrastp">Stronger black-on-white colours, for tired eyes or bright rooms.</p></div><input type="checkbox" id="settingsContrast" style="width:26px;height:26px"></div>
+      </div>
+      <div class="panel">
+        <h3 data-i18n="legal.h">Privacy, health data and terms</h3>
+        <div class="legal-box" id="legalBox"></div>
       </div>
       <div class="panel">
         <h3 data-i18n="whatsnew.h">What's in this version</h3>
@@ -884,6 +935,9 @@
         <h3 style="margin-top:1.8rem;font-size:1.15rem">Manage existing exercises</h3>
         <div style="margin-bottom:.8rem"><input class="text-input" id="admExSearch" type="search" placeholder="Search to remove or restore..." style="max-width:320px"></div>
         <div id="admExList" style="max-height:340px;overflow-y:auto"></div>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Exercises people skip most</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">Counted on this device only, since there is no server. Still useful: an exercise skipped again and again is usually badly explained or too hard.</p>
+        <div id="skipList"></div>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Repeat purchase alerts</h3>
         <p style="color:var(--ink-soft)">When a customer buys a second time — even a different product — they appear here and an email is prepared for you.</p>
         <div id="ownerNotifList"></div>
@@ -933,7 +987,7 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 4.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 5.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
 <!-- ============ WELCOME MODAL ============ -->
 <div class="modal-overlay" id="welcomeOverlay">
   <div class="modal-box" style="max-width:520px;text-align:center">
@@ -972,7 +1026,7 @@
     <h2 id="dayModalTitle"></h2>
     <p id="dayModalMeta" style="color:var(--ink-soft);font-weight:700"></p>
     <div id="dayModalList" style="margin:1rem 0"></div>
-    <button class="btn btn-primary" id="dayModalStartBtn" data-i18n="workouts.start">Start this workout</button>
+    <button class="btn btn-primary" id="dayModalStartBtn" data-i18n="workouts.start">Start this workout</button> <button class="btn btn-secondary" id="dayModalPrintBtn" type="button" data-i18n="print.plan">Print my plan</button>
   </div>
 </div>
 <!-- ============ FRIEND PROFILE MODAL ============ -->
@@ -1291,6 +1345,17 @@ I18N.en = {
 "whatsnew.h":"What's in this version","whatsnew.build":"Version {v} · built {d} · {n} exercises · {a} moving demonstrations",
 "welcome.h":"Welcome — let's set two things up","welcome.p":"You can change both of these later in Settings.",
 "welcome.lang":"Which language do you read most easily?","welcome.size":"How big should the writing be?","welcome.start":"Start using Steady & Strong",
+"help.btn":"I need help","help.h":"Getting help","help.p":"If you have fallen, feel unwell, or something frightens you, call someone now. Do not wait.",
+"help.yours":"Your emergency contact","help.setup":"Your own emergency contact","help.contactname":"Name","help.contactphone":"Phone","help.save":"Save this contact","help.saved":"Saved — the help button will call this person.",
+"help.none":"You haven't added a contact yet. Add one below so it's ready before you need it.","help.emerg":"Emergency services in {country}","help.call":"Call {name}",
+"simple.h":"What would you like to do?","simple.train":"Train today","simple.plan":"My plan","simple.help":"I need help","simple.full":"Show me everything",
+"settings.simpleh":"Simple mode","settings.simplep":"One screen, three big buttons. Everything else stays one tap away.",
+"settings.offlineh":"Works without Internet","offline.on":"Saved on this device — the app opens even with no connection.","offline.off":"Not saved yet. Open the site once with Internet and it saves itself.",
+"print.plan":"Print my plan","print.title":"My plan — Steady & Strong",
+"legal.h":"Privacy, health data and terms","friends.share":"Send my invite by message","friends.sharetext":"Add me on Steady & Strong — open this link:",
+"friends.handshake":"{id} is now on your list. Send them your own link so you appear on theirs too.","friends.sendback":"Send my link back",
+"friends.howtoshared":"Send your invite link or show your QR code. Whoever opens it is connected to you, and your request appears in their Requests tab.",
+"friends.howtolocal":"This site has no server of its own, so a request cannot fly to another phone by itself. It works like this instead: send your link, they open it and you appear on their list — then they send theirs back, you open it, and both sides are connected. Two taps each, and it works between any two devices.",
 "undo.action":"Undo",
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
@@ -1452,6 +1517,17 @@ I18N.pt = {
 "whatsnew.h":"O que tem esta versão","whatsnew.build":"Versão {v} · criada em {d} · {n} exercícios · {a} demonstrações animadas",
 "welcome.h":"Bem-vindo — vamos só acertar duas coisas","welcome.p":"Pode mudar as duas mais tarde nas Definições.",
 "welcome.lang":"Em que idioma lê com mais facilidade?","welcome.size":"De que tamanho quer a letra?","welcome.start":"Começar a usar o Steady & Strong",
+"help.btn":"Preciso de ajuda","help.h":"Pedir ajuda","help.p":"Se caiu, se se sente mal, ou se alguma coisa o assusta, ligue a alguém agora. Não espere.",
+"help.yours":"O seu contacto de emergência","help.setup":"O seu próprio contacto de emergência","help.contactname":"Nome","help.contactphone":"Telefone","help.save":"Guardar este contacto","help.saved":"Guardado — o botão de ajuda liga a esta pessoa.",
+"help.none":"Ainda não adicionou um contacto. Acrescente um aqui em baixo, para estar pronto antes de precisar.","help.emerg":"Emergência em {country}","help.call":"Ligar a {name}",
+"simple.h":"O que quer fazer?","simple.train":"Treinar hoje","simple.plan":"O meu plano","simple.help":"Preciso de ajuda","simple.full":"Mostrar tudo",
+"settings.simpleh":"Modo simples","settings.simplep":"Um ecrã, três botões grandes. O resto fica a um toque de distância.",
+"settings.offlineh":"Funciona sem Internet","offline.on":"Guardado neste dispositivo — a aplicação abre mesmo sem ligação.","offline.off":"Ainda não guardado. Abra o site uma vez com Internet e ele guarda-se sozinho.",
+"print.plan":"Imprimir o meu plano","print.title":"O meu plano — Steady & Strong",
+"legal.h":"Privacidade, dados de saúde e termos","friends.share":"Enviar o meu convite por mensagem","friends.sharetext":"Adiciona-me no Steady & Strong — abre este link:",
+"friends.handshake":"{id} já está na sua lista. Envie-lhe o seu link para também aparecer na dele.","friends.sendback":"Enviar o meu link de volta",
+"friends.howtoshared":"Envie o seu link de convite ou mostre o código QR. Quem o abrir fica ligado a si, e o seu pedido aparece no separador Pedidos dele.",
+"friends.howtolocal":"Este site não tem servidor próprio, por isso um pedido não consegue voar sozinho até outro telemóvel. Funciona assim: envia o seu link, a pessoa abre-o e você aparece na lista dela — depois ela envia o dela, você abre, e ficam ligados dos dois lados. Dois toques cada um, e funciona entre quaisquer dois dispositivos.",
 "undo.action":"Desfazer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
@@ -1613,6 +1689,17 @@ I18N.es = {
 "whatsnew.h":"Qué trae esta versión","whatsnew.build":"Versión {v} · creada el {d} · {n} ejercicios · {a} demostraciones animadas",
 "welcome.h":"Bienvenido — vamos a ajustar dos cosas","welcome.p":"Puedes cambiar las dos más tarde en Ajustes.",
 "welcome.lang":"¿En qué idioma lees con más facilidad?","welcome.size":"¿De qué tamaño quieres la letra?","welcome.start":"Empezar a usar Steady & Strong",
+"help.btn":"Necesito ayuda","help.h":"Pedir ayuda","help.p":"Si te has caído, te sientes mal o algo te asusta, llama a alguien ahora. No esperes.",
+"help.yours":"Tu contacto de emergencia","help.setup":"Tu propio contacto de emergencia","help.contactname":"Nombre","help.contactphone":"Teléfono","help.save":"Guardar este contacto","help.saved":"Guardado — el botón de ayuda llamará a esta persona.",
+"help.none":"Todavía no has añadido un contacto. Añade uno aquí abajo, para tenerlo listo antes de necesitarlo.","help.emerg":"Emergencias en {country}","help.call":"Llamar a {name}",
+"simple.h":"¿Qué quieres hacer?","simple.train":"Entrenar hoy","simple.plan":"Mi plan","simple.help":"Necesito ayuda","simple.full":"Mostrarlo todo",
+"settings.simpleh":"Modo sencillo","settings.simplep":"Una pantalla, tres botones grandes. El resto queda a un toque.",
+"settings.offlineh":"Funciona sin Internet","offline.on":"Guardado en este dispositivo — la aplicación abre incluso sin conexión.","offline.off":"Todavía no guardado. Abre el sitio una vez con Internet y se guarda solo.",
+"print.plan":"Imprimir mi plan","print.title":"Mi plan — Steady & Strong",
+"legal.h":"Privacidad, datos de salud y términos","friends.share":"Enviar mi invitación por mensaje","friends.sharetext":"Añádeme en Steady & Strong — abre este enlace:",
+"friends.handshake":"{id} ya está en tu lista. Envíale tu enlace para aparecer también en la suya.","friends.sendback":"Enviar mi enlace de vuelta",
+"friends.howtoshared":"Envía tu enlace de invitación o enseña tu código QR. Quien lo abra queda conectado contigo, y tu solicitud aparece en su pestaña Solicitudes.",
+"friends.howtolocal":"Este sitio no tiene servidor propio, así que una solicitud no puede volar sola a otro móvil. Funciona así: envías tu enlace, la persona lo abre y tú apareces en su lista — después ella envía el suyo, tú lo abres, y quedáis conectados por ambos lados. Dos toques cada uno, y funciona entre dos dispositivos cualesquiera.",
 "undo.action":"Deshacer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
@@ -1774,6 +1861,17 @@ I18N.fr = {
 "whatsnew.h":"Ce que contient cette version","whatsnew.build":"Version {v} · créée le {d} · {n} exercices · {a} démonstrations animées",
 "welcome.h":"Bienvenue — réglons deux choses","welcome.p":"Vous pourrez changer les deux plus tard dans les Réglages.",
 "welcome.lang":"Dans quelle langue lisez-vous le plus facilement ?","welcome.size":"Quelle taille de texte ?","welcome.start":"Commencer à utiliser Steady & Strong",
+"help.btn":"J'ai besoin d'aide","help.h":"Demander de l'aide","help.p":"Si vous êtes tombé, si vous vous sentez mal ou si quelque chose vous inquiète, appelez quelqu'un maintenant. N'attendez pas.",
+"help.yours":"Votre contact d'urgence","help.setup":"Votre propre contact d'urgence","help.contactname":"Nom","help.contactphone":"Téléphone","help.save":"Enregistrer ce contact","help.saved":"Enregistré — le bouton d'aide appellera cette personne.",
+"help.none":"Vous n'avez pas encore ajouté de contact. Ajoutez-en un ci-dessous, pour qu'il soit prêt avant d'en avoir besoin.","help.emerg":"Urgences en {country}","help.call":"Appeler {name}",
+"simple.h":"Que voulez-vous faire ?","simple.train":"S'entraîner aujourd'hui","simple.plan":"Mon programme","simple.help":"J'ai besoin d'aide","simple.full":"Tout afficher",
+"settings.simpleh":"Mode simple","settings.simplep":"Un écran, trois grands boutons. Le reste reste à portée d'un geste.",
+"settings.offlineh":"Fonctionne sans Internet","offline.on":"Enregistré sur cet appareil — l'application s'ouvre même sans connexion.","offline.off":"Pas encore enregistré. Ouvrez le site une fois avec Internet et il s'enregistre tout seul.",
+"print.plan":"Imprimer mon programme","print.title":"Mon programme — Steady & Strong",
+"legal.h":"Confidentialité, données de santé et conditions","friends.share":"Envoyer mon invitation par message","friends.sharetext":"Ajoute-moi sur Steady & Strong — ouvre ce lien :",
+"friends.handshake":"{id} est maintenant dans votre liste. Envoyez-lui votre lien pour apparaître aussi dans la sienne.","friends.sendback":"Renvoyer mon lien",
+"friends.howtoshared":"Envoyez votre lien d'invitation ou montrez votre QR code. Qui l'ouvre est connecté à vous, et votre demande apparaît dans son onglet Demandes.",
+"friends.howtolocal":"Ce site n'a pas de serveur propre : une demande ne peut donc pas voler seule vers un autre téléphone. Cela marche ainsi : vous envoyez votre lien, la personne l'ouvre et vous apparaissez dans sa liste — puis elle envoie le sien, vous l'ouvrez, et vous êtes connectés des deux côtés. Deux gestes chacun, et cela fonctionne entre deux appareils quelconques.",
 "undo.action":"Annuler",
 "common.cancel":"Annuler","common.save":"Enregistrer","common.close":"Fermer","common.yes":"Oui","common.no":"Non"
 };
@@ -2425,6 +2523,8 @@ function defaultState(){
     location: { country:"", city:"", coords:null },
     reviews: [],
     openSession: null,
+    emergency: null,
+    skipped: {},
     customExercises: {},
     hiddenExercises: [],
     a11y: { sizeBumps:0, comfortSuggested:false }
@@ -2533,7 +2633,7 @@ function showView(name){
   if(name === "streaks")  renderStreaksView();
   if(name === "friends")  renderFriendsView();
   if(name === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); }
-  if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
+  if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); renderLegal(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
 }
 function tryShowView(target){
   requireAccess(function(){
@@ -2965,6 +3065,8 @@ function doLogout(){
 function refreshChrome(){
   renderProfileChrome();
   buildWatermark();
+  renderHelpFab();
+  applySimpleMode();
   renderTrialBanner();
   renderAccountSettings();
   renderNavLocks();
@@ -3245,6 +3347,7 @@ async function renderOwnerPanel(){
   renderCustomerList();
   renderAdminExerciseList();
   renderAdminContactsList();
+  renderSkipList();
   renderOwnerReviews();
 }
 document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async function(){
@@ -3887,6 +3990,17 @@ function offerResume(){
 }
 function startSequenceSession(seq, minutesLabel){
   if(!seq || !seq.length) return;
+  /* Last line of defence: a paid exercise never plays unless this account
+     actually bought the bonus pack, whatever route it arrived by — a plan
+     made earlier, the Health AI, or a saved session. */
+  seq = seq.filter(function(id){
+    var ex = EXERCISES[id];
+    if(!ex) return false;
+    if(ex.pro && !extrasActive()) return false;
+    if(id.indexOf("ggx_") === 0 && !extrasActive()) return false;
+    return true;
+  });
+  if(!seq.length){ openExtrasModal(); return; }
   sequence = seq.slice();
   currentIndex = 0; isPaused = false; activeSessionLength = minutesLabel;
   builderEl.style.display = "none";
@@ -3918,7 +4032,7 @@ document.getElementById("pauseBtn").addEventListener("click", function(){
   if(isPaused){ clearInterval(timerId); this.textContent = t("session.resume"); }
   else { runTimer(); this.textContent = t("session.pause"); }
 });
-document.getElementById("skipBtn").addEventListener("click", advance);
+document.getElementById("skipBtn").addEventListener("click", function(){ noteSkip(); advance(); });
 document.getElementById("endBtn").addEventListener("click", function(){
   clearInterval(timerId);
   playerEl.classList.remove("active");
@@ -4081,6 +4195,7 @@ async function refreshFriendStats(){
       if(pub.sessions !== f.sessions || pub.streak !== f.streak || pub.name !== f.name || pub.total !== f.total){
         f.sessions = pub.sessions || 0; f.streak = pub.streak || 0;
         f.total = pub.total || 0; f.avgWeek = pub.avgWeek || 0; f.minutes = pub.minutes || 0;
+        f.updated = pub.updated || f.updated;
         if(pub.name) f.name = pub.name;
         changed = true;
       }
@@ -4345,8 +4460,9 @@ function openPlanDetail(planId){
 }
 document.getElementById("backToPlansBtn").addEventListener("click", renderPlansList);
 var dayModalOverlay = document.getElementById("dayModalOverlay");
-var dayModalSeq = null, dayModalLen = null;
+var dayModalSeq = null, dayModalLen = null, dayModalPlan = null, dayModalDay = null;
 function openDayModal(plan, dayKey){
+  dayModalPlan = plan; dayModalDay = dayKey;
   var labels = DAY_LABELS();
   var day = plan.schedule[dayKey];
   document.getElementById("dayModalTitle").textContent = labels[dayKey] + " — " + plan.name;
@@ -4378,6 +4494,9 @@ function openDayModal(plan, dayKey){
   dayModalOverlay.classList.add("active");
 }
 document.getElementById("dayModalCloseBtn").addEventListener("click", function(){ dayModalOverlay.classList.remove("active"); });
+document.getElementById("dayModalPrintBtn").addEventListener("click", function(){
+  if(dayModalPlan) printPlan(dayModalPlan, dayModalDay);
+});
 document.getElementById("dayModalStartBtn").addEventListener("click", function(){
   dayModalOverlay.classList.remove("active");
   showView("home");
@@ -4410,6 +4529,16 @@ document.getElementById("copyIdBtn").addEventListener("click", function(){
   var btn = this;
   var done = function(){ btn.textContent = t("friends.copied"); setTimeout(function(){ btn.textContent = t("friends.copyid"); }, 1800); };
   if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(STATE.profile.id).then(done, done); }
+  else done();
+});
+document.getElementById("shareInviteBtn").addEventListener("click", function(){
+  var btn = this, link = inviteUrl();
+  var done = function(){
+    btn.textContent = t("friends.invitecopied");
+    setTimeout(function(){ btn.textContent = t("friends.share"); }, 2600);
+  };
+  if(navigator.share){ navigator.share({ title:"Steady & Strong", text: t("friends.sharetext"), url: link }).then(done, done); return; }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(done, done); }
   else done();
 });
 document.getElementById("copyInviteBtn").addEventListener("click", function(){
@@ -4498,9 +4627,17 @@ function renderFriendsView(){
   renderProfileChrome();
   renderQR();
   document.getElementById("friendsNote").textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
+  var howto = document.getElementById("friendsHowto");
+  if(howto) howto.textContent = Store.isNative ? t("friends.howtoshared") : t("friends.howtolocal");
   renderMyFriends();
   pollRequests();
   checkIncomingLinks().then(function(changed){ if(changed) renderMyFriends(); });
+}
+/* How long since this friend last did anything, from their shared summary.
+   Five days quiet is the point where a phone call is kind, not nosy. */
+function staleDays(f){
+  if(!f || !f.updated) return 0;
+  return Math.floor((Date.now() - f.updated) / 86400000);
 }
 function renderMyFriends(){
   var grid = document.getElementById("myFriendsGrid");
@@ -4515,7 +4652,8 @@ function renderMyFriends(){
     card.innerHTML =
       '<span class="avatar-sm" style="background:' + colorFor(f.id) + '">' + initials(f.name) + '</span>' +
       '<div class="friend-info"><h3>' + f.name + '</h3>' +
-      '<div class="friend-meta"><span>🔥 ' + (f.streak || 0) + '</span><span>📅 ' + (f.sessions || 0) + '</span><span class="id-tag">' + f.id + '</span></div>' +
+      '<div class="friend-meta"><span>🔥 ' + (f.streak || 0) + '</span><span>📅 ' + (f.sessions || 0) + '</span><span class="id-tag">' + f.id + '</span>' +
+      (staleDays(f) >= 5 ? '<span class="stale-badge">' + staleDays(f) + ' d</span>' : '') + '</div>' +
       '<div class="friend-actions">' +
       '<button class="btn btn-teal btn-sm" data-chat="' + f.id + '">' + t("friends.chat") + '</button>' +
       '<button class="btn btn-secondary btn-sm" data-prof="' + f.id + '">' + t("friends.profile") + '</button>' +
@@ -4612,8 +4750,25 @@ async function handleInviteLink(){
   if(!STATE.auth.loggedIn){ pendingInvite = id; return; }
   if(id === STATE.profile.id) return;
   await addFriendById(id, null);
-  showUndoToast(t("friends.added", { name: id }), function(){});
   tryShowView("friends");
+  offerHandshake(id);
+}
+/* Two devices, no server: the only honest way to connect both sides is for
+   each person to open the other's link. The first tap adds them here; this
+   sends your own link straight back so they can finish it in one tap. */
+function offerHandshake(id){
+  var el = showUndoToast(t("friends.handshake", { id: id }), function(){});
+  if(!el) return;
+  el.querySelector("button").textContent = t("common.close");
+  var send = document.createElement("button");
+  send.type = "button"; send.textContent = t("friends.sendback"); send.style.marginLeft = ".4rem";
+  send.addEventListener("click", function(){
+    var link = inviteUrl();
+    if(navigator.share){ navigator.share({ text: link }); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(link); }
+    send.textContent = t("friends.invitecopied");
+  });
+  el.appendChild(send);
 }
 async function checkIncomingLinks(){
   var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
@@ -6040,6 +6195,34 @@ var FEATURES = [
    pt:"Português, espanhol e francês totalmente traduzidos — nada fica em inglês",
    es:"Portugués, español y francés totalmente traducidos — nada queda en inglés",
    fr:"Portugais, espagnol et français entièrement traduits — rien ne reste en anglais"},
+  {en:"A red help button that calls the person you chose, with your country's emergency number beside it",
+   pt:"Um botão vermelho de ajuda que liga à pessoa que escolheu, com o número de emergência do seu país ao lado",
+   es:"Un botón rojo de ayuda que llama a la persona que elijas, con el número de emergencias de tu país al lado",
+   fr:"Un bouton rouge d'aide qui appelle la personne choisie, avec le numéro d'urgence de votre pays à côté"},
+  {en:"Simple mode: one screen, three big buttons — train, my plan, help",
+   pt:"Modo simples: um ecrã, três botões grandes — treinar, o meu plano, ajuda",
+   es:"Modo sencillo: una pantalla, tres botones grandes — entrenar, mi plan, ayuda",
+   fr:"Mode simple : un écran, trois grands boutons — s'entraîner, mon programme, aide"},
+  {en:"Your weekly plan can be printed on paper, even though the app itself refuses to print",
+   pt:"O seu plano semanal pode ser impresso em papel, mesmo com a aplicação a recusar impressões",
+   es:"Tu plan semanal se puede imprimir en papel, aunque la aplicación se niegue a imprimir",
+   fr:"Votre programme hebdomadaire s'imprime sur papier, même si l'application refuse l'impression"},
+  {en:"Works with no Internet once opened, and installs on a phone's home screen",
+   pt:"Funciona sem Internet depois de aberto uma vez, e instala-se no ecrã principal do telemóvel",
+   es:"Funciona sin Internet una vez abierto, y se instala en la pantalla de inicio del móvil",
+   fr:"Fonctionne sans Internet une fois ouvert, et s'installe sur l'écran d'accueil du téléphone"},
+  {en:"Plain-language privacy and terms, written for health data under European rules",
+   pt:"Privacidade e termos em linguagem simples, escritos para dados de saúde segundo as regras europeias",
+   es:"Privacidad y términos en lenguaje sencillo, escritos para datos de salud según las reglas europeas",
+   fr:"Confidentialité et conditions en langage clair, pensées pour les données de santé selon les règles européennes"},
+  {en:"A friend who hasn't trained for days is flagged, so family can check in",
+   pt:"Um amigo que não treina há dias fica assinalado, para a família poder ver como ele está",
+   es:"Un amigo que lleva días sin entrenar queda marcado, para que la familia pueda interesarse",
+   fr:"Un ami qui ne s'entraîne plus depuis des jours est signalé, pour que la famille prenne des nouvelles"},
+  {en:"The administrator panel shows which exercises people skip most",
+   pt:"O painel de administrador mostra que exercícios as pessoas mais saltam",
+   es:"El panel de administrador muestra qué ejercicios salta más la gente",
+   fr:"Le panneau d'administration montre quels exercices sont le plus souvent passés"},
   {en:"Extra contrast mode, text in three sizes, and a menu that slides sideways on a phone",
    pt:"Modo de contraste reforçado, letra em três tamanhos, e menu que desliza de lado no telemóvel",
    es:"Modo de contraste reforzado, letra en tres tamaños, y menú deslizante en el móvil",
@@ -6097,6 +6280,176 @@ document.getElementById("welcomeDone").addEventListener("click", function(){
   STATE.settings.welcomed = true;
   saveState();
 });
+/* ============ 17c. HELP BUTTON, SIMPLE MODE, PRINTING, LEGAL, OFFLINE ============ */
+/* --- The help button: the single most useful thing on a screen used by
+   someone who lives alone. It calls a person they chose, and shows the
+   emergency number for their country right underneath. --- */
+function renderHelpModal(){
+  var wrap = document.getElementById("helpList");
+  var html = "";
+  var mine = STATE.emergency || null;
+  if(mine && mine.phone){
+    html += '<div class="doc-card"><h4>' + t("help.yours") + '</h4><p>' + mine.name + ' — ' + mine.phone + '</p>' +
+      '<div class="doc-actions"><a class="btn btn-rose" href="tel:' + mine.phone.replace(/[^0-9+]/g,"") + '">' +
+      t("help.call", { name: mine.name }) + '</a></div></div>';
+  } else {
+    html += '<p class="note-box">' + t("help.none") + '</p>';
+  }
+  var cdef = countryByCode((STATE.location && STATE.location.country) || "");
+  if(cdef && cdef.em){
+    html += '<div class="emergency-box"><strong>' + t("help.emerg", { country: cdef.n }) + ': ' + cdef.em + '</strong>' +
+      '<a class="btn btn-rose btn-sm" href="tel:' + cdef.em.split(" ")[0].replace(/[^0-9+]/g,"") + '">' +
+      t("doc.callnow", { num: cdef.em.split(" ")[0] }) + '</a></div>';
+  }
+  (ownerSettings.contacts || []).forEach(function(c){
+    html += '<div class="contact-card"><span><strong>' + c.name + '</strong> — ' + specLabel(c.spec) + '</span>' +
+      '<a class="btn btn-teal btn-sm" href="tel:' + c.phone.replace(/[^0-9+]/g,"") + '">' + t("contacts.call") + '</a></div>';
+  });
+  wrap.innerHTML = html;
+  document.getElementById("helpName").value = (mine && mine.name) || "";
+  document.getElementById("helpPhone").value = (mine && mine.phone) || "";
+}
+function openHelp(){ renderHelpModal(); document.getElementById("helpOverlay").classList.add("active"); }
+document.getElementById("helpFab").addEventListener("click", openHelp);
+document.getElementById("helpCloseBtn").addEventListener("click", function(){ document.getElementById("helpOverlay").classList.remove("active"); });
+document.getElementById("helpSave").addEventListener("click", function(){
+  var n = document.getElementById("helpName").value.trim();
+  var p = document.getElementById("helpPhone").value.trim();
+  if(!n || !p) return;
+  STATE.emergency = { name:n, phone:p };
+  saveState();
+  if(STATE.auth.loggedIn) saveAccount();
+  renderHelpModal();
+  showUndoToast(t("help.saved"), function(){});
+});
+function renderHelpFab(){
+  document.getElementById("helpFab").classList.toggle("show", !!STATE.auth.loggedIn);
+}
+/* --- Simple mode: three buttons, nothing else. --- */
+function applySimpleMode(){
+  var el = document.getElementById("simpleMode");
+  var on = !!STATE.settings.simpleMode && STATE.auth.loggedIn && !isLocked();
+  el.classList.toggle("on", on);
+  var box = document.getElementById("settingsSimple");
+  if(box) box.checked = !!STATE.settings.simpleMode;
+}
+document.getElementById("settingsSimple").addEventListener("change", function(e){
+  STATE.settings.simpleMode = e.target.checked;
+  saveState();
+  applySimpleMode();
+});
+document.getElementById("simpleExit").addEventListener("click", function(){
+  document.getElementById("simpleMode").classList.remove("on");
+});
+document.getElementById("simpleTrain").addEventListener("click", function(){
+  document.getElementById("simpleMode").classList.remove("on");
+  showView("home");
+  var btn = document.querySelector('.length-btn[data-length="10"]');
+  if(btn) btn.click();
+  requireAccess(function(){
+    startSequenceSession(generateRoutine(categoriesForFocus(chosenFocus || "both"), 10), 10);
+  });
+});
+document.getElementById("simplePlan").addEventListener("click", function(){
+  document.getElementById("simpleMode").classList.remove("on");
+  tryShowView("workouts");
+});
+document.getElementById("simpleHelp").addEventListener("click", function(){
+  document.getElementById("simpleMode").classList.remove("on");
+  openHelp();
+});
+/* --- Printing your own plan. The page itself refuses to print, so we build a
+   clean sheet in a second window that the capture guard never touches. --- */
+function printPlan(plan, dayKey){
+  var labels = DAY_LABELS();
+  var w = window.open("", "_blank");
+  if(!w) return;
+  var rows = "";
+  DAY_KEYS.forEach(function(k){
+    if(dayKey && k !== dayKey) return;
+    var day = plan.schedule[k];
+    rows += '<h2>' + labels[k] + ' — ' + (day ? focusLabel(day.type) : t("workouts.rest")) + '</h2>';
+    if(!day){ rows += '<p>' + t("workouts.restp") + '</p>'; return; }
+    rows += '<ol>';
+    day.exercises.forEach(function(id){
+      var ex = EXERCISES[id];
+      if(!ex) return;
+      rows += '<li><strong>' + L(ex.name) + '</strong> — ' + t("ex.about", { n: ex.work }) + '<br>' + L(ex.instr) + '</li>';
+    });
+    rows += '</ol>';
+  });
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + t("print.title") + '</title>' +
+    '<style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.6;max-width:18cm;margin:1.5cm auto;color:#111}' +
+    'h1{font-size:20pt;margin-bottom:.2cm}h2{font-size:14pt;margin:.8cm 0 .2cm;border-bottom:1px solid #999}' +
+    'li{margin-bottom:.35cm}small{color:#555}</style></head><body>' +
+    '<h1>' + plan.name + '</h1><small>' + t("print.title") + ' · ' + new Date().toLocaleDateString() + '</small>' +
+    rows + '</body></html>');
+  w.document.close();
+  setTimeout(function(){ try{ w.print(); }catch(e){} }, 400);
+}
+/* --- Plain-language privacy and terms. Health information is sensitive data
+   in the EU, so this says exactly what is kept and how to erase it. --- */
+var LEGAL = {
+ en:[["What this app is","Steady & Strong gives general exercise guidance for older adults. It is not a medical device and gives no diagnosis. Always ask your doctor before starting, especially after a fall, surgery or a new injury."],
+     ["What is stored","Your name, email, chosen language, workout history, streaks, step counts, plans, friends, notes you write, and anything you type into the Health AI — including descriptions of pain, which count as health data."],
+     ["Where it is stored","On this device, in your browser. If shared storage is available it is also copied there so you can sign in from another device. It is not sold, and it is not shared with advertisers."],
+     ["Your rights","You may see, correct, export or erase everything at any time. Settings › Reset all data erases this device immediately. To have an account erased entirely, write to the address below."],
+     ["Payments","Card details are typed on Stripe's own pages and are never seen by this site."],
+     ["Contact","Write to the administrator email shown in the administrator panel of this site."]],
+ pt:[["O que é esta aplicação","O Steady & Strong dá orientação geral de exercício para pessoas mais velhas. Não é um dispositivo médico e não faz diagnósticos. Fale sempre com o seu médico antes de começar, sobretudo depois de uma queda, cirurgia ou lesão recente."],
+     ["O que é guardado","O seu nome, e-mail, idioma escolhido, histórico de treinos, sequências, passos, planos, amigos, notas que escreve, e tudo o que escrever na IA de Saúde — incluindo descrições de dor, que são dados de saúde."],
+     ["Onde é guardado","Neste dispositivo, no seu navegador. Se houver armazenamento partilhado, é também copiado para lá, para poder entrar noutro dispositivo. Não é vendido nem partilhado com anunciantes."],
+     ["Os seus direitos","Pode ver, corrigir, exportar ou apagar tudo quando quiser. Definições › Repor todos os dados apaga já este dispositivo. Para apagar a conta por completo, escreva para o endereço abaixo."],
+     ["Pagamentos","Os dados do cartão são escritos nas páginas da própria Stripe e nunca são vistos por este site."],
+     ["Contacto","Escreva para o e-mail de administrador indicado no painel de administrador deste site."]],
+ es:[["Qué es esta aplicación","Steady & Strong ofrece orientación general de ejercicio para personas mayores. No es un producto sanitario y no da diagnósticos. Consulta siempre a tu médico antes de empezar, sobre todo tras una caída, cirugía o lesión reciente."],
+     ["Qué se guarda","Tu nombre, correo, idioma elegido, historial de entrenamientos, rachas, pasos, planes, amigos, notas que escribas y todo lo que escribas en la IA de Salud — incluidas descripciones de dolor, que son datos de salud."],
+     ["Dónde se guarda","En este dispositivo, en tu navegador. Si hay almacenamiento compartido, también se copia allí para que puedas entrar desde otro dispositivo. No se vende ni se comparte con anunciantes."],
+     ["Tus derechos","Puedes ver, corregir, exportar o borrar todo cuando quieras. Ajustes › Restablecer todos los datos borra este dispositivo al instante. Para borrar la cuenta por completo, escribe a la dirección de abajo."],
+     ["Pagos","Los datos de la tarjeta se escriben en las páginas de la propia Stripe y este sitio nunca los ve."],
+     ["Contacto","Escribe al correo de administrador que aparece en el panel de administrador de este sitio."]],
+ fr:[["Ce qu'est cette application","Steady & Strong donne des conseils d'exercice généraux pour les personnes âgées. Ce n'est pas un dispositif médical et il ne pose aucun diagnostic. Demandez toujours l'avis de votre médecin avant de commencer."],
+     ["Ce qui est conservé","Votre nom, e-mail, langue choisie, historique d'entraînement, séries, pas, programmes, amis, notes écrites, et tout ce que vous saisissez dans l'IA Santé — y compris les descriptions de douleur, qui sont des données de santé."],
+     ["Où c'est conservé","Sur cet appareil, dans votre navigateur. S'il existe un stockage partagé, une copie y est faite pour vous connecter depuis un autre appareil. Rien n'est vendu ni partagé avec des annonceurs."],
+     ["Vos droits","Vous pouvez consulter, corriger, exporter ou effacer le tout à tout moment. Réglages › Réinitialiser efface cet appareil immédiatement. Pour supprimer entièrement un compte, écrivez à l'adresse ci-dessous."],
+     ["Paiements","Les données bancaires sont saisies sur les pages de Stripe et ne sont jamais vues par ce site."],
+     ["Contact","Écrivez à l'e-mail d'administrateur indiqué dans le panneau d'administration de ce site."]]
+};
+function renderLegal(){
+  var box = document.getElementById("legalBox");
+  if(!box) return;
+  var lang = STATE.settings.lang || "en";
+  var list = LEGAL[lang] || LEGAL.en;
+  box.innerHTML = list.map(function(p){ return "<h4>" + p[0] + "</h4><p>" + p[1] + "</p>"; }).join("");
+}
+/* --- Offline: a tiny service worker keeps the whole app on the device. --- */
+function renderOfflineStatus(on){
+  var el = document.getElementById("offlineStatus");
+  if(el) el.textContent = on ? t("offline.on") : t("offline.off");
+}
+function setupOffline(){
+  if(!("serviceWorker" in navigator) || location.protocol !== "https:"){ renderOfflineStatus(false); return; }
+  navigator.serviceWorker.register("sw.js").then(function(){ renderOfflineStatus(true); })
+    .catch(function(){ renderOfflineStatus(false); });
+}
+/* --- Which exercises get skipped: honest, local, and useful. --- */
+function noteSkip(){
+  var ex = EXERCISES[sequence[currentIndex]];
+  if(!ex) return;
+  STATE.skipped = STATE.skipped || {};
+  STATE.skipped[ex.id] = (STATE.skipped[ex.id] || 0) + 1;
+  saveState();
+}
+function renderSkipList(){
+  var wrap = document.getElementById("skipList");
+  if(!wrap) return;
+  var rows = Object.keys(STATE.skipped || {}).map(function(id){
+    return { id:id, n:STATE.skipped[id], name: EXERCISES[id] ? L(EXERCISES[id].name) : id };
+  }).sort(function(a,b){ return b.n - a.n; }).slice(0,10);
+  if(!rows.length){ wrap.innerHTML = '<p class="owner-notif-empty">Nothing skipped yet.</p>'; return; }
+  wrap.innerHTML = '<table class="code-table"><thead><tr><th>Exercise</th><th>Times skipped</th></tr></thead><tbody>' +
+    rows.map(function(r){ return '<tr><td>' + r.name + '</td><td>' + r.n + '</td></tr>'; }).join("") + '</tbody></table>';
+}
 /* ============ 18. SETTINGS + INIT ============ */
 function syncVoiceCheckboxes(){
   document.getElementById("settingsVoiceToggle").checked = !!STATE.settings.voice;
@@ -6134,7 +6487,7 @@ function renderAllVisible(){
   if(id === "streaks")  renderStreaksView();
   if(id === "friends")  renderFriendsView();
   if(id === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); if(lastAnalysis) renderHealthAnswer(); }
-  if(id === "settings"){ renderMemory(); renderOwnerPanel(); renderWhatsNew(); }
+  if(id === "settings"){ renderMemory(); renderOwnerPanel(); renderWhatsNew(); renderLegal(); }
 }
 document.querySelectorAll(".modal-overlay").forEach(function(ov){
   ov.addEventListener("click", function(e){ if(e.target === ov) ov.classList.remove("active"); });
@@ -6174,6 +6527,10 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   applyComfortAssist();
   applyContrast();
   renderWhatsNew();
+  renderLegal();
+  renderHelpFab();
+  applySimpleMode();
+  setupOffline();
   autoStartStepsIfPossible();
   offerResume();
   loadOwnerSettings().then(function(){
