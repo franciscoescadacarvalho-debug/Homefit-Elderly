@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v8 — Home Workouts for You</title>
+<title>Steady &amp; Strong v13 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -356,6 +356,28 @@
   .loc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
   .loc-row>div{flex:1;min-width:170px}
   .idea-card{border-style:dashed!important}
+  .countdown{position:fixed;inset:0;background:rgba(22,63,58,.96);z-index:940;display:none;
+    flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
+  .countdown.on{display:flex}
+  .countdown .num{font-family:var(--font-display);font-size:clamp(6rem,26vw,14rem);line-height:1;font-weight:700}
+  .countdown .lab{font-size:1.3rem;opacity:.85}
+  .how-row{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin:1rem 0}
+  .how-row button{flex:1;min-width:130px;font-size:1.15rem}
+  .ready-list{list-style:none;padding:0;margin:1rem 0;text-align:left}
+  .ready-list li{padding:.6rem 0;border-bottom:1px solid var(--line);font-weight:700;display:flex;gap:.7rem}
+  .ready-list li:last-child{border-bottom:none}
+  .phase-tag{display:inline-block;background:var(--teal-tint);color:var(--teal-dark);border-radius:999px;
+    padding:.2rem .8rem;font-size:.85rem;font-weight:700;margin-bottom:.4rem}
+  .stars{display:flex;gap:.25rem;margin:.4rem 0 .6rem}
+  .star{background:none;border:none;cursor:pointer;padding:.1rem;line-height:1;font-size:2.4rem;
+    color:var(--line);transition:transform .12s ease,color .12s ease;min-height:auto}
+  .star:hover{transform:scale(1.12)}
+  .star.on{color:var(--marigold)}
+  .stars-label{font-weight:700;color:var(--teal-dark);min-height:1.5em;margin-bottom:.6rem}
+  .stars-small{color:var(--marigold);letter-spacing:.06em;font-size:1rem}
+  .rating-summary{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:var(--bg);
+    border:2px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem}
+  .rating-big{font-family:var(--font-display);font-size:2.6rem;font-weight:700;color:var(--teal-dark);line-height:1}
   .help-fab{position:fixed;left:1.2rem;bottom:1.2rem;z-index:410;background:var(--rose);color:#fff;border:none;
     border-radius:999px;padding:1rem 1.5rem;font-family:var(--font-body);font-weight:700;font-size:1.15rem;
     cursor:pointer;box-shadow:0 6px 20px rgba(201,112,95,.45);display:none;align-items:center;gap:.6rem}
@@ -413,7 +435,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v8</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v13</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -472,7 +494,7 @@
     <h3 style="font-size:1.15rem;margin-top:1.4rem" data-i18n="help.setup">Your own emergency contact</h3>
     <div class="card-row">
       <div class="field-group"><label class="field-label" for="helpName" data-i18n="help.contactname">Name</label><input class="text-input" id="helpName" type="text" placeholder="e.g. Ana (daughter)"></div>
-      <div class="field-group"><label class="field-label" for="helpPhone" data-i18n="help.contactphone">Phone</label><input class="text-input" id="helpPhone" type="tel" placeholder="+351 000 000 000"></div>
+      <div class="field-group"><label class="field-label" for="helpPhone" data-i18n="help.contactphone">Phone</label><input class="text-input" id="helpPhone" type="tel" placeholder=""></div>
     </div>
     <button class="btn btn-teal btn-sm" id="helpSave" type="button" data-i18n="help.save">Save this contact</button>
   </div>
@@ -559,7 +581,8 @@
             <button class="focus-btn" data-focus="balance" aria-pressed="false" data-i18n="session.balanceonly">Balance only</button>
           </div>
           <label class="voice-toggle"><input type="checkbox" id="voiceToggle"><span data-i18n="session.voice">Announce each exercise aloud</span></label>
-          <div><button class="btn btn-primary" id="beginBtn" disabled data-i18n="session.begin">Begin session</button></div>
+          <div style="display:flex;gap:.8rem;flex-wrap:wrap"><button class="btn btn-primary" id="beginBtn" disabled data-i18n="session.begin">Begin session</button>
+          <button class="btn btn-secondary" id="easyDayBtn" type="button" data-i18n="easy.btn">I can't manage today</button></div>
         </div>
         <div class="player" id="player">
           <div class="dots" id="dots" aria-hidden="true"></div>
@@ -584,6 +607,13 @@
           <div class="badge" aria-hidden="true"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
           <h3 data-i18n="session.done">Well done!</h3>
           <p id="completeSummary"></p>
+          <h3 style="font-size:1.2rem;margin-top:1.2rem" data-i18n="how.q">How did that feel?</h3>
+          <div class="how-row">
+            <button class="btn btn-secondary" data-how="easy" data-i18n="how.easy">Easy</button>
+            <button class="btn btn-secondary" data-how="right" data-i18n="how.right">Just right</button>
+            <button class="btn btn-secondary" data-how="hard" data-i18n="how.hard">Hard</button>
+          </div>
+          <p class="stars-label" id="howThanks"></p>
           <button class="btn btn-primary" id="restartBtn" data-i18n="session.another">Start another session</button>
         </div>
       </div>
@@ -777,6 +807,8 @@
           <button class="cal-nav-btn" id="calNextBtn" type="button" aria-label="Next month">&rarr;</button>
         </div>
         <div class="month-grid" id="monthGrid"></div>
+        <p><button class="btn btn-secondary btn-sm" id="printReportBtn" type="button" data-i18n="report.btn">Print my month</button></p>
+        <p class="note-box" style="margin-top:1rem" data-i18n="grace.note">One missed day is allowed — the run only breaks after two.</p>
         <p class="note-box" style="margin-top:1rem" data-i18n="streaks.calnote">Orange days are days you completed a session. Your streak counts the run of orange days up to today.</p>
       </div>
       <div class="panel" style="margin-top:1.4rem">
@@ -865,8 +897,9 @@
         <div class="settings-row"><div><h3 data-i18n="settings.comforth">Comfort Assist</h3><p data-i18n="settings.comfortp">If we notice you increasing text size or re-reading a screen often, gently suggest larger text and simpler layout.</p></div><input type="checkbox" id="settingsComfortAssist" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.accounth">Account</h3><p id="settingsAccountP"></p></div><button class="btn btn-secondary btn-sm" id="settingsAuthBtn" type="button">Sign in</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.subh">Subscription</h3><p id="settingsSubP"></p></div><button class="btn btn-primary btn-sm" id="settingsUpgradeBtn" type="button" data-i18n="settings.manage">Manage plan</button></div>
+        <div class="settings-row" id="familyRow" style="display:none"><div><h3 data-i18n="family.h">Share with one family member</h3><p data-i18n="family.p">Your Family plan covers two people. Send this code to the person you want to share it with.</p><p style="margin-top:.4rem"><span data-i18n="family.code">Your family code</span>: <span class="id-tag" id="familyCode"></span></p></div><button class="btn btn-secondary btn-sm" id="familyShareBtn" type="button" data-i18n="friends.share">Send my invite by message</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.extrash">Grandparents &amp; Grandchildren + Health AI pack</h3><p id="settingsExtrasP"></p></div><button class="btn btn-teal btn-sm" id="settingsExtrasBtn" type="button" data-i18n="extras.unlockbtn">Unlock 100+ extra exercises</button></div>
-        <div class="settings-row"><div><h3 data-i18n="settings.reseth">Erase everything and delete my account</h3><p data-i18n="settings.resetp">Wipes this device and permanently deletes your account: plans, friends, streaks, memory, health notes and sign-in. It cannot be undone.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Erase and delete account</button></div>
+        <div class="settings-row"><div><h3 data-i18n="settings.reseth">Reset all data — this deletes the account</h3><p data-i18n="settings.resetp">Wipes this device and permanently deletes your account: plans, friends, streaks, memory, health notes and sign-in. It cannot be undone.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Erase and delete account</button></div>
       </div>
       <div class="panel">
         <div class="settings-row"><div><h3 data-i18n="settings.simpleh">Simple mode</h3><p data-i18n="settings.simplep">One screen, three big buttons. Everything else stays one tap away.</p></div><input type="checkbox" id="settingsSimple" style="width:26px;height:26px"></div>
@@ -896,7 +929,9 @@
       <div class="panel">
         <h3 data-i18n="reviews.h">Reviews &amp; feedback</h3>
         <p style="color:var(--ink-soft)" data-i18n="reviews.p">Tell us what could be better. The site owner can read every review left here.</p>
-        <textarea class="text-input" id="reviewInput" placeholder="What's working well, and what could be improved?"></textarea>
+        <div class="stars" id="reviewStars" role="group" aria-label="Rating"></div>
+        <p class="stars-label" id="reviewStarsLabel"></p>
+        <textarea class="text-input" id="reviewInput" placeholder=""></textarea>
         <button class="btn btn-teal" id="reviewSubmitBtn" type="button" data-i18n="reviews.submit" style="margin-top:.8rem">Send feedback</button>
         <p class="reminder-status" id="reviewStatus"></p>
       </div>
@@ -944,6 +979,7 @@
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Customers</h3>
         <div id="ownerCustomerList"></div>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Reviews &amp; feedback from customers</h3>
+        <div id="ratingSummary"></div>
         <div id="ownerReviewsList"></div>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">People customers can call for health concerns</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">Only add contacts you have personally verified — a name, a speciality and a phone number. Shown to customers on the Health AI page, matched to their symptoms where possible.</p>
@@ -953,11 +989,11 @@
           <div class="field-group"><label class="field-label" for="admContactSpec">Speciality</label>
             <select class="text-input" id="admContactSpec"></select>
           </div>
-          <div class="field-group"><label class="field-label" for="admContactPhone">Phone</label><input class="text-input" id="admContactPhone" type="tel" placeholder="+351 000 000 000"></div>
+          <div class="field-group"><label class="field-label" for="admContactPhone">Phone</label><input class="text-input" id="admContactPhone" type="tel" placeholder=""></div>
         </div>
         <button class="btn btn-secondary btn-sm" id="admContactAddBtn" type="button">Add contact</button>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">"Talk to a real person" button</h3>
-        <div class="field-group"><label class="field-label" for="admSupportPhone">Support phone number (shown to every visitor)</label><input class="text-input" id="admSupportPhone" type="tel" placeholder="+351 000 000 000"></div>
+        <div class="field-group"><label class="field-label" for="admSupportPhone">Support phone number (shown to every visitor)</label><input class="text-input" id="admSupportPhone" type="tel" placeholder=""></div>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Bonus pack on this account</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">Handy while testing: lock the pack again so you can see exactly what a customer sees before paying.</p>
         <p><button class="btn btn-rose btn-sm" id="lockPackBtn" type="button">Lock the bonus pack again</button> <span id="packState" style="font-weight:700"></span></p>
@@ -973,11 +1009,27 @@
           <li>Copy the Client ID (it ends in <code>.apps.googleusercontent.com</code>) and paste it below.</li>
         </ol>
         <div class="field-group"><label class="field-label" for="googleClientIdInput">Google OAuth Client ID</label><input class="text-input" id="googleClientIdInput" type="text" placeholder="1234567890-abc123.apps.googleusercontent.com"></div>
+        <button class="btn btn-secondary btn-sm" id="googleTestBtn" type="button">Test Google sign-in</button>
+        <p class="promo-status" id="googleTestStatus"></p>
+        <p style="color:var(--ink-soft);font-size:.95rem">Saving here only affects <em>this</em> browser. To give the real Google button to everyone, copy the line below into <code>index.html</code>, near the top, inside <code>BUILT_IN</code>.</p>
+        <pre id="builtInSnippet" style="white-space:pre-wrap;word-break:break-all;background:#f4f1ea;padding:.7rem;border-radius:10px;font-size:.85rem"></pre>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Friend requests between devices</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">A web page cannot post a request to somebody else&rsquo;s phone on its own — it needs one shared address to leave it at. A free Firebase Realtime Database gives you that in about three minutes, and no card is asked for.</p>
+        <ol style="color:var(--ink-soft);font-size:.95rem;padding-left:1.2rem">
+          <li>Go to <code>console.firebase.google.com</code> → Add project (any name) → skip Analytics.</li>
+          <li>In the left menu: Build → <strong>Realtime Database</strong> → Create database → choose a region → start in <strong>test mode</strong>.</li>
+          <li>Copy the address at the top — it looks like <code>https://your-project-default-rtdb.firebaseio.com</code> — and paste it below.</li>
+          <li>Press Test. Then, in Rules, paste this so only the friends area stays open:<br><code>{ "rules": { "ss": { ".read": true, ".write": true } } }</code></li>
+        </ol>
+        <div class="field-group"><label class="field-label" for="cloudUrlInput">Shared database address</label><input class="text-input" id="cloudUrlInput" type="url" placeholder="https://your-project-default-rtdb.firebaseio.com"></div>
+        <button class="btn btn-secondary btn-sm" id="cloudTestBtn" type="button">Test the connection</button>
+        <p class="promo-status" id="cloudTestStatus"></p>
         <h3 style="margin-top:1.6rem;font-size:1.15rem">Payments &amp; ownership</h3>
         <div class="field-group"><label class="field-label" for="ownerEmailInput">Administrator email (who sees this panel and gets alerts)</label><input class="text-input" id="ownerEmailInput" type="email"></div>
         <div class="field-group"><label class="field-label" for="extraOwnerEmailsInput">Extra administrator emails (optional — comma separated, e.g. for an employee)</label><input class="text-input" id="extraOwnerEmailsInput" type="text" placeholder="employee@example.com, manager@example.com"></div>
-        <div class="field-group"><label class="field-label" for="stripeMonthlyInput">Stripe Payment Link — Monthly (€4.99/mo)</label><input class="text-input" id="stripeMonthlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
-        <div class="field-group"><label class="field-label" for="stripeYearlyInput">Stripe Payment Link — Yearly (€36/yr)</label><input class="text-input" id="stripeYearlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="stripeMonthlyInput">Stripe Payment Link — Monthly (€5.99/mo)</label><input class="text-input" id="stripeMonthlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="stripeYearlyInput">Stripe Payment Link — Yearly (€49/yr)</label><input class="text-input" id="stripeYearlyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
+        <div class="field-group"><label class="field-label" for="stripeFamilyInput">Stripe Payment Link — Family (€9.99/mo, two people)</label><input class="text-input" id="stripeFamilyInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <div class="field-group"><label class="field-label" for="stripeExtrasInput">Stripe Payment Link — Grandparents &amp; Grandchildren + Health AI bonus pack (€1/mo)</label><input class="text-input" id="stripeExtrasInput" type="url" placeholder="https://buy.stripe.com/..."></div>
         <h3 style="margin-top:1.2rem;font-size:1.15rem">Return links to paste into Stripe</h3>
         <p style="color:var(--ink-soft);font-size:.95rem">In each Stripe Payment Link, open <em>After payment &rarr; Redirect customers to a page you choose</em> and paste the matching link below. Access only switches on when the customer comes back through one of these.</p>
@@ -990,7 +1042,20 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 8.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 12.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<div class="countdown" id="countdown"><span class="lab" data-i18n="count.go">Starting in</span><span class="num" id="countdownNum">3</span></div>
+<div class="modal-overlay" id="readyOverlay">
+  <div class="modal-box" style="max-width:460px;text-align:center">
+    <h2 data-i18n="ready.h">Before you stand up</h2>
+    <ul class="ready-list">
+      <li>🪑 <span data-i18n="ready.chair">A sturdy chair within reach</span></li>
+      <li>👣 <span data-i18n="ready.floor">Nothing on the floor to trip on</span></li>
+      <li>📱 <span data-i18n="ready.phone">Your phone where you can reach it</span></li>
+    </ul>
+    <button class="btn btn-primary" id="readyGo" type="button" style="width:100%" data-i18n="ready.go">I'm ready — start</button>
+    <button class="btn btn-secondary" id="readyLater" type="button" style="width:100%;margin-top:.6rem" data-i18n="ready.later">Not now</button>
+  </div>
+</div>
 <!-- ============ WELCOME MODAL ============ -->
 <div class="modal-overlay" id="welcomeOverlay">
   <div class="modal-box" style="max-width:520px;text-align:center">
@@ -1127,6 +1192,14 @@
       <p style="margin-bottom:.6rem" id="bonusCardText"></p>
       <button class="btn btn-plum btn-sm" id="bonusCardBtn" type="button" data-i18n="extras.unlockbtn">Unlock 100+ extra exercises</button>
     </div>
+    <div class="panel" style="padding:1rem 1.2rem;margin-bottom:1rem">
+      <h3 style="font-size:1.05rem" data-i18n="family.have">I have a family code</h3>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <input class="text-input" id="familyCodeInput" type="text" placeholder="FAM-00000" style="flex:1;min-width:170px">
+        <button class="btn btn-teal btn-sm" id="familyUseBtn" type="button" data-i18n="family.use">Use code</button>
+      </div>
+      <p class="promo-status" id="familyStatus"></p>
+    </div>
     <p class="auth-error" id="paymentError"></p>
     <button class="btn btn-primary" id="paymentSubmitBtn" type="button" style="width:100%"></button>
     <p class="note-box" id="paymentFooterNote" style="margin-top:1.4rem"></p>
@@ -1183,9 +1256,11 @@ var PROMO_CODES = {
 /* Subscription plans. The bonus pack is deliberately NOT in here: it is sold
    separately and never comes bundled with a plan. */
 var PLAN_DEFS = {
-  monthly: { label:"Monthly", price:4.99,  periodKey:"pay.permonth", days:30 },
-  yearly:  { label:"Yearly",  price:36.00, periodKey:"pay.peryear",  days:365 }
+  monthly: { label:"Monthly", price:5.99,  periodKey:"pay.permonth", days:30 },
+  yearly:  { label:"Yearly",  price:49.00, periodKey:"pay.peryear",  days:365 },
+  family:  { label:"Family",  price:9.99,  periodKey:"pay.permonth", days:30, seats:2 }
 };
+var GRACE_DAYS = 1;      /* one missed day does not wipe out weeks of work */
 var EXTRAS_PRICE = 1.00;
 var EXTRAS_GATED_VIEWS = ["together","health"];
 /* ============ 2. I18N ============ */
@@ -1241,6 +1316,7 @@ I18N.en = {
 "friends.livenote":"Their numbers refresh every time you open this page.",
 "friends.sharednote":"Friend look-up, chat and shared stats run through this page's shared storage, so adding a friend by their real ID or QR code works for both of you. Live audio and video calling still only previews your own camera, because that needs a calling server.",
 "friends.localnote":"This page is running without shared cloud storage, so friends you add are stored on this device and confirm automatically once they open the site here. Everything else — chat, QR, stats, notes — works exactly the same.",
+"friends.cloudnote":"This site has a shared address book, so a friend request really does travel to the other person's phone: they see it under Requests the next time they open the page, wherever they are.","friends.cloudfail":"The shared address book did not answer, so right now friends are only being kept on this device. It will try again on its own.",
 "fp.notesh":"Your notes about them","fp.savenotes":"Save notes","fp.saved":"Notes saved.",
 "gg.h2":"Grandparents & Grandchildren","gg.p":"Each activity has a role for the grown-up and a role for the child, and its own moving picture of that exact activity. An adult should always supervise.",
 "gg.bannerh":"Move together, remember together","gg.bannerp":"Gentle, playful exercises designed for a grandparent and a grandchild to do side by side. Safe for older joints, fun enough for a six-year-old.",
@@ -1360,7 +1436,23 @@ I18N.en = {
 "friends.howtoshared":"Send your invite link or show your QR code. Whoever opens it is connected to you, and your request appears in their Requests tab.",
 "friends.howtolocal":"This site has no server of its own, so a request cannot fly to another phone by itself. It works like this instead: send your link, they open it and you appear on their list — then they send theirs back, you open it, and both sides are connected. Two taps each, and it works between any two devices.",
 "reset.confirm":"This erases everything on this device AND deletes your account for good — plans, streaks, friends, memory and anything you wrote into the Health AI. You will not be able to sign in with this email again. Records of payments already made are kept, because accounting rules require it. Continue?",
-"reset.done":"Your account and all your data have been deleted.","reset.working":"Deleting...","help.callnow":"Call {name}","help.dialling":"Calling {name}…","undo.action":"Undo",
+"reset.done":"Your account and all your data have been deleted.","reset.working":"Deleting...","help.callnow":"Call {name}","help.dialling":"Calling {name}…","ph.contactname":"e.g. Ann (daughter)","ph.city":"e.g. London","ph.pain":"e.g. My right knee aches when I stand up from a chair, and it's stiff in the morning.",
+"ph.goal":"e.g. I'd like the muscles in my arms to show a bit more","ph.memory":"e.g. I prefer seated exercises in the morning","ph.review":"What's working well, and what could be improved?",
+"ph.suggest":"e.g. a gentle exercise for stiff hands","ph.notes":"e.g. Prefers seated sessions, birthday in March","ph.chat":"Type a message...","ph.planname":"My weekly plan",
+"ph.gname":"e.g. Mary","ph.docname":"e.g. Dr. Smith","stars.q":"How many stars would you give it?","stars.none":"No stars chosen yet.","stars.picked":"{n} of 5 stars — {word}",
+"stars.1":"poor","stars.2":"not great","stars.3":"fine","stars.4":"good","stars.5":"excellent",
+"stars.need":"Please choose a number of stars first.","stars.avg":"{avg} out of 5, from {n} review(s)","friends.scanloading":"Loading the reader…","friends.scanhttps":"The camera only works on a secure https:// address. Open the published site, not the file on your computer.","ready.h":"Before you stand up","ready.chair":"A sturdy chair within reach","ready.floor":"Nothing on the floor to trip on","ready.phone":"Your phone where you can reach it","ready.go":"I'm ready — start","ready.later":"Not now",
+"count.go":"Starting in","count.half":"Halfway","count.done":"and rest",
+"how.q":"How did that feel?","how.easy":"Easy","how.right":"Just right","how.hard":"Hard","how.thanks":"Noted — the next one will suit you better.",
+"easy.btn":"I can't manage today","easy.h":"Three gentle minutes, sitting down","easy.p":"A hard day still counts. Sit comfortably and we'll do three easy minutes together.",
+"grace.note":"One missed day is allowed — the run only breaks after two.","milestone.week":"Seven days in a row. That is the week that changes things — well done.",
+"fall.q":"Are you all right? You stopped a while ago.","fall.ok":"I'm fine","report.btn":"Print my month","report.title":"My month — Steady & Strong",
+"report.days":"Days trained","report.minutes":"Minutes","report.sessions":"Sessions","report.steps":"Steps","report.note":"Bring this to your doctor or show it to your family.",
+"prog.h":"Ready for a little more","prog.p":"You have kept the same session for two weeks. Try adding five seconds to each exercise, or the standing version.",
+"family.h":"Share with one family member","family.p":"Your Family plan covers two people. Send this code to the person you want to share it with.","family.code":"Your family code","family.have":"I have a family code","family.use":"Use code","family.ok":"Family plan shared with you — enjoy.","family.bad":"That code is not valid or has already been used.","family.limit":"This family plan already has its second person.",
+"refer.earned":"A friend joined through your link — a week has been added to your trial.",
+"readaloud":"🔊 Read this aloud","auth.bademail":"That does not look like a real email address.","auth.disposable":"Throw-away email addresses are not accepted — please use your usual one.",
+"auth.nomx":"No mail service answers for \"{d}\". Check the spelling of the part after the @.","auth.checking":"Checking the address…","auth.typo":"Did you mean {s}?","undo.action":"Undo",
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
 I18N.pt = {
@@ -1414,6 +1506,7 @@ I18N.pt = {
 "friends.livenote":"Os números dele são atualizados sempre que abre esta página.",
 "friends.sharednote":"A procura de amigos, as conversas e as estatísticas partilhadas funcionam pelo armazenamento partilhado desta página, por isso adicionar um amigo pelo ID real ou pelo QR funciona para os dois. As chamadas de voz e vídeo continuam a mostrar apenas a sua própria câmara, porque isso exige um servidor de chamadas.",
 "friends.localnote":"Esta página está a funcionar sem armazenamento partilhado na nuvem, por isso os amigos que adicionar ficam guardados neste dispositivo e confirmam-se sozinhos quando eles abrirem o site aqui. Tudo o resto — conversa, QR, estatísticas, notas — funciona exatamente igual.",
+"friends.cloudnote":"Este site tem uma lista partilhada, por isso um pedido de amizade viaja mesmo até ao telemóvel da outra pessoa: ela vê-o em Pedidos da próxima vez que abrir a página, esteja onde estiver.","friends.cloudfail":"A lista partilhada não respondeu, por isso de momento os amigos ficam guardados só neste aparelho. Voltará a tentar sozinho.",
 "fp.notesh":"As suas notas sobre ele","fp.savenotes":"Guardar notas","fp.saved":"Notas guardadas.",
 "gg.h2":"Avós e Netos","gg.p":"Cada atividade tem um papel para o adulto e um papel para a criança, e a sua própria imagem animada dessa atividade. Um adulto deve supervisionar sempre.",
 "gg.bannerh":"Mexerem-se juntos, recordarem juntos","gg.bannerp":"Exercícios suaves e divertidos pensados para um avô ou avó fazer lado a lado com um neto. Seguros para articulações mais velhas, divertidos para uma criança de seis anos.",
@@ -1533,7 +1626,23 @@ I18N.pt = {
 "friends.howtoshared":"Envie o seu link de convite ou mostre o código QR. Quem o abrir fica ligado a si, e o seu pedido aparece no separador Pedidos dele.",
 "friends.howtolocal":"Este site não tem servidor próprio, por isso um pedido não consegue voar sozinho até outro telemóvel. Funciona assim: envia o seu link, a pessoa abre-o e você aparece na lista dela — depois ela envia o dela, você abre, e ficam ligados dos dois lados. Dois toques cada um, e funciona entre quaisquer dois dispositivos.",
 "reset.confirm":"Isto apaga tudo neste dispositivo E elimina a sua conta de vez — planos, sequências, amigos, memória e tudo o que escreveu na IA de Saúde. Não voltará a conseguir entrar com este e-mail. Os registos de pagamentos já feitos são mantidos, porque as regras de contabilidade o exigem. Continuar?",
-"reset.done":"A sua conta e todos os seus dados foram apagados.","reset.working":"A apagar...","help.callnow":"Ligar a {name}","help.dialling":"A ligar a {name}…","undo.action":"Desfazer",
+"reset.done":"A sua conta e todos os seus dados foram apagados.","reset.working":"A apagar...","help.callnow":"Ligar a {name}","help.dialling":"A ligar a {name}…","ph.contactname":"por exemplo Ana (filha)","ph.city":"por exemplo Lisboa","ph.pain":"por exemplo: dói-me o joelho direito quando me levanto da cadeira, e de manhã está rígido.",
+"ph.goal":"por exemplo: gostava que os músculos dos braços se vissem um pouco mais","ph.memory":"por exemplo: prefiro exercícios sentado de manhã","ph.review":"O que está a correr bem, e o que podia melhorar?",
+"ph.suggest":"por exemplo: um exercício suave para mãos rígidas","ph.notes":"por exemplo: prefere sessões sentado, faz anos em março","ph.chat":"Escreva uma mensagem...","ph.planname":"O meu plano semanal",
+"ph.gname":"por exemplo Maria","ph.docname":"por exemplo Dr. Silva","stars.q":"Quantas estrelas daria?","stars.none":"Ainda não escolheu estrelas.","stars.picked":"{n} de 5 estrelas — {word}",
+"stars.1":"fraco","stars.2":"pouco bom","stars.3":"razoável","stars.4":"bom","stars.5":"excelente",
+"stars.need":"Escolha primeiro o número de estrelas.","stars.avg":"{avg} em 5, de {n} avaliação(ões)","friends.scanloading":"A carregar o leitor…","friends.scanhttps":"A câmara só funciona num endereço seguro https://. Abra o site publicado, não o ficheiro do computador.","ready.h":"Antes de se levantar","ready.chair":"Uma cadeira firme ao alcance","ready.floor":"Nada no chão onde tropeçar","ready.phone":"O telemóvel onde lhe chegue a mão","ready.go":"Estou pronto — começar","ready.later":"Agora não",
+"count.go":"Começa em","count.half":"Metade","count.done":"e descanse",
+"how.q":"Como se sentiu?","how.easy":"Fácil","how.right":"No ponto","how.hard":"Difícil","how.thanks":"Anotado — a próxima fica mais à sua medida.",
+"easy.btn":"Hoje não consigo","easy.h":"Três minutos suaves, sentado","easy.p":"Um dia difícil também conta. Sente-se bem e fazemos três minutos calmos juntos.",
+"grace.note":"É permitido falhar um dia — a série só se perde ao fim de dois.","milestone.week":"Sete dias seguidos. É esta a semana que muda as coisas — muito bem.",
+"fall.q":"Está tudo bem? Parou há algum tempo.","fall.ok":"Estou bem","report.btn":"Imprimir o meu mês","report.title":"O meu mês — Steady & Strong",
+"report.days":"Dias treinados","report.minutes":"Minutos","report.sessions":"Sessões","report.steps":"Passos","report.note":"Leve isto ao seu médico ou mostre à família.",
+"prog.h":"Pronto para um pouco mais","prog.p":"Já leva duas semanas com a mesma sessão. Experimente juntar cinco segundos a cada exercício, ou a versão de pé.",
+"family.h":"Partilhar com um familiar","family.p":"O seu plano Família serve duas pessoas. Envie este código a quem quiser partilhar.","family.code":"O seu código de família","family.have":"Tenho um código de família","family.use":"Usar código","family.ok":"Plano Família partilhado consigo — bom proveito.","family.bad":"Esse código não é válido ou já foi usado.","family.limit":"Este plano Família já tem a segunda pessoa.",
+"refer.earned":"Um amigo entrou pelo seu link — foi acrescentada uma semana ao seu período experimental.",
+"readaloud":"🔊 Ler isto em voz alta","auth.bademail":"Isso não parece um endereço de e-mail verdadeiro.","auth.disposable":"Não são aceites e-mails descartáveis — use o seu e-mail do costume.",
+"auth.nomx":"Nenhum serviço de correio responde por \"{d}\". Confirme o que está depois do @.","auth.checking":"A verificar o endereço…","auth.typo":"Queria dizer {s}?","undo.action":"Desfazer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
 I18N.es = {
@@ -1587,6 +1696,7 @@ I18N.es = {
 "friends.livenote":"Sus números se actualizan cada vez que abres esta página.",
 "friends.sharednote":"La búsqueda de amigos, el chat y las estadísticas compartidas funcionan con el almacenamiento compartido de esta página, así que añadir a un amigo por su ID real o por QR funciona para los dos. Las llamadas de voz y vídeo siguen mostrando solo tu propia cámara, porque eso necesita un servidor de llamadas.",
 "friends.localnote":"Esta página funciona sin almacenamiento compartido en la nube, así que los amigos que añadas se guardan en este dispositivo y se confirman solos cuando abran el sitio aquí. Todo lo demás — chat, QR, estadísticas, notas — funciona exactamente igual.",
+"friends.cloudnote":"Este sitio tiene una libreta compartida, así que una solicitud de amistad llega de verdad al móvil de la otra persona: la verá en Solicitudes la próxima vez que abra la página, esté donde esté.","friends.cloudfail":"La libreta compartida no respondió, así que por ahora los amigos se guardan solo en este dispositivo. Lo volverá a intentar solo.",
 "fp.notesh":"Tus notas sobre él o ella","fp.savenotes":"Guardar notas","fp.saved":"Notas guardadas.",
 "gg.h2":"Abuelos y Nietos","gg.p":"Cada actividad tiene un papel para el adulto y otro para el niño, y su propia imagen animada de esa actividad. Un adulto debe supervisar siempre.",
 "gg.bannerh":"Moverse juntos, recordar juntos","gg.bannerp":"Ejercicios suaves y divertidos pensados para que un abuelo o abuela los haga junto a un nieto. Seguros para articulaciones mayores, divertidos para un niño de seis años.",
@@ -1706,7 +1816,23 @@ I18N.es = {
 "friends.howtoshared":"Envía tu enlace de invitación o enseña tu código QR. Quien lo abra queda conectado contigo, y tu solicitud aparece en su pestaña Solicitudes.",
 "friends.howtolocal":"Este sitio no tiene servidor propio, así que una solicitud no puede volar sola a otro móvil. Funciona así: envías tu enlace, la persona lo abre y tú apareces en su lista — después ella envía el suyo, tú lo abres, y quedáis conectados por ambos lados. Dos toques cada uno, y funciona entre dos dispositivos cualesquiera.",
 "reset.confirm":"Esto borra todo en este dispositivo Y elimina tu cuenta para siempre — planes, rachas, amigos, memoria y todo lo que escribiste en la IA de Salud. No podrás volver a entrar con este correo. Los registros de pagos ya realizados se conservan, porque las normas contables lo exigen. ¿Continuar?",
-"reset.done":"Tu cuenta y todos tus datos han sido eliminados.","reset.working":"Eliminando...","help.callnow":"Llamar a {name}","help.dialling":"Llamando a {name}…","undo.action":"Deshacer",
+"reset.done":"Tu cuenta y todos tus datos han sido eliminados.","reset.working":"Eliminando...","help.callnow":"Llamar a {name}","help.dialling":"Llamando a {name}…","ph.contactname":"por ejemplo Ana (hija)","ph.city":"por ejemplo Madrid","ph.pain":"por ejemplo: me duele la rodilla derecha al levantarme de la silla, y por la mañana está rígida.",
+"ph.goal":"por ejemplo: me gustaría que se me marcaran un poco más los brazos","ph.memory":"por ejemplo: prefiero ejercicios sentado por la mañana","ph.review":"¿Qué funciona bien y qué se podría mejorar?",
+"ph.suggest":"por ejemplo: un ejercicio suave para manos rígidas","ph.notes":"por ejemplo: prefiere sesiones sentado, cumple años en marzo","ph.chat":"Escribe un mensaje...","ph.planname":"Mi plan semanal",
+"ph.gname":"por ejemplo María","ph.docname":"por ejemplo Dr. García","stars.q":"¿Cuántas estrellas le darías?","stars.none":"Todavía no has elegido estrellas.","stars.picked":"{n} de 5 estrellas — {word}",
+"stars.1":"malo","stars.2":"poco bueno","stars.3":"aceptable","stars.4":"bueno","stars.5":"excelente",
+"stars.need":"Elige primero el número de estrellas.","stars.avg":"{avg} sobre 5, de {n} opinión(es)","friends.scanloading":"Cargando el lector…","friends.scanhttps":"La cámara solo funciona en una dirección segura https://. Abre el sitio publicado, no el archivo del ordenador.","ready.h":"Antes de levantarte","ready.chair":"Una silla firme al alcance","ready.floor":"Nada en el suelo con lo que tropezar","ready.phone":"El móvil donde llegues con la mano","ready.go":"Estoy listo — empezar","ready.later":"Ahora no",
+"count.go":"Empieza en","count.half":"La mitad","count.done":"y descansa",
+"how.q":"¿Cómo te has sentido?","how.easy":"Fácil","how.right":"En su punto","how.hard":"Difícil","how.thanks":"Anotado — la próxima se ajustará mejor.",
+"easy.btn":"Hoy no puedo","easy.h":"Tres minutos suaves, sentado","easy.p":"Un día difícil también cuenta. Siéntate cómodo y hacemos tres minutos tranquilos.",
+"grace.note":"Se permite fallar un día — la racha solo se pierde a los dos.","milestone.week":"Siete días seguidos. Esa es la semana que cambia las cosas — muy bien.",
+"fall.q":"¿Va todo bien? Paraste hace un rato.","fall.ok":"Estoy bien","report.btn":"Imprimir mi mes","report.title":"Mi mes — Steady & Strong",
+"report.days":"Días entrenados","report.minutes":"Minutos","report.sessions":"Sesiones","report.steps":"Pasos","report.note":"Llévalo a tu médico o enséñaselo a tu familia.",
+"prog.h":"Listo para un poco más","prog.p":"Llevas dos semanas con la misma sesión. Prueba a añadir cinco segundos a cada ejercicio, o la versión de pie.",
+"family.h":"Compartir con un familiar","family.p":"Tu plan Familia cubre a dos personas. Envía este código a quien quieras compartirlo.","family.code":"Tu código de familia","family.have":"Tengo un código de familia","family.use":"Usar código","family.ok":"Plan Familia compartido contigo — que lo disfrutes.","family.bad":"Ese código no es válido o ya se ha usado.","family.limit":"Este plan Familia ya tiene su segunda persona.",
+"refer.earned":"Un amigo ha entrado por tu enlace — se ha añadido una semana a tu prueba.",
+"readaloud":"🔊 Leer esto en voz alta","auth.bademail":"Eso no parece una dirección de correo real.","auth.disposable":"No se aceptan correos desechables — usa el tuyo de siempre.",
+"auth.nomx":"Ningún servicio de correo responde por \"{d}\". Comprueba lo que va después de la @.","auth.checking":"Comprobando la dirección…","auth.typo":"¿Querías decir {s}?","undo.action":"Deshacer",
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
 I18N.fr = {
@@ -1760,6 +1886,7 @@ I18N.fr = {
 "friends.livenote":"Ses chiffres se mettent à jour chaque fois que vous ouvrez cette page.",
 "friends.sharednote":"La recherche d'amis, la discussion et les statistiques partagées passent par le stockage partagé de cette page : ajouter un ami par son vrai identifiant ou son QR code fonctionne donc des deux côtés. Les appels audio et vidéo n'affichent que votre propre caméra, car cela demande un serveur d'appels.",
 "friends.localnote":"Cette page fonctionne sans stockage partagé dans le cloud : les amis que vous ajoutez sont enregistrés sur cet appareil et se confirment tout seuls dès qu'ils ouvrent le site ici. Tout le reste — discussion, QR, statistiques, notes — fonctionne exactement pareil.",
+"friends.cloudnote":"Ce site dispose d'un carnet partagé : une demande d'ami parvient donc vraiment au téléphone de l'autre personne, qui la verra dans Demandes à sa prochaine visite, où qu'elle soit.","friends.cloudfail":"Le carnet partagé n'a pas répondu : pour l'instant les amis ne sont gardés que sur cet appareil. Une nouvelle tentative se fera toute seule.",
 "fp.notesh":"Vos notes à son sujet","fp.savenotes":"Enregistrer les notes","fp.saved":"Notes enregistrées.",
 "gg.h2":"Grands-parents et petits-enfants","gg.p":"Chaque activité a un rôle pour l'adulte et un rôle pour l'enfant, et sa propre image animée de cette activité précise. Un adulte doit toujours surveiller.",
 "gg.bannerh":"Bouger ensemble, se souvenir ensemble","gg.bannerp":"Des exercices doux et ludiques pensés pour qu'un grand-parent et un petit-enfant les fassent côte à côte. Sûrs pour des articulations âgées, amusants pour un enfant de six ans.",
@@ -1879,7 +2006,23 @@ I18N.fr = {
 "friends.howtoshared":"Envoyez votre lien d'invitation ou montrez votre QR code. Qui l'ouvre est connecté à vous, et votre demande apparaît dans son onglet Demandes.",
 "friends.howtolocal":"Ce site n'a pas de serveur propre : une demande ne peut donc pas voler seule vers un autre téléphone. Cela marche ainsi : vous envoyez votre lien, la personne l'ouvre et vous apparaissez dans sa liste — puis elle envoie le sien, vous l'ouvrez, et vous êtes connectés des deux côtés. Deux gestes chacun, et cela fonctionne entre deux appareils quelconques.",
 "reset.confirm":"Ceci efface tout sur cet appareil ET supprime définitivement votre compte — programmes, séries, amis, mémoire et tout ce que vous avez écrit dans l'IA Santé. Vous ne pourrez plus vous connecter avec cet e-mail. Les enregistrements des paiements déjà effectués sont conservés, comme l'exigent les règles comptables. Continuer ?",
-"reset.done":"Votre compte et toutes vos données ont été supprimés.","reset.working":"Suppression...","help.callnow":"Appeler {name}","help.dialling":"Appel de {name}…","undo.action":"Annuler",
+"reset.done":"Votre compte et toutes vos données ont été supprimés.","reset.working":"Suppression...","help.callnow":"Appeler {name}","help.dialling":"Appel de {name}…","ph.contactname":"par exemple Anne (fille)","ph.city":"par exemple Paris","ph.pain":"par exemple : mon genou droit me fait mal quand je me lève de la chaise, et il est raide le matin.",
+"ph.goal":"par exemple : j'aimerais que mes bras se dessinent un peu plus","ph.memory":"par exemple : je préfère les exercices assis le matin","ph.review":"Qu'est-ce qui marche bien, et qu'est-ce qui pourrait être mieux ?",
+"ph.suggest":"par exemple : un exercice doux pour les mains raides","ph.notes":"par exemple : préfère les séances assises, anniversaire en mars","ph.chat":"Écrivez un message...","ph.planname":"Mon programme de la semaine",
+"ph.gname":"par exemple Marie","ph.docname":"par exemple Dr Dupont","stars.q":"Combien d'étoiles donneriez-vous ?","stars.none":"Aucune étoile choisie pour l'instant.","stars.picked":"{n} étoiles sur 5 — {word}",
+"stars.1":"mauvais","stars.2":"passable","stars.3":"correct","stars.4":"bien","stars.5":"excellent",
+"stars.need":"Choisissez d'abord un nombre d'étoiles.","stars.avg":"{avg} sur 5, sur {n} avis","friends.scanloading":"Chargement du lecteur…","friends.scanhttps":"La caméra ne fonctionne que sur une adresse sécurisée https://. Ouvrez le site publié, pas le fichier de l'ordinateur.","ready.h":"Avant de vous lever","ready.chair":"Une chaise solide à portée","ready.floor":"Rien au sol pour trébucher","ready.phone":"Le téléphone à portée de main","ready.go":"Je suis prêt — commencer","ready.later":"Pas maintenant",
+"count.go":"Départ dans","count.half":"À la moitié","count.done":"et repos",
+"how.q":"Comment était-ce ?","how.easy":"Facile","how.right":"Juste bien","how.hard":"Difficile","how.thanks":"Noté — la prochaine sera mieux ajustée.",
+"easy.btn":"Je n'y arrive pas aujourd'hui","easy.h":"Trois minutes douces, assis","easy.p":"Un jour difficile compte aussi. Installez-vous et faisons trois minutes tranquilles.",
+"grace.note":"Un jour manqué est permis — la série ne se casse qu'au deuxième.","milestone.week":"Sept jours d'affilée. C'est la semaine qui change les choses — bravo.",
+"fall.q":"Tout va bien ? Vous vous êtes arrêté depuis un moment.","fall.ok":"Je vais bien","report.btn":"Imprimer mon mois","report.title":"Mon mois — Steady & Strong",
+"report.days":"Jours d'entraînement","report.minutes":"Minutes","report.sessions":"Séances","report.steps":"Pas","report.note":"Apportez ceci à votre médecin ou montrez-le à votre famille.",
+"prog.h":"Prêt pour un peu plus","prog.p":"Vous gardez la même séance depuis deux semaines. Essayez d'ajouter cinq secondes par exercice, ou la version debout.",
+"family.h":"Partager avec un proche","family.p":"Votre formule Famille couvre deux personnes. Envoyez ce code à la personne concernée.","family.code":"Votre code famille","family.have":"J'ai un code famille","family.use":"Utiliser le code","family.ok":"Formule Famille partagée avec vous — profitez-en.","family.bad":"Ce code n'est pas valable ou a déjà été utilisé.","family.limit":"Cette formule Famille a déjà sa deuxième personne.",
+"refer.earned":"Un ami a rejoint par votre lien — une semaine a été ajoutée à votre essai.",
+"readaloud":"🔊 Lire à voix haute","auth.bademail":"Cela ne ressemble pas à une vraie adresse e-mail.","auth.disposable":"Les adresses jetables ne sont pas acceptées — utilisez votre adresse habituelle.",
+"auth.nomx":"Aucun service de messagerie ne répond pour « {d} ». Vérifiez ce qui suit le @.","auth.checking":"Vérification de l\'adresse…","auth.typo":"Vouliez-vous dire {s} ?","undo.action":"Annuler",
 "common.cancel":"Annuler","common.save":"Enregistrer","common.close":"Fermer","common.yes":"Oui","common.no":"Non"
 };
 var SENT = {
@@ -1908,6 +2051,31 @@ function t(key, vars){
   if(vars){ Object.keys(vars).forEach(function(k){ s = s.split("{"+k+"}").join(vars[k]); }); }
   return s;
 }
+/* The example phone number follows the language, and the country if one was
+   chosen — a French reader should not be shown a Portuguese dialling code. */
+var DIAL_BY_LANG = { en:"+44", pt:"+351", es:"+34", fr:"+33" };
+var DIAL_BY_COUNTRY = { PT:"+351", ES:"+34", FR:"+33", GB:"+44", IE:"+353", DE:"+49", IT:"+39", NL:"+31",
+  BE:"+32", CH:"+41", AT:"+43", PL:"+48", SE:"+46", NO:"+47", DK:"+45", FI:"+358", GR:"+30", LU:"+352",
+  BR:"+55", US:"+1", CA:"+1", MX:"+52", AR:"+54", AU:"+61", NZ:"+64", IN:"+91", JP:"+81", AO:"+244" };
+function dialExample(){
+  var c = STATE && STATE.location && STATE.location.country;
+  var code = (c && DIAL_BY_COUNTRY[c]) || DIAL_BY_LANG[(STATE && STATE.settings && STATE.settings.lang) || "en"] || "+44";
+  return code + " 000 000 000";
+}
+function applyPlaceholders(){
+  var ph = [
+    ["helpPhone", dialExample()], ["admContactPhone", dialExample()], ["admSupportPhone", dialExample()],
+    ["helpName", t("ph.contactname")], ["admContactName", t("ph.docname")], ["docCity", t("ph.city")],
+    ["memoryInput", t("ph.memory")], ["reviewInput", t("ph.review")], ["suggestInput", t("ph.suggest")],
+    ["fpNotes", t("ph.notes")], ["chatInput", t("ph.chat")], ["wizPlanName", t("ph.planname")],
+    ["googleName", t("ph.gname")],
+    ["injuryInput", healthMode === "goal" ? t("ph.goal") : t("ph.pain")]
+  ];
+  ph.forEach(function(p){
+    var el = document.getElementById(p[0]);
+    if(el) el.placeholder = p[1];
+  });
+}
 function applyI18n(){
   document.querySelectorAll("[data-i18n]").forEach(function(el){
     var v = t(el.getAttribute("data-i18n"));
@@ -1916,6 +2084,7 @@ function applyI18n(){
   var ls = document.getElementById("libSearch"); if(ls) ls.placeholder = t("lib.search");
   var sel = document.getElementById("langSelect"); if(sel) sel.value = STATE.settings.lang || "en";
   document.documentElement.lang = STATE.settings.lang || "en";
+  if(typeof applyPlaceholders === "function") applyPlaceholders();
 }
 /* ============ 3. MOVING DEMONSTRATIONS ============
    Every exercise gets its own drawing. Nothing here is a stock image: each
@@ -2532,6 +2701,9 @@ function defaultState(){
     openSession: null,
     emergency: null,
     skipped: {},
+    effort: { easy:0, hard:0, adjust:0 },
+    milestones: {},
+    referral: { earned:false, from:[] },
     customExercises: {},
     hiddenExercises: [],
     a11y: { sizeBumps:0, comfortSuggested:false }
@@ -2574,18 +2746,95 @@ function applyExerciseOverrides(){
   });
   (STATE.hiddenExercises || []).forEach(function(id){ delete EXERCISES[id]; });
 }
+/* ======================================================================
+   BUILT-IN SETTINGS — edit these four lines and everyone gets them.
+   The admin panel writes to this browser only, so anything set there is
+   invisible to your visitors. Whatever you type here travels with the file.
+   ====================================================================== */
+var BUILT_IN = {
+  cloudUrl: "",                 /* https://xxxx-default-rtdb.firebaseio.com  */
+  googleClientId: "",           /* 1234-abc.apps.googleusercontent.com       */
+  stripe: { monthly:"", yearly:"", family:"", extras:"" }
+};
+/* --- The shared address book ------------------------------------------
+   A page on its own cannot post a friend request to another phone: there is
+   nowhere to leave it. Give it one free Firebase Realtime Database address
+   and requests, chat and shared numbers travel between devices for real.
+   With no address it behaves as before — this device only. */
+var CLOUD = { base:"", live:false, checked:false };
+function cloudNormalise(u){
+  u = (u || "").trim().replace(/\s/g, "");
+  if(!u) return "";
+  if(!/^https?:\/\//i.test(u)) u = "https://" + u;
+  return u.replace(/\/+$/, "").replace(/\.json$/i, "");
+}
+(function readCloud(){
+  var u = "";
+  try{
+    var m = (location.search || "").match(/[?&]cloud=([^&]+)/);
+    if(m){ u = decodeURIComponent(m[1]); localStorage.setItem("ss_cloud", u); }
+    else { u = localStorage.getItem("ss_cloud") || ""; }
+  }catch(e){}
+  CLOUD.base = cloudNormalise(u || BUILT_IN.cloudUrl);
+})();
+var SOCIAL_RE = /^(directory:|public:|requests:|chat:)/;
+function cloudKey(key){ return key.replace(/[^A-Za-z0-9_-]/g, "_"); }
+function cloudUrlFor(key){ return CLOUD.base + "/ss/social/" + cloudKey(key) + ".json"; }
+async function cloudGet(key){
+  if(!CLOUD.base) return undefined;
+  try{
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 8000);
+    var r = await fetch(cloudUrlFor(key) + "?t=" + Date.now(), { signal: ctl.signal, cache:"no-store" });
+    clearTimeout(to);
+    if(!r.ok) return undefined;
+    var j = await r.json();
+    CLOUD.live = true;
+    if(j === null || j === undefined) return null;
+    return typeof j === "string" ? j : JSON.stringify(j);
+  }catch(e){ return undefined; }
+}
+async function cloudSet(key, value){
+  if(!CLOUD.base) return false;
+  try{
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 8000);
+    var r = await fetch(cloudUrlFor(key), { method:"PUT", body: JSON.stringify(value), signal: ctl.signal });
+    clearTimeout(to);
+    if(r.ok) CLOUD.live = true;
+    return r.ok;
+  }catch(e){ return false; }
+}
+async function cloudTest(){
+  CLOUD.checked = true;
+  if(!CLOUD.base){ CLOUD.live = false; return false; }
+  var stamp = "ping-" + Date.now();
+  var wrote = await cloudSet("public:__ping", stamp);
+  if(!wrote){ CLOUD.live = false; return false; }
+  var back = await cloudGet("public:__ping");
+  CLOUD.live = (back === stamp);
+  return CLOUD.live;
+}
 var Store = (function(){
   var native = (typeof window !== "undefined" && window.storage && typeof window.storage.get === "function") ? window.storage : null;
   var FALLBACK_PREFIX = "ss_shared::";
   return {
     isNative: !!native,
     get: async function(key){
+      if(CLOUD.base && SOCIAL_RE.test(key)){
+        var cv = await cloudGet(key);
+        if(cv !== undefined){
+          try{ localStorage.setItem(FALLBACK_PREFIX + key, cv === null ? "" : cv); }catch(e){}
+          return cv;
+        }
+      }
       if(native){
         try{ var r = await native.get(key, true); return r ? r.value : null; }catch(e){}
       }
       try{ return localStorage.getItem(FALLBACK_PREFIX + key); }catch(e){ return null; }
     },
     set: async function(key, value){
+      if(CLOUD.base && SOCIAL_RE.test(key)) await cloudSet(key, value);
       if(native){
         try{ await native.set(key, value, true); return true; }catch(e){}
       }
@@ -2600,12 +2849,71 @@ var Store = (function(){
   };
 })();
 function normEmail(e){ return (e || "").trim().toLowerCase(); }
+/* --- Only real addresses get in ----------------------------------------
+   With no server we cannot send a confirmation letter, so we do the next
+   best thing: proper format, no throw-away domains, a nudge for the usual
+   typos, and a live DNS lookup to see whether the domain actually runs a
+   mail service. If the network is down we fall back to the format check
+   rather than lock someone out. */
+var DISPOSABLE = ["mailinator.com","tempmail.com","temp-mail.org","guerrillamail.com","10minutemail.com",
+ "yopmail.com","trashmail.com","sharklasers.com","getnada.com","dispostable.com","maildrop.cc","fakeinbox.com",
+ "throwawaymail.com","mytemp.email","spam4.me","mailnesia.com","tempinbox.com","emailondeck.com","test.com","example.com"];
+var COMMON_DOMAINS = ["gmail.com","hotmail.com","outlook.com","yahoo.com","icloud.com","sapo.pt","live.com",
+ "protonmail.com","gmx.com","aol.com","me.com","orange.fr","free.fr","web.de","libero.it","terra.com.br","uol.com.br"];
+function editDistance(a, b){
+  var m = a.length, n = b.length, d = [], i, j;
+  for(i = 0; i <= m; i++) d[i] = [i];
+  for(j = 0; j <= n; j++) d[0][j] = j;
+  for(i = 1; i <= m; i++) for(j = 1; j <= n; j++){
+    d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  }
+  return d[m][n];
+}
+function suggestDomain(dom){
+  var best = null, bestD = 99;
+  COMMON_DOMAINS.forEach(function(c){
+    var dd = editDistance(dom, c);
+    if(dd < bestD){ bestD = dd; best = c; }
+  });
+  return (bestD > 0 && bestD <= 2) ? best : null;
+}
+async function domainAcceptsMail(dom){
+  try{
+    var ctl = new AbortController();
+    setTimeout(function(){ ctl.abort(); }, 4000);
+    var r = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(dom) + "&type=MX",
+      { headers: { accept: "application/dns-json" }, signal: ctl.signal });
+    if(!r.ok) return true;                       /* lookup unavailable: do not block */
+    var j = await r.json();
+    if(j.Answer && j.Answer.length) return true;
+    /* Some small domains take mail on the A record instead of an MX one. */
+    var r2 = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(dom) + "&type=A",
+      { headers: { accept: "application/dns-json" } });
+    var j2 = await r2.json();
+    return !!(j2.Answer && j2.Answer.length);
+  }catch(e){ return true; }
+}
+async function validateEmail(raw, statusFn){
+  var email = normEmail(raw);
+  if(!/^[^\s@"]+@[^\s@.]+(\.[^\s@.]+)+$/.test(email)) return { ok:false, msg:t("auth.bademail") };
+  var dom = email.split("@")[1];
+  if(dom.length < 4 || !/\.[a-z]{2,}$/.test(dom)) return { ok:false, msg:t("auth.bademail") };
+  if(DISPOSABLE.indexOf(dom) !== -1) return { ok:false, msg:t("auth.disposable") };
+  var sug = suggestDomain(dom);
+  if(sug) return { ok:false, msg:t("auth.typo", { s: email.split("@")[0] + "@" + sug }) };
+  if(statusFn) statusFn(t("auth.checking"));
+  var live = await domainAcceptsMail(dom);
+  if(!live) return { ok:false, msg:t("auth.nomx", { d: dom }) };
+  return { ok:true };
+}
 function simpleHash(str){
   var h = 5381;
   for(var i=0;i<str.length;i++){ h = ((h<<5) + h) + str.charCodeAt(i); h |= 0; }
   return "h" + String(h);
 }
+var accountDeleted = false;
 async function saveAccount(){
+  if(accountDeleted) return;              /* never resurrect a deleted account */
   if(!STATE.auth.loggedIn || !STATE.auth.email) return;
   var blob = {
     passHash: STATE.auth._passHash, name: STATE.auth.name, google: !!STATE.auth.google,
@@ -2618,7 +2926,9 @@ async function saveAccount(){
     steps: STATE.steps, location: STATE.location
   };
   await Store.setJSON("account:" + normEmail(STATE.auth.email), blob);
-  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name, email:normEmail(STATE.auth.email) });
+  /* Name and ID only: the shared address book may be readable by anyone who
+     has the database address, so no e-mail ever leaves this device. */
+  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name });
   await Store.setJSON("public:" + STATE.profile.id, {
     id:STATE.profile.id, name:STATE.profile.name, streak:computeStreak(),
     sessions:sessionsThisMonth(), total:STATE.workoutLog.length,
@@ -2626,6 +2936,15 @@ async function saveAccount(){
   });
   var idx = await Store.getJSON("customers", []);
   if(idx.indexOf(normEmail(STATE.auth.email)) === -1){ idx.push(normEmail(STATE.auth.email)); await Store.setJSON("customers", idx); }
+}
+async function publishPublicProfile(){
+  if(!STATE.auth.loggedIn) return;
+  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name });
+  await Store.setJSON("public:" + STATE.profile.id, {
+    id:STATE.profile.id, name:STATE.profile.name, streak:computeStreak(),
+    sessions:sessionsThisMonth(), total:STATE.workoutLog.length,
+    avgWeek:avgPerWeek(), minutes:totalMinutes(), updated:Date.now()
+  });
 }
 /* ============ 6. VIEW ROUTING ============ */
 function showView(name){
@@ -2640,7 +2959,7 @@ function showView(name){
   if(name === "streaks")  renderStreaksView();
   if(name === "friends")  renderFriendsView();
   if(name === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); }
-  if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); renderLegal(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
+  if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); renderLegal(); renderStars(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
 }
 function tryShowView(target){
   requireAccess(function(){
@@ -2896,6 +3215,8 @@ document.getElementById("authSubmitBtn").addEventListener("click", async functio
   btn.disabled = true;
   try{
     if(authMode === "signup"){
+      var check = await validateEmail(email, showAuthError);
+      if(!check.ok){ showAuthError(check.msg); return; }
       var existing = await Store.getJSON("account:" + email, null);
       if(existing){ showAuthError(t("auth.exists")); return; }
       await completeSignIn(email, { forceCreate:true, name:name, passHash:simpleHash(pass) });
@@ -2986,8 +3307,23 @@ async function setupGoogleSignIn(){
     holder.style.display = "block";
     fallbackBtn.style.display = "none";
     googleRealActive = true;
+    /* If the Client ID is wrong, or this address is not on the list of
+       authorised origins, Google renders nothing at all. Watch for that and
+       put the built-in chooser back rather than leaving an empty gap. */
+    setTimeout(function(){
+      if(holder.childElementCount === 0){
+        googleRealActive = false;
+        holder.style.display = "none";
+        fallbackBtn.style.display = "";
+      }
+    }, 2500);
     return true;
-  }catch(e){ googleRealActive = false; return false; }
+  }catch(e){
+    googleRealActive = false;
+    holder.style.display = "none";
+    fallbackBtn.style.display = "";
+    return false;
+  }
 }
 var googlePanel = document.getElementById("googlePanel");
 function closeGooglePanel(){
@@ -3021,13 +3357,12 @@ async function openGooglePanel(){
 async function googleSignIn(emailRaw, nameRaw){
   var email = normEmail(emailRaw);
   var err = document.getElementById("googleError");
-  if(!email || email.indexOf("@") < 1 || email.indexOf(".") < 0){
-    err.textContent = t("auth.gneedmail"); err.classList.add("show"); return;
-  }
-  err.classList.remove("show");
   var btn = document.getElementById("googleContinueBtn");
   btn.disabled = true;
   try{
+    var check = await validateEmail(email, function(m){ err.textContent = m; err.classList.add("show"); });
+    if(!check.ok){ err.textContent = check.msg; err.classList.add("show"); return; }
+    err.classList.remove("show");
     var acc = await Store.getJSON("account:" + email, null);
     var name = (nameRaw && nameRaw.trim()) || (acc && acc.name) || email.split("@")[0];
     var known = await Store.getJSON("google:accounts", []);
@@ -3096,6 +3431,7 @@ function refreshChrome(){
   renderTrialBanner();
   renderAccountSettings();
   renderNavLocks();
+  renderFamilyRow();
   renderLock();
   loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); });
 }
@@ -3141,8 +3477,9 @@ document.getElementById("settingsUpgradeBtn").addEventListener("click", function
 /* ============ 8. OWNER PANEL, PROMO CODES, PAYMENTS ============ */
 var SPEC_KEYS = ["physio","ortho","gp","rheum","neuro","cardio","pulmo","podiat","ent","trainer","nutri","other"];
 function specLabel(k){ return t("doc.spec." + (k || "other")); }
-var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[], stripe:{ monthly:"", yearly:"", extras:"" }, liveMode:true,
-  contacts: [], supportPhone: "", googleClientId: "", captureGuard: true };
+var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[],
+  stripe:{ monthly: BUILT_IN.stripe.monthly, yearly: BUILT_IN.stripe.yearly, family: BUILT_IN.stripe.family, extras: BUILT_IN.stripe.extras },
+  liveMode:true, contacts: [], supportPhone: "", googleClientId: BUILT_IN.googleClientId, cloudUrl: CLOUD.base, captureGuard: true };
 var ownerLoaded = false;
 async function loadOwnerSettings(){
   if(ownerLoaded) return ownerSettings;
@@ -3154,6 +3491,7 @@ async function loadOwnerSettings(){
     if(saved.contacts) ownerSettings.contacts = saved.contacts;
     if(saved.supportPhone) ownerSettings.supportPhone = saved.supportPhone;
     if(saved.googleClientId) ownerSettings.googleClientId = saved.googleClientId;
+    if(saved.cloudUrl) ownerSettings.cloudUrl = saved.cloudUrl;
     if(saved.captureGuard !== undefined) ownerSettings.captureGuard = !!saved.captureGuard;
   }
   ownerLoaded = true;
@@ -3169,7 +3507,7 @@ function renderReturnUrls(){
   var wrap = document.getElementById("returnUrlList");
   if(!wrap) return;
   var rows = '<table class="code-table"><thead><tr><th>Product</th><th>Paste this as the Stripe return link</th></tr></thead><tbody>';
-  ["monthly","yearly","extras"].forEach(function(k){
+  ["monthly","yearly","family","extras"].forEach(function(k){
     rows += '<tr><td>' + productLabel(k) + '</td><td><code>' + returnUrlFor(k) + '</code></td></tr>';
   });
   wrap.innerHTML = rows + '</tbody></table>';
@@ -3360,9 +3698,19 @@ async function renderOwnerPanel(){
   document.getElementById("extraOwnerEmailsInput").value = (ownerSettings.extraEmails || []).join(", ");
   document.getElementById("stripeMonthlyInput").value = ownerSettings.stripe.monthly || "";
   document.getElementById("stripeYearlyInput").value = ownerSettings.stripe.yearly || "";
+  document.getElementById("stripeFamilyInput").value = ownerSettings.stripe.family || "";
   document.getElementById("stripeExtrasInput").value = ownerSettings.stripe.extras || "";
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
   document.getElementById("googleClientIdInput").value = ownerSettings.googleClientId || "";
+  document.getElementById("cloudUrlInput").value = ownerSettings.cloudUrl || CLOUD.base || "";
+  var snip = document.getElementById("builtInSnippet");
+  if(snip){
+    snip.textContent = 'var BUILT_IN = {\n' +
+      '  cloudUrl: "' + (ownerSettings.cloudUrl || CLOUD.base || "") + '",\n' +
+      '  googleClientId: "' + (ownerSettings.googleClientId || "") + '",\n' +
+      '  stripe: { monthly:"' + (ownerSettings.stripe.monthly || "") + '", yearly:"' + (ownerSettings.stripe.yearly || "") +
+      '", family:"' + (ownerSettings.stripe.family || "") + '", extras:"' + (ownerSettings.stripe.extras || "") + '" }\n};';
+  }
   document.getElementById("guardToggle").checked = ownerSettings.captureGuard !== false;
   document.getElementById("packState").textContent = extrasActive() ? "Currently unlocked on your account." : "Currently locked.";
   var oh = document.getElementById("googleOriginHint");
@@ -3395,9 +3743,13 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   ownerSettings.extraEmails = document.getElementById("extraOwnerEmailsInput").value.split(",").map(function(s){ return normEmail(s); }).filter(Boolean);
   ownerSettings.stripe.monthly = document.getElementById("stripeMonthlyInput").value.trim();
   ownerSettings.stripe.yearly  = document.getElementById("stripeYearlyInput").value.trim();
+  ownerSettings.stripe.family  = document.getElementById("stripeFamilyInput").value.trim();
   ownerSettings.stripe.extras  = document.getElementById("stripeExtrasInput").value.trim();
   ownerSettings.supportPhone = document.getElementById("admSupportPhone").value.trim();
   ownerSettings.googleClientId = document.getElementById("googleClientIdInput").value.trim();
+  ownerSettings.cloudUrl = cloudNormalise(document.getElementById("cloudUrlInput").value);
+  CLOUD.base = ownerSettings.cloudUrl;
+  try{ if(CLOUD.base) localStorage.setItem("ss_cloud", CLOUD.base); else localStorage.removeItem("ss_cloud"); }catch(e){}
   ownerSettings.captureGuard = document.getElementById("guardToggle").checked;
   guardOn = ownerSettings.captureGuard;
   applyGuard();
@@ -3407,7 +3759,42 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   setTimeout(function(){ c.classList.remove("show"); }, 2500);
   renderOwnerPanel();
   renderSupportFab();
+  gisRequested = false;
   setupGoogleSignIn();
+  if(CLOUD.base){ publishPublicProfile(); pollRequests(); }
+  renderFriendsNote();
+});
+document.getElementById("cloudTestBtn").addEventListener("click", async function(){
+  var st = document.getElementById("cloudTestStatus");
+  CLOUD.base = cloudNormalise(document.getElementById("cloudUrlInput").value);
+  if(!CLOUD.base){ st.textContent = "Paste the address first."; return; }
+  st.textContent = "Testing...";
+  var ok = await cloudTest();
+  st.textContent = ok
+    ? "Connected. Friend requests will now reach the other person's phone."
+    : "No answer. Check the address, and that the database rules allow writing.";
+  renderFriendsNote();
+});
+document.getElementById("googleTestBtn").addEventListener("click", async function(){
+  var st = document.getElementById("googleTestStatus");
+  var cid = document.getElementById("googleClientIdInput").value.trim();
+  if(!cid){ st.textContent = "No Client ID yet — the built-in chooser is being used."; return; }
+  if(!/\.apps\.googleusercontent\.com$/.test(cid)){ st.textContent = "That does not look like a Client ID — it should end in .apps.googleusercontent.com"; return; }
+  if(location.protocol !== "https:" && location.hostname !== "localhost"){
+    st.textContent = "Google only works over https. Publish the page first, then test there."; return;
+  }
+  st.textContent = "Testing...";
+  ownerSettings.googleClientId = cid;
+  gisRequested = false;
+  var loaded = await loadGis();
+  if(!loaded){ st.textContent = "Google's script did not load — check the connection or any blocker."; return; }
+  var ok = await setupGoogleSignIn();
+  setTimeout(function(){
+    var holder = document.getElementById("googleRealBtn");
+    st.textContent = (ok && holder && holder.childElementCount > 0)
+      ? "Working. The real Google button appears on the sign-in screen."
+      : "Google refused. Add " + location.origin + " under Authorised JavaScript origins, then wait a minute and test again.";
+  }, 2600);
 });
 async function recordPurchase(email, productKey, amount){
   if(!email) return;
@@ -3472,13 +3859,35 @@ async function renderCustomerList(){
 }
 async function renderOwnerReviews(){
   var wrap = document.getElementById("ownerReviewsList");
+  var sum = document.getElementById("ratingSummary");
   var reviews = await Store.getJSON("business:reviews", []);
+  if(sum) sum.innerHTML = "";
   if(!reviews.length){ wrap.innerHTML = '<p class="owner-notif-empty">No reviews yet.</p>'; return; }
+  var rated = reviews.filter(function(r){ return r.stars; });
+  if(sum && rated.length){
+    var avg = rated.reduce(function(a,r){ return a + r.stars; }, 0) / rated.length;
+    var bars = "";
+    for(var n = 5; n >= 1; n--){
+      var c = rated.filter(function(r){ return r.stars === n; }).length;
+      var pct = Math.round((c / rated.length) * 100);
+      bars += '<div style="display:flex;align-items:center;gap:.5rem;font-size:.9rem">' +
+        '<span style="width:2.4rem">' + n + ' ★</span>' +
+        '<span style="flex:1;height:9px;background:var(--line);border-radius:99px;overflow:hidden;min-width:90px">' +
+        '<span style="display:block;height:100%;width:' + pct + '%;background:var(--marigold)"></span></span>' +
+        '<span style="width:2.2rem;text-align:right">' + c + '</span></div>';
+    }
+    sum.innerHTML = '<div class="rating-summary"><div><div class="rating-big">' + avg.toFixed(1) + '</div>' +
+      '<div class="stars-small">' + starString(avg) + '</div></div>' +
+      '<div style="flex:1;min-width:200px">' + bars + '</div></div>' +
+      '<p style="color:var(--ink-soft);font-size:.95rem">' + t("stars.avg", { avg: avg.toFixed(1), n: rated.length }) + '</p>';
+  }
   wrap.innerHTML = "";
   reviews.slice().reverse().forEach(function(r){
     var div = document.createElement("div");
     div.className = "review-item";
-    div.innerHTML = '<div class="meta">' + (r.name || "Someone") + ' (' + r.email + ') — ' + new Date(r.ts).toLocaleDateString() + '</div><p style="margin:.4rem 0 0">' + r.text + '</p>';
+    div.innerHTML = '<div class="meta">' + (r.stars ? '<span class="stars-small">' + starString(r.stars) + '</span> · ' : '') +
+      (r.name || "Someone") + ' (' + r.email + ') — ' + new Date(r.ts).toLocaleDateString() + '</div>' +
+      '<p style="margin:.4rem 0 0">' + r.text + '</p>';
     wrap.appendChild(div);
   });
 }
@@ -3493,7 +3902,7 @@ function lookupPromo(codeRaw, scope){
 /* --- Payment modal: subscription plans only, plus a clearly separate bonus card --- */
 var paymentOverlay = document.getElementById("paymentOverlay");
 var selectedPlan = "monthly";
-var planPromo = { monthly:null, yearly:null };
+var planPromo = { monthly:null, yearly:null, family:null };
 function planFinalPrice(key){
   var base = PLAN_DEFS[key].price;
   var p = planPromo[key];
@@ -3616,6 +4025,9 @@ function openPaymentModal(){
   paymentOverlay.classList.add("active");
 }
 document.getElementById("paymentCloseBtn").addEventListener("click", function(){ paymentOverlay.classList.remove("active"); });
+document.getElementById("familyUseBtn").addEventListener("click", function(){
+  useFamilyCode(document.getElementById("familyCodeInput").value, document.getElementById("familyStatus"));
+});
 document.getElementById("bonusCardBtn").addEventListener("click", function(){
   paymentOverlay.classList.remove("active");
   openExtrasModal();
@@ -3731,7 +4143,8 @@ function exerciseCardHTML(ex, locked){
       '<div class="demo-wrap">' + demoSVG(ex.demo) + '</div>' +
       '<p>' + L(ex.instr) + '</p>' +
       '<div class="tip"><strong>' + t("ex.tip") + ':</strong> ' + L(ex.tip) + '</div>' +
-      '<a class="video-link" href="' + videoUrl(ex) + '" target="_blank" rel="noopener">' + t("ex.watchvideo") + '</a>';
+      '<a class="video-link" href="' + videoUrl(ex) + '" target="_blank" rel="noopener">' + t("ex.watchvideo") + '</a>' +
+      '<button class="btn btn-secondary btn-sm" type="button" data-say="' + ex.id + '" style="margin-top:.5rem;align-self:flex-start">' + t("readaloud") + '</button>';
   }
   return html;
 }
@@ -3770,6 +4183,12 @@ function renderLibrary(){
     }
     grid.appendChild(card);
     shown++;
+  });
+  grid.querySelectorAll("[data-say]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var ex = EXERCISES[b.getAttribute("data-say")];
+      if(ex) readAloud(L(ex.name) + ". " + L(ex.instr) + " " + L(ex.tip));
+    });
   });
   document.getElementById("libCount").textContent = t("lib.showing", { n: shown });
 }
@@ -3975,14 +4394,17 @@ function loadExercise(){
   document.getElementById("playerVideoLink").href = videoUrl(ex);
   var nextEx = EXERCISES[sequence[currentIndex + 1]];
   document.getElementById("nextUp").textContent = nextEx ? t("session.next", { name: L(nextEx.name) }) : t("session.nextdone");
-  document.getElementById("playerStatus").textContent = t("session.exof", { a: currentIndex + 1, b: sequence.length });
+  var ph = phaseLabelFor(currentIndex);
+  document.getElementById("playerStatus").innerHTML =
+    (ph ? '<span class="phase-tag">' + ph + '</span><br>' : "") +
+    t("session.exof", { a: currentIndex + 1, b: sequence.length });
   buildDots();
 }
 function startPhase(newPhase){
   phase = newPhase;
   var ex = EXERCISES[sequence[currentIndex]];
   if(!ex){ finishSession(); return; }
-  phaseTotal = phase === "work" ? ex.work : REST_SEC;
+  phaseTotal = phase === "work" ? adjustedWork(ex) : REST_SEC;
   secondsLeft = phaseTotal;
   updateRing();
   if(phase === "work"){ loadExercise(); speak(L(ex.name) + ". " + L(ex.instr)); }
@@ -3992,7 +4414,17 @@ function startPhase(newPhase){
     speak(t("session.rest"));
   }
 }
-function tick(){ secondsLeft--; if(secondsLeft < 0){ advance(); return; } updateRing(); }
+function tick(){
+  secondsLeft--;
+  if(secondsLeft < 0){ advance(); return; }
+  /* Spoken cues for anyone who cannot read the timer from across the room. */
+  if(STATE.settings.voice && phase === "work"){
+    if(secondsLeft === Math.floor(phaseTotal / 2) && phaseTotal >= 30) speak(t("count.half"));
+    if(secondsLeft === 3 || secondsLeft === 2 || secondsLeft === 1) speak(String(secondsLeft));
+    if(secondsLeft === 0) speak(t("count.done"));
+  }
+  updateRing();
+}
 function advance(){
   saveSessionProgress();
   if(phase === "work"){ startPhase("rest"); }
@@ -4029,6 +4461,48 @@ function offerResume(){
   });
   el.appendChild(yes);
 }
+/* Keeps the screen awake during a session. Nothing is more annoying than a
+   phone that sleeps in the middle of an exercise. */
+var wakeLock = null;
+async function keepAwake(on){
+  try{
+    if(on){
+      if("wakeLock" in navigator && !wakeLock) wakeLock = await navigator.wakeLock.request("screen");
+    } else if(wakeLock){ await wakeLock.release(); wakeLock = null; }
+  }catch(e){ wakeLock = null; }
+}
+document.addEventListener("visibilitychange", function(){
+  if(!document.hidden && playerEl.classList.contains("active")) keepAwake(true);
+});
+/* Three, two, one — time to put the phone down and stand up properly. */
+function runCountdown(then){
+  var box = document.getElementById("countdown");
+  var num = document.getElementById("countdownNum");
+  var n = 3;
+  box.classList.add("on");
+  num.textContent = n;
+  speak(String(n));
+  var iv = setInterval(function(){
+    n--;
+    if(n <= 0){
+      clearInterval(iv);
+      box.classList.remove("on");
+      then();
+      return;
+    }
+    num.textContent = n;
+    speak(String(n));
+  }, 1000);
+}
+/* Which part of the session an exercise belongs to, shown on screen. */
+function phaseLabelFor(index){
+  var total = sequence.length;
+  if(total >= 6){
+    if(index < 2) return t("lib.warmup");
+    if(index >= total - 2) return t("lib.stretch");
+  }
+  return "";
+}
 function startSequenceSession(seq, minutesLabel){
   if(!seq || !seq.length) return;
   /* Last line of defence: a paid exercise never plays unless this account
@@ -4049,13 +4523,18 @@ function startSequenceSession(seq, minutesLabel){
   playerEl.classList.add("active");
   document.getElementById("pauseBtn").textContent = t("session.pause");
   document.getElementById("session").scrollIntoView({ behavior: STATE.settings.reduceMotion ? "auto" : "smooth" });
-  startPhase("work");
-  runTimer();
-  saveSessionProgress();
+  keepAwake(true);
+  runCountdown(function(){
+    startPhase("work");
+    runTimer();
+    saveSessionProgress();
+  });
 }
 function finishSession(){
   clearInterval(timerId);
-  sequence = []; STATE.openSession = null; saveState();
+  keepAwake(false);
+  document.getElementById("howThanks").textContent = "";
+  STATE.openSession = null; saveState();
   playerEl.classList.remove("active");
   completeEl.classList.add("active");
   document.getElementById("completeSummary").textContent = t("session.summary", { min: activeSessionLength || "", n: sequence.length });
@@ -4065,17 +4544,19 @@ function finishSession(){
 beginBtn.addEventListener("click", function(){
   if(!chosenLength) return;
   requireAccess(function(){
-    startSequenceSession(generateRoutine(categoriesForFocus(chosenFocus), chosenLength), chosenLength);
+    askReady(generateRoutine(categoriesForFocus(chosenFocus), chosenLength), chosenLength);
   });
 });
 document.getElementById("pauseBtn").addEventListener("click", function(){
   isPaused = !isPaused;
   if(isPaused){ clearInterval(timerId); this.textContent = t("session.resume"); }
   else { runTimer(); this.textContent = t("session.pause"); }
+  watchForTrouble();
 });
 document.getElementById("skipBtn").addEventListener("click", function(){ noteSkip(); advance(); });
 document.getElementById("endBtn").addEventListener("click", function(){
   clearInterval(timerId);
+  keepAwake(false);
   playerEl.classList.remove("active");
   builderEl.style.display = "block";
   sequence = []; STATE.openSession = null; saveState();
@@ -4100,6 +4581,8 @@ function logWorkoutCompletion(minutes, focus){
   learnFromSessions();
   saveState();
   if(STATE.auth.loggedIn) saveAccount();
+  checkMilestones();
+  checkProgression();
 }
 function computeStreak(){
   var set = {};
@@ -4185,7 +4668,7 @@ function statBox(num, labelKey){
   return '<div class="stat-box"><div class="num">' + num + '</div><div class="lab">' + t(labelKey) + '</div></div>';
 }
 function renderStreaksView(){
-  document.getElementById("streakCount").textContent = computeStreak();
+  document.getElementById("streakCount").textContent = computeStreakGraceful();
   var heat = document.getElementById("heatGrid");
   heat.innerHTML = "";
   var set = {};
@@ -4541,7 +5024,7 @@ document.getElementById("dayModalPrintBtn").addEventListener("click", function()
 document.getElementById("dayModalStartBtn").addEventListener("click", function(){
   dayModalOverlay.classList.remove("active");
   showView("home");
-  if(dayModalSeq) startSequenceSession(dayModalSeq, dayModalLen);
+  if(dayModalSeq) askReady(dayModalSeq, dayModalLen);
 });
 /* ============ 11. PROFILE, FRIENDS, QR, CHAT ============ */
 function initials(n){ return (n || "?").trim().charAt(0).toUpperCase(); }
@@ -4667,7 +5150,7 @@ document.getElementById("qrSaveBtn").addEventListener("click", function(){
 function renderFriendsView(){
   renderProfileChrome();
   renderQR();
-  document.getElementById("friendsNote").textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
+  renderFriendsNote();
   var howto = document.getElementById("friendsHowto");
   if(howto) howto.textContent = Store.isNative ? t("friends.howtoshared") : t("friends.howtolocal");
   renderMyFriends();
@@ -4726,6 +5209,25 @@ function renderMyFriends(){
   });
   refreshFriendStats().then(function(changed){ if(changed) renderMyFriends(); });
 }
+/* One free week, once, and only for a genuinely new person: not yourself, not
+   an ID already on the list, and not a second time. Deliberately mean, because
+   referral rewards are the first thing people try to game. */
+async function maybeRewardReferral(newId){
+  STATE.referral = STATE.referral || { earned:false, from:[] };
+  if(STATE.referral.earned) return;
+  if(!STATE.auth.loggedIn || STATE.auth.paid) return;
+  if(newId === STATE.profile.id) return;
+  if(STATE.referral.from.indexOf(newId) !== -1) return;
+  var pub = await Store.getJSON("public:" + newId, null);
+  if(!pub) return;                                  /* must be a real account */
+  STATE.referral.from.push(newId);
+  STATE.referral.earned = true;
+  STATE.auth.trialStart = (STATE.auth.trialStart || Date.now()) + 7 * 86400000;
+  saveState();
+  await saveAccount();
+  renderTrialBanner();
+  showUndoToast(t("refer.earned"), function(){});
+}
 async function addFriendById(rawId, msgEl){
   var id = (rawId || "").trim().toUpperCase();
   if(!/^SS-\d{5}$/.test(id)){
@@ -4752,6 +5254,7 @@ async function addFriendById(rawId, msgEl){
   }
   if(msgEl) msgEl.textContent = t("friends.added", { name: name });
   renderMyFriends();
+  maybeRewardReferral(id);
   return true;
 }
 document.getElementById("addByIdBtn").addEventListener("click", async function(){
@@ -4762,11 +5265,19 @@ document.getElementById("addByIdBtn").addEventListener("click", async function()
 document.getElementById("addIdInput").addEventListener("keydown", function(e){
   if(e.key === "Enter"){ e.preventDefault(); document.getElementById("addByIdBtn").click(); }
 });
+function renderFriendsNote(){
+  var el = document.getElementById("friendsNote");
+  if(!el) return;
+  if(CLOUD.base) el.textContent = CLOUD.checked && !CLOUD.live ? t("friends.cloudfail") : t("friends.cloudnote");
+  else el.textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
+}
 /* Requests really arrive: the inbox is polled while the page is open, the
    Requests tab shows how many are waiting, and a new one raises a message. */
 async function pollRequests(){
   if(!STATE.auth.loggedIn) return 0;
   var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
+  var confirmed = await checkIncomingLinks();
+  if(confirmed) renderMyFriends();
   var pending = reqs.filter(function(r){ return !STATE.friends.some(function(f){ return f.id === r.id; }); });
   var badge = document.getElementById("reqBadge");
   if(badge) badge.textContent = pending.length ? " (" + pending.length + ")" : "";
@@ -4781,7 +5292,8 @@ async function pollRequests(){
   }
   return pending.length;
 }
-setInterval(pollRequests, 25000);
+setInterval(pollRequests, 15000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollRequests(); });
 var pendingInvite = null;
 async function handleInviteLink(){
   var m = (location.search || "").toUpperCase().match(/[?&]ADD=(SS-\d{5})/);
@@ -4867,17 +5379,56 @@ function stopScan(){
   document.getElementById("startScanBtn").style.display = "inline-flex";
   document.getElementById("stopScanBtn").style.display = "none";
 }
+/* Three ways to read a code, in order of what the device offers:
+   the browser's own barcode reader, then jsQR from either of two sources.
+   The camera opens straight away and does not wait for any of them. */
+var jsqrTried = false, barcodeDetector = null;
+function loadJsQr(){
+  return new Promise(function(resolve){
+    if(window.jsQR) return resolve(true);
+    if(jsqrTried) return resolve(!!window.jsQR);
+    jsqrTried = true;
+    var sc = document.createElement("script");
+    sc.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js";
+    sc.onload = function(){ resolve(!!window.jsQR); };
+    sc.onerror = function(){ resolve(false); };
+    document.head.appendChild(sc);
+  });
+}
+function setupDetector(){
+  if(barcodeDetector) return;
+  try{
+    if("BarcodeDetector" in window){ barcodeDetector = new window.BarcodeDetector({ formats:["qr_code"] }); }
+  }catch(e){ barcodeDetector = null; }
+}
+function idFromText(txt){
+  var m = String(txt || "").toUpperCase().match(/SS-\d{5}/);
+  return m ? m[0] : null;
+}
 function decodeFrom(imageData){
   if(!window.jsQR) return null;
   var code = window.jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts:"attemptBoth" });
   if(!code || !code.data) return null;
-  var m = String(code.data).toUpperCase().match(/SS-\d{5}/);
-  return m ? m[0] : null;
+  return idFromText(code.data);
 }
 function scanLoop(){
   var video = document.getElementById("scanVideo");
   var canvas = document.getElementById("scanCanvas");
   if(!scanStream) return;
+  if(barcodeDetector && video.readyState >= 2){
+    barcodeDetector.detect(video).then(function(codes){
+      if(!scanStream) return;
+      for(var i = 0; i < (codes || []).length; i++){
+        var found = idFromText(codes[i].rawValue);
+        if(found){
+          stopScan();
+          scanMsg(t("friends.scanfound", { id: found }));
+          addFriendById(found, document.getElementById("scanMsg"));
+          return;
+        }
+      }
+    }).catch(function(){ barcodeDetector = null; });
+  }
   if(video.readyState >= 2 && video.videoWidth > 0){
     var w = Math.min(640, video.videoWidth);
     var h = Math.round(video.videoHeight * (w / video.videoWidth));
@@ -4897,8 +5448,14 @@ function scanLoop(){
   scanTimer = setTimeout(scanLoop, 120);
 }
 document.getElementById("startScanBtn").addEventListener("click", function(){
+  var secure = (location.protocol === "https:" || location.hostname === "localhost");
+  if(!secure){ scanMsg(t("friends.scanhttps")); return; }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ scanMsg(t("friends.scannocam")); return; }
-  if(!window.jsQR){ scanMsg(t("friends.scannolib")); return; }
+  setupDetector();
+  if(!barcodeDetector && !window.jsQR){
+    scanMsg(t("friends.scanloading"));
+    loadJsQr();                       /* keeps loading while the camera opens */
+  }
   scanMsg(t("friends.scanstart"));
   navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ ideal:"environment" }, width:{ ideal:1280 } }, audio:false })
     .then(function(stream){
@@ -4915,14 +5472,38 @@ document.getElementById("startScanBtn").addEventListener("click", function(){
       scanCtx = null;
       scanLoop();
     })
-    .catch(function(){ scanMsg(t("friends.scanperm")); });
+    .catch(function(err){
+      var name = (err && err.name) || "";
+      if(name === "NotFoundError" || name === "OverconstrainedError"){
+        /* No rear camera on this device: ask again for any camera at all. */
+        navigator.mediaDevices.getUserMedia({ video:true, audio:false }).then(function(stream){
+          scanStream = stream;
+          var video = document.getElementById("scanVideo");
+          video.setAttribute("playsinline", "true");
+          video.srcObject = stream;
+          var p = video.play(); if(p && p.catch) p.catch(function(){});
+          document.getElementById("scanVideoWrap").classList.add("on");
+          document.getElementById("startScanBtn").style.display = "none";
+          document.getElementById("stopScanBtn").style.display = "inline-flex";
+          scanMsg(t("friends.scanpoint"));
+          scanCtx = null;
+          scanLoop();
+        }).catch(function(){ scanMsg(t("friends.scannocam")); });
+        return;
+      }
+      scanMsg(t("friends.scanperm") + (name ? " (" + name + ")" : ""));
+    });
 });
 document.getElementById("stopScanBtn").addEventListener("click", function(){ stopScan(); scanMsg(""); });
 document.getElementById("scanPhotoBtn").addEventListener("click", function(){ document.getElementById("scanPhotoInput").click(); });
 document.getElementById("scanPhotoInput").addEventListener("change", function(e){
   var file = e.target.files && e.target.files[0];
   if(!file) return;
-  if(!window.jsQR){ scanMsg(t("friends.scannolib")); return; }
+  if(!window.jsQR){
+    scanMsg(t("friends.scanloading"));
+    loadJsQr().then(function(ok){ if(ok) document.getElementById("scanPhotoInput").click(); else scanMsg(t("friends.scannolib")); });
+    return;
+  }
   var img = new Image();
   img.onload = function(){
     var canvas = document.getElementById("scanCanvas");
@@ -5444,6 +6025,7 @@ document.getElementById("docGeoBtn").addEventListener("click", function(){
 document.getElementById("docFindBtn").addEventListener("click", function(){ renderDoctorResults(); });
 document.getElementById("docCountry").addEventListener("change", function(e){
   STATE.location.country = e.target.value; saveState();
+  applyPlaceholders();
 });
 document.getElementById("docCity").addEventListener("change", function(e){
   STATE.location.city = e.target.value.trim(); saveState();
@@ -5527,9 +6109,7 @@ function setHealthMode(mode){
   document.getElementById("healthInputLabel").textContent = mode === "goal" ? t("health.labelgoal") : t("health.label");
   document.getElementById("healthHint").textContent = mode === "goal" ? t("health.hintgoal") : t("health.hint");
   var ta = document.getElementById("injuryInput");
-  ta.placeholder = mode === "goal"
-    ? "e.g. I'd like the muscles in my arms to show a bit more"
-    : "e.g. My right knee aches when I stand up from a chair, and it's stiff in the morning.";
+  ta.placeholder = mode === "goal" ? t("ph.goal") : t("ph.pain");
 }
 document.querySelectorAll(".mode-chip").forEach(function(chip){
   chip.addEventListener("click", function(){
@@ -5964,6 +6544,175 @@ function autoStartStepsIfPossible(){
   if(!("ontouchstart" in window)) return; /* desktops have no useful sensor */
   startStepAuto();
 }
+/* ============ 12b. EFFORT, SAFETY, PROGRESSION, REPORT, FAMILY ============ */
+/* "How did that feel?" quietly tunes the next session: two easy answers make
+   the work a little longer, two hard ones make it shorter. */
+document.querySelectorAll("[data-how]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var how = b.getAttribute("data-how");
+    STATE.effort = STATE.effort || { easy:0, hard:0, adjust:0 };
+    if(how === "easy") STATE.effort.easy++;
+    if(how === "hard") STATE.effort.hard++;
+    if(STATE.effort.easy >= 2){ STATE.effort.adjust = Math.min(15, (STATE.effort.adjust || 0) + 5); STATE.effort.easy = 0; }
+    if(STATE.effort.hard >= 2){ STATE.effort.adjust = Math.max(-10, (STATE.effort.adjust || 0) - 5); STATE.effort.hard = 0; }
+    saveState();
+    if(STATE.auth.loggedIn) saveAccount();
+    document.getElementById("howThanks").textContent = t("how.thanks");
+  });
+});
+function adjustedWork(ex){
+  var a = (STATE.effort && STATE.effort.adjust) || 0;
+  return Math.max(15, (ex.work || 30) + a);
+}
+/* A bad day should not cost three weeks of work. */
+function computeStreakGraceful(){
+  var set = {};
+  STATE.workoutLog.forEach(function(d){ set[d] = true; });
+  var streak = 0, misses = 0, cur = new Date();
+  if(!set[dateStr(cur)]) cur.setDate(cur.getDate() - 1);
+  while(true){
+    if(set[dateStr(cur)]){ streak++; }
+    else {
+      misses++;
+      if(misses > GRACE_DAYS) break;
+    }
+    cur.setDate(cur.getDate() - 1);
+    if(streak > 3650) break;
+  }
+  return streak;
+}
+/* One milestone only: the seventh day in a row, which is the one that sticks. */
+function checkMilestones(){
+  STATE.milestones = STATE.milestones || {};
+  if(computeStreakGraceful() >= 7 && !STATE.milestones.week7){
+    STATE.milestones.week7 = Date.now();
+    saveState();
+    showUndoToast(t("milestone.week"), function(){});
+    speak(t("milestone.week"));
+  }
+}
+/* Two weeks of the very same session means it is time to nudge upward. */
+function checkProgression(){
+  var since = Date.now() - 14 * 86400000;
+  var recent = (STATE.sessionLog || []).filter(function(x){ return x.ts > since; });
+  if(recent.length < 6) return;
+  var same = recent.every(function(x){ return x.minutes === recent[0].minutes && x.focus === recent[0].focus; });
+  if(!same) return;
+  if(STATE.progressNudge && Date.now() - STATE.progressNudge < 7 * 86400000) return;
+  STATE.progressNudge = Date.now();
+  saveState();
+  showUndoToast(t("prog.h") + " — " + t("prog.p"), function(){});
+}
+/* If a session is left paused mid-balance, ask after two minutes. */
+var idleWatch = null;
+function watchForTrouble(){
+  clearTimeout(idleWatch);
+  if(!isPaused || !playerEl.classList.contains("active")) return;
+  idleWatch = setTimeout(function(){
+    if(!isPaused || !playerEl.classList.contains("active")) return;
+    var el = showUndoToast(t("fall.q"), function(){});
+    if(!el) return;
+    el.querySelector("button").textContent = t("fall.ok");
+    var call = document.createElement("button");
+    call.type = "button"; call.textContent = t("help.btn"); call.style.marginLeft = ".4rem";
+    call.addEventListener("click", function(){ triggerSos(); });
+    el.appendChild(call);
+  }, 120000);
+}
+/* A standing session gets one calm safety check first, once a day. */
+function needsStandingCheck(seq){
+  return seq.some(function(id){
+    var ex = EXERCISES[id];
+    return ex && (ex.cat === "balance" || ex.equip === "wall");
+  });
+}
+var pendingStart = null;
+function askReady(seq, minutes){
+  var today = dateStr();
+  if(STATE.readyShown === today || !needsStandingCheck(seq)){ startSequenceSession(seq, minutes); return; }
+  pendingStart = { seq:seq, minutes:minutes };
+  document.getElementById("readyOverlay").classList.add("active");
+}
+document.getElementById("readyGo").addEventListener("click", function(){
+  document.getElementById("readyOverlay").classList.remove("active");
+  STATE.readyShown = dateStr();
+  saveState();
+  if(pendingStart){ var p = pendingStart; pendingStart = null; startSequenceSession(p.seq, p.minutes); }
+});
+document.getElementById("readyLater").addEventListener("click", function(){
+  document.getElementById("readyOverlay").classList.remove("active");
+  pendingStart = null;
+});
+/* Three gentle minutes, seated, for the days when nothing else is possible. */
+document.getElementById("easyDayBtn").addEventListener("click", function(){
+  requireAccess(function(){
+    var gentle = ["breathingReach","shoulderRolls","seatedMarching","neckStretch","gentleTwist"]
+      .filter(function(id){ return EXERCISES[id]; });
+    showUndoToast(t("easy.h") + " — " + t("easy.p"), function(){});
+    startSequenceSession(gentle, 3);
+  });
+});
+/* One page for the doctor or the family. */
+function printReport(){
+  var now = new Date();
+  var ym = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0");
+  var days = STATE.workoutLog.filter(function(d){ return d.indexOf(ym) === 0; });
+  var sess = (STATE.sessionLog || []).filter(function(x){ return String(x.date || "").indexOf(ym) === 0; });
+  var mins = sess.reduce(function(a,x){ return a + (x.minutes || 0); }, 0);
+  var steps = Object.keys(STATE.steps.byDate || {}).filter(function(d){ return d.indexOf(ym) === 0; })
+    .reduce(function(a,d){ return a + STATE.steps.byDate[d]; }, 0);
+  var w = window.open("", "_blank");
+  if(!w) return;
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + t("report.title") + '</title>' +
+    '<style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.6;max-width:18cm;margin:1.6cm auto;color:#111}' +
+    'h1{font-size:22pt;margin-bottom:.1cm}table{width:100%;border-collapse:collapse;margin:1cm 0}' +
+    'td,th{border-bottom:1px solid #bbb;text-align:left;padding:.35cm .2cm}th{font-size:11pt;color:#555}' +
+    '.big{font-size:26pt;font-weight:bold}</style></head><body>' +
+    '<h1>' + t("report.title") + '</h1><p>' + STATE.profile.name + ' · ' + now.toLocaleDateString() + '</p>' +
+    '<table><tr><th>' + t("report.days") + '</th><th>' + t("report.sessions") + '</th><th>' + t("report.minutes") + '</th><th>' + t("report.steps") + '</th></tr>' +
+    '<tr><td class="big">' + days.length + '</td><td class="big">' + sess.length + '</td><td class="big">' + mins + '</td><td class="big">' + steps + '</td></tr></table>' +
+    '<p>' + t("streaks.daylabel") + ': ' + computeStreakGraceful() + '</p>' +
+    '<p><em>' + t("report.note") + '</em></p></body></html>');
+  w.document.close();
+  setTimeout(function(){ try{ w.print(); }catch(e){} }, 400);
+}
+document.getElementById("printReportBtn").addEventListener("click", printReport);
+/* Family plan: one code, one extra person, checked before it is honoured. */
+function familyCode(){ return "FAM-" + STATE.profile.id.replace("SS-",""); }
+function renderFamilyRow(){
+  var row = document.getElementById("familyRow");
+  if(!row) return;
+  var on = STATE.auth.loggedIn && STATE.auth.plan === "family" && STATE.auth.paid;
+  row.style.display = on ? "flex" : "none";
+  if(on) document.getElementById("familyCode").textContent = familyCode();
+}
+document.getElementById("familyShareBtn").addEventListener("click", function(){
+  var msg = t("family.p") + " " + familyCode();
+  if(navigator.share){ navigator.share({ text: msg }); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(msg); }
+  this.textContent = t("friends.invitecopied");
+});
+async function useFamilyCode(code, statusEl){
+  code = String(code || "").trim().toUpperCase();
+  if(!/^FAM-\d{5}$/.test(code)){ statusEl.textContent = t("family.bad"); return; }
+  if(code === familyCode()){ statusEl.textContent = t("family.bad"); return; }
+  var rec = await Store.getJSON("family:" + code, { members: [] });
+  if((rec.members || []).length >= 1 && rec.members.indexOf(normEmail(STATE.auth.email)) === -1){
+    statusEl.textContent = t("family.limit"); return;
+  }
+  var ownerId = "SS-" + code.replace("FAM-","");
+  var pub = await Store.getJSON("public:" + ownerId, null);
+  if(!pub){ statusEl.textContent = t("family.bad"); return; }
+  rec.members = [normEmail(STATE.auth.email)];
+  await Store.setJSON("family:" + code, rec);
+  STATE.auth.paid = true;
+  STATE.auth.plan = "family";
+  STATE.auth.planExpiry = Date.now() + 30 * 86400000;
+  saveState();
+  await saveAccount();
+  refreshChrome();
+  statusEl.textContent = t("family.ok");
+}
 /* ============ 13. MEMORY ============ */
 function learnFromSessions(){
   var facts = {};
@@ -6032,16 +6781,52 @@ document.getElementById("memoryInput").addEventListener("keydown", function(e){
   if(e.key === "Enter"){ e.preventDefault(); document.getElementById("memoryAddBtn").click(); }
 });
 /* ============ 14. REVIEWS ============ */
+/* Stars first, words after: most people will happily tap a star and never
+   write a sentence, and a rating on its own is already worth having. */
+var reviewStars = 0;
+function renderStars(){
+  var wrap = document.getElementById("reviewStars");
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  for(var i = 1; i <= 5; i++){
+    (function(n){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "star" + (n <= reviewStars ? " on" : "");
+      b.textContent = n <= reviewStars ? "★" : "☆";
+      b.setAttribute("aria-label", n + "/5");
+      b.setAttribute("aria-pressed", String(n === reviewStars));
+      b.addEventListener("click", function(){
+        reviewStars = (reviewStars === n) ? 0 : n;   /* tap the same star to clear */
+        renderStars();
+      });
+      wrap.appendChild(b);
+    })(i);
+  }
+  var label = document.getElementById("reviewStarsLabel");
+  if(label){
+    label.textContent = reviewStars
+      ? t("stars.picked", { n: reviewStars, word: t("stars." + reviewStars) })
+      : t("stars.q") + " " + t("stars.none");
+  }
+}
+function starString(n){
+  n = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+  return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+}
 document.getElementById("reviewSubmitBtn").addEventListener("click", function(){
   requireAccess(function(){
     var input = document.getElementById("reviewInput");
     var text = input.value.trim();
     var status = document.getElementById("reviewStatus");
+    if(!reviewStars){ status.textContent = t("stars.need"); return; }
     if(!text){ status.textContent = t("reviews.empty"); return; }
     Store.getJSON("business:reviews", []).then(function(list){
-      list.push({ email: STATE.auth.email, name: STATE.profile.name, text:text, ts:Date.now() });
+      list.push({ email: STATE.auth.email, name: STATE.profile.name, text:text, stars: reviewStars, ts:Date.now() });
       Store.setJSON("business:reviews", list).then(function(){
         input.value = "";
+        reviewStars = 0;
+        renderStars();
         status.textContent = t("reviews.thanks");
         if(isOwner()) renderOwnerReviews();
       });
@@ -6236,6 +7021,42 @@ var FEATURES = [
    pt:"Português, espanhol e francês totalmente traduzidos — nada fica em inglês",
    es:"Portugués, español y francés totalmente traducidos — nada queda en inglés",
    fr:"Portugais, espagnol et français entièrement traduits — rien ne reste en anglais"},
+  {en:"The screen stays awake, a 3-2-1 countdown starts you off, and the timer counts down out loud",
+   pt:"O ecrã não adormece, uma contagem 3-2-1 dá o arranque, e o tempo é contado em voz alta",
+   es:"La pantalla no se apaga, una cuenta 3-2-1 da la salida, y el tiempo se cuenta en voz alta",
+   fr:"L'écran reste allumé, un décompte 3-2-1 lance la séance, et le temps est compté à voix haute"},
+  {en:"After each session: easy, just right or hard — and the next one adjusts itself",
+   pt:"No fim de cada sessão: fácil, no ponto ou difícil — e a seguinte ajusta-se sozinha",
+   es:"Al final de cada sesión: fácil, en su punto o difícil — y la siguiente se ajusta sola",
+   fr:"Après chaque séance : facile, juste bien ou difficile — et la suivante s'ajuste"},
+  {en:"A missed day no longer wipes out the streak, and a hard day has its own three gentle minutes",
+   pt:"Falhar um dia já não deita a sequência abaixo, e um dia difícil tem três minutos suaves à parte",
+   es:"Fallar un día ya no tira la racha, y un día difícil tiene sus tres minutos suaves",
+   fr:"Un jour manqué ne casse plus la série, et un jour difficile a ses trois minutes douces"},
+  {en:"A standing session asks for the chair, the clear floor and the phone within reach first",
+   pt:"Uma sessão de pé pede primeiro a cadeira, o chão livre e o telemóvel ao alcance",
+   es:"Una sesión de pie pide antes la silla, el suelo despejado y el móvil al alcance",
+   fr:"Une séance debout demande d'abord la chaise, le sol dégagé et le téléphone à portée"},
+  {en:"If a session stays paused for two minutes, the app asks whether you are all right",
+   pt:"Se uma sessão ficar em pausa dois minutos, a aplicação pergunta se está tudo bem",
+   es:"Si una sesión queda en pausa dos minutos, la aplicación pregunta si va todo bien",
+   fr:"Si une séance reste en pause deux minutes, l'application demande si tout va bien"},
+  {en:"A printable one-page month for the doctor or the family",
+   pt:"Um resumo mensal de uma página, para imprimir e levar ao médico ou mostrar à família",
+   es:"Un resumen mensual de una página, para imprimir y llevar al médico o enseñar a la familia",
+   fr:"Un bilan mensuel d'une page à imprimer pour le médecin ou la famille"},
+  {en:"Friend requests really reach the other person's phone once a shared address book is set up in the admin panel",
+   pt:"Os pedidos de amizade chegam mesmo ao telemóvel da outra pessoa, assim que a lista partilhada estiver ligada no painel de administração",
+   es:"Las solicitudes de amistad llegan de verdad al móvil de la otra persona, en cuanto la libreta compartida esté activada en el panel",
+   fr:"Les demandes d'ami parviennent vraiment au téléphone de l'autre personne, dès que le carnet partagé est activé dans le panneau"},
+  {en:"Sign in with Google uses Google's own button, with a test that says exactly what is missing if it refuses",
+   pt:"O entrar com Google usa o botão do próprio Google, com um teste que diz exatamente o que falta se ele recusar",
+   es:"Entrar con Google usa el botón del propio Google, con una prueba que dice exactamente qué falta si se niega",
+   fr:"La connexion Google utilise le bouton de Google lui-même, avec un test qui dit précisément ce qui manque en cas de refus"},
+  {en:"Family plan for two people, with a code to share, and only real email addresses may register",
+   pt:"Plano Família para duas pessoas, com código para partilhar, e só endereços de e-mail verdadeiros se podem registar",
+   es:"Plan Familia para dos personas, con código para compartir, y solo correos reales pueden registrarse",
+   fr:"Formule Famille pour deux personnes, avec un code à partager, et seules les vraies adresses e-mail peuvent s'inscrire"},
   {en:"A red help button that calls the person you chose, with your country's emergency number beside it",
    pt:"Um botão vermelho de ajuda que liga à pessoa que escolheu, com o número de emergência do seu país ao lado",
    es:"Un botón rojo de ayuda que llama a la persona que elijas, con el número de emergencias de tu país al lado",
@@ -6551,6 +7372,10 @@ document.getElementById("langSelect").addEventListener("change", function(e){
 async function deleteAccountEverywhere(){
   var email = normEmail(STATE.auth.email || "");
   var id = STATE.profile.id;
+  /* Close the door first: any save already in flight finds the account gone
+     and gives up, instead of writing it back a second after we erase it. */
+  accountDeleted = true;
+  STATE.auth = defaultState().auth;
   try{
     if(email) await Store.set("account:" + email, "");
     await Store.set("directory:" + id, "");
@@ -6568,13 +7393,20 @@ async function deleteAccountEverywhere(){
   }catch(e){}
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
   try{
-    Object.keys(localStorage).forEach(function(k){
-      if(k.indexOf("ss_shared::account:" + email) === 0 ||
-         k.indexOf("ss_shared::directory:" + id) === 0 ||
-         k.indexOf("ss_shared::public:" + id) === 0 ||
-         k.indexOf("ss_shared::requests:" + id) === 0){ localStorage.removeItem(k); }
+    Object.keys(localStorage).slice().forEach(function(k){
+      var mine = (email && k.indexOf(email) !== -1) || (id && k.indexOf(id) !== -1);
+      if(k.indexOf("ss_shared::") === 0 && mine) localStorage.removeItem(k);
     });
   }catch(e){}
+  /* Check it really went, and have one more go if something survived. */
+  try{
+    var still = email ? await Store.getJSON("account:" + email, null) : null;
+    if(still){
+      await Store.set("account:" + email, "");
+      try{ localStorage.removeItem("ss_shared::account:" + email); }catch(e){}
+    }
+  }catch(e){}
+  return true;
 }
 document.getElementById("resetDataBtn").addEventListener("click", async function(){
   if(!confirm(t("reset.confirm"))) return;
@@ -6596,7 +7428,7 @@ function renderAllVisible(){
   if(id === "streaks")  renderStreaksView();
   if(id === "friends")  renderFriendsView();
   if(id === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); if(lastAnalysis) renderHealthAnswer(); }
-  if(id === "settings"){ renderMemory(); renderOwnerPanel(); renderWhatsNew(); renderLegal(); }
+  if(id === "settings"){ renderMemory(); renderOwnerPanel(); renderWhatsNew(); renderLegal(); renderStars(); }
 }
 document.querySelectorAll(".modal-overlay").forEach(function(ov){
   ov.addEventListener("click", function(e){ if(e.target === ov) ov.classList.remove("active"); });
@@ -6637,6 +7469,7 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   applyContrast();
   renderWhatsNew();
   renderLegal();
+  renderStars();
   renderHelpFab();
   applySimpleMode();
   setupOffline();
@@ -6653,7 +7486,10 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
     setupGoogleSignIn();
     handleReturnFromStripe();
     handleInviteLink();
-    pollRequests();
+    if(CLOUD.base){
+      cloudTest().then(function(){ renderFriendsNote(); publishPublicProfile(); pollRequests(); });
+    } else { pollRequests(); }
+    renderFriendsNote();
   });
 })();
 })();
