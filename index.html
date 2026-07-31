@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v16 — Home Workouts for You</title>
+<title>Steady &amp; Strong v17 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -283,6 +283,13 @@
   #walkOverlay #walkSteps{font-size:23vw;line-height:1;font-weight:800;color:#f4f1ea}
   #walkOverlay p{color:#8a8a8a;margin:.6rem 0}
   #walkOverlay .btn{margin-top:1.6rem}
+  .msg{position:relative}
+  .msg img.att{max-width:100%;border-radius:10px;display:block;margin:.2rem 0;cursor:zoom-in}
+  .msg .att-file{display:inline-flex;align-items:center;gap:.4rem;text-decoration:underline;font-weight:700}
+  .msg .msg-del{position:absolute;top:2px;right:4px;border:none;background:transparent;cursor:pointer;font-size:.9rem;opacity:.45;line-height:1}
+  .msg .msg-del:hover{opacity:1}
+  .msg.call{background:var(--teal-tint)!important;color:var(--ink)!important;font-style:italic;text-align:center;max-width:100%}
+  .msg.gone{opacity:.55;font-style:italic}
   .msg-time{display:block;font-size:.72rem;opacity:.6;margin-top:.2rem}
   .call-video-wrap{position:relative;background:var(--teal-dark);border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:1rem}
   #callRemote{width:100%;height:100%;object-fit:cover;background:#000}
@@ -470,7 +477,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v16</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v17</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -855,6 +862,21 @@
               <button class="btn btn-secondary btn-sm" id="stepAutoStopBtn" type="button" style="display:none" data-i18n="steps.autostop">Stop counting</button>
               <button class="btn btn-secondary btn-sm" id="walkStartBtn" type="button" data-i18n="steps.walkmode">Going for a walk</button>
             </div>
+            <div class="reminder-row">
+              <label class="field-label" for="stepSens" style="margin:0" data-i18n="steps.sens">Sensitivity</label>
+              <select class="text-input" id="stepSens" style="max-width:150px">
+                <option value="0.6" data-i18n="steps.sens.high">Gentle walking</option>
+                <option value="1" data-i18n="steps.sens.normal">Normal</option>
+                <option value="1.6" data-i18n="steps.sens.low">Only firm steps</option>
+              </select>
+            </div>
+            <p class="reminder-status" id="stepLive" style="display:none;font-variant-numeric:tabular-nums"></p>
+            <div class="reminder-row">
+              <span class="field-label" style="margin:0" data-i18n="steps.byhand">Add by hand</span>
+              <button class="btn btn-secondary btn-sm" data-addsteps="500" type="button">+500</button>
+              <button class="btn btn-secondary btn-sm" data-addsteps="1000" type="button">+1000</button>
+              <button class="btn btn-secondary btn-sm" data-addsteps="-500" type="button">&minus;500</button>
+            </div>
             <p class="reminder-status" id="stepStatus"></p>
             <p style="color:var(--ink-soft);font-size:.9rem" data-i18n="steps.truth">No web page can read the step counter while it is closed — that is a rule of the phone, not a missing feature. Leave this page open (walk mode keeps it awake on a dark screen) and every step is counted, with or without internet.</p>
             <div id="stepWeek" style="display:flex;gap:.4rem;align-items:flex-end;margin-top:.8rem;height:60px"></div>
@@ -998,6 +1020,8 @@
           <select class="text-input" id="langSelect" style="max-width:220px"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option><option value="fr">Français</option></select>
         </div>
         <div class="settings-row"><div><h3 data-i18n="settings.voiceh">Voice announcements</h3><p data-i18n="settings.voicep">Read each exercise name aloud during guided sessions.</p></div><input type="checkbox" id="settingsVoiceToggle" style="width:26px;height:26px"></div>
+        <div class="settings-row"><div><h3 data-i18n="notify.h">Let me know</h3><p data-i18n="notify.p">A message or a call reaches you even when this page is behind another window. The telephone buzzes either way; the written notice needs your permission once.</p><p class="promo-status" id="notifyStatus"></p></div><button class="btn btn-secondary btn-sm" id="notifyBtn" type="button" data-i18n="notify.btn">Turn on notices</button></div>
+        <div class="settings-row"><div><h3 data-i18n="block.h">Blocked people</h3><p data-i18n="block.p">Nothing from them reaches you — no messages, no requests, no ringing. They are never told, and you can undo it here.</p><div id="blockedList" style="margin-top:.5rem"></div></div><span></span></div>
         <div class="settings-row"><div><h3 data-i18n="zoom.h">Size of everything</h3><p data-i18n="zoom.p">Not only the words: buttons, timers and drawings grow with the text, so nothing ends up too small to press. Ctrl and + or &minus; does the same from a keyboard.</p></div>
           <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
             <button class="btn btn-secondary btn-sm" id="zoomOutBtn2" type="button" aria-label="Smaller">A&minus;</button>
@@ -1197,7 +1221,7 @@
   </section>
 </div>
 </main>
-<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0">Version 12.0 · build 2026-07-30 — open Settings › What's in this version for the full list</p></div></footer>
+<footer><div class="container"><p data-i18n="footer.p">Steady &amp; Strong — home workouts designed for you. Always listen to your body.</p><p style="font-size:.85rem;opacity:.75;margin:0" id="footerBuild"></p></div></footer>
 <div class="countdown" id="countdown"><span class="lab" data-i18n="count.go">Starting in</span><span class="num" id="countdownNum">3</span></div>
 <div class="modal-overlay" id="readyOverlay">
   <div class="modal-box" style="max-width:460px;text-align:center">
@@ -1279,8 +1303,20 @@
   <div class="modal-box">
     <button class="modal-close" id="chatCloseBtn" aria-label="Close">&times;</button>
     <h3 id="chatWithName">Chat</h3>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem">
+      <button class="btn btn-secondary btn-sm" id="chatCallBtn" type="button" data-i18n="friends.audio">Audio call</button>
+      <button class="btn btn-secondary btn-sm" id="chatVideoBtn" type="button" data-i18n="friends.video">Video call</button>
+      <button class="btn btn-secondary btn-sm" id="chatClearBtn" type="button" data-i18n="chat.clear">Clear conversation</button>
+      <button class="btn btn-secondary btn-sm" id="chatBlockBtn" type="button" data-i18n="block.btn">Block</button>
+    </div>
     <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input-row"><input class="text-input" id="chatInput" type="text" placeholder="Type a message..."><button class="btn btn-teal btn-sm" id="chatSendBtn" data-i18n="friends.send">Send</button></div>
+    <div class="chat-input-row">
+      <button class="btn btn-secondary btn-sm" id="chatAttachBtn" type="button" title="Attach" aria-label="Attach">📎</button>
+      <input class="text-input" id="chatInput" type="text" placeholder="Type a message...">
+      <button class="btn btn-teal btn-sm" id="chatSendBtn" data-i18n="friends.send">Send</button>
+    </div>
+    <input type="file" id="chatFile" accept="image/*,.pdf,.txt,.doc,.docx" style="display:none">
+    <p class="promo-status" id="chatStatus"></p>
   </div>
 </div>
 <!-- ============ CALL MODAL ============ -->
@@ -1446,7 +1482,7 @@ var PLAN_DEFS = {
    "What's in this version", the backup file and the fault log all read this,
    so they can never disagree with one another again. Bump it here and in the
    first line of sw.js — the admin panel shouts if those two ever differ. */
-var BUILD_TAG = "v16";
+var BUILD_TAG = "v17";
 var APP_BUILD_DATE = "2026-07-31";
 var GRACE_DAYS = 1;      /* one missed day does not wipe out weeks of work */
 var EXTRAS_PRICE = 1.00;
@@ -1489,7 +1525,8 @@ I18N.en = {
 "friends.h2":"Friends","friends.p":"Add friends by ID or QR code, chat with them, and see how they're doing.","photo.add":"Add a photo","photo.remove":"Remove","photo.working":"Making it smaller...","photo.done":"Saved. Your friends will see it too.","photo.removed":"Removed — back to the letter.","photo.notimage":"That file is not a picture.","photo.failed":"That picture could not be read. Try another one.",
 "friends.username":"Your display name","friends.yourid":"Your ID:","friends.save":"Save profile","friends.copyid":"Copy","friends.copied":"Copied!",
 "friends.tabmine":"My friends","friends.tabadd":"Add friend","friends.tabreq":"Requests",
-"call.calling":"Ringing {name}...","call.connecting":"Connecting...","call.connected":"Connected.","call.incoming":"{name} is calling","call.incomingp":"Answer to speak and see each other.","call.answer":"Answer","call.decline":"Decline","call.declined":"They could not take the call.","call.ended":"Call ended.","call.failed":"The two devices could not reach each other. This usually happens on a mobile network that blocks direct connections — try Wi-Fi, or add a relay in the admin panel.","call.nocam":"No camera or microphone was allowed, so the call cannot start.","call.nocloud":"Live calling needs the shared address set up in the admin panel. Until then this only shows your own camera.","chat.newmsg":"{name}:","nick.label":"What would you like to call them?","nick.save":"Save name","nick.saved":"Saved. You will see {n} everywhere.","nick.cleared":"Name cleared — their own name is back.","nick.realname":"Their own name: {n}",
+"call.calling":"Ringing {name}...","call.connecting":"Connecting...","call.connected":"Connected.","call.incoming":"{name} is calling","call.incomingp":"Answer to speak and see each other.","call.answer":"Answer","call.decline":"Decline","call.declined":"They could not take the call.","call.ended":"Call ended.","call.failed":"The two devices could not reach each other. This usually happens on a mobile network that blocks direct connections — try Wi-Fi, or add a relay in the admin panel.","call.nocam":"No camera or microphone was allowed, so the call cannot start.","call.nocloud":"Live calling needs the shared address set up in the admin panel. Until then this only shows your own camera.","chat.clear":"Clear conversation","chat.clearask":"This removes the whole conversation for both of you. Carry on?","chat.delete":"Delete this message","chat.deleted":"Message removed","block.btn":"Block","block.un":"Unblock","block.on":"You have blocked this person. Nothing they send reaches you.","block.h":"Blocked people","block.p":"Nothing from them reaches you — no messages, no requests, no ringing. They are never told, and you can undo it here.","block.none":"Nobody is blocked.","block.refused":"You have blocked that person. Unblock them in Settings first.","notify.h":"Let me know","notify.p":"A message or a call reaches you even when this page is behind another window. The telephone buzzes either way; the written notice needs your permission once.","notify.btn":"Turn on notices","notify.on":"Notices are on. They work while this page is open, in any window.","notify.off":"Notices are off — you will only see messages when you are looking at this page.","notify.denied":"Your browser has refused notices for this site. Turn them back on in the browser settings for this page.","notify.nosupport":"This browser cannot show notices.","call.log.out":"You called {name}","call.log.in":"{name} called you","call.log.missed":"Missed call from {name}","call.log.noanswer":"{name} did not answer","att.sending":"Sending...","att.failed":"That file could not be sent.","att.toobig":"That file is {s} — too big to send through a chat with no server. The limit is {m}. A photograph is shrunk automatically, so photographs are always fine.","att.gone":"An older attachment ({n}) was let go to keep the conversation working.",
+"chat.newmsg":"{name}:","nick.label":"What would you like to call them?","nick.save":"Save name","nick.saved":"Saved. You will see {n} everywhere.","nick.cleared":"Name cleared — their own name is back.","nick.realname":"Their own name: {n}",
 "friends.scanh":"Your QR code","friends.scanp":"Show this to a friend so they can scan it and add you instantly.",
 "friends.scancamh":"Scan a friend's QR code","friends.scancamp":"Point your camera at their code. Your browser will ask for camera permission first.",
 "friends.startscan":"Open camera & scan","friends.stopscan":"Stop camera","friends.scanphoto":"Scan a photo instead","friends.qrretry":"Redraw the code","friends.qrsave":"Save as picture",
@@ -1548,6 +1585,7 @@ I18N.en = {
 "coach.h":"How much the voice says","coach.p":"From silence, to just the name of each exercise, to a coach who talks you through it.","coach.off":"Nothing","coach.names":"Just the names","coach.full":"Full guidance","coach.speedh":"Speaking speed","coach.speedp":"Slower is easier to follow across a room.","coach.slow":"Slow","coach.normal":"Normal","coach.fast":"Brisk","coach.test":"Try the voice","coach.sample":"This is how I will guide you. Sit tall, and breathe easily.","coach.now":"Number {n} of {total}. {name}.","coach.seatedok":"You can do this one sitting down if you prefer.","coach.restnow":"Rest now.","coach.breathe":"Keep breathing — do not hold your breath.","coach.getready":"Ready for the next one.","coach.water":"Have a sip of water.","coach.enc1":"That is it — steady and strong.","coach.enc2":"Nearly there, keep going.","coach.enc3":"Lovely work.","coach.enc4":"Slow and controlled is better than fast.","coach.enc5":"Good — stay tall.","steps.walkmode":"Going for a walk","steps.walkstop":"Finish the walk","steps.walkp":"The screen stays on with almost nothing lit, so the counting carries on in your pocket. No internet needed.","steps.walkmin":"{n} minutes walking","steps.truth":"No web page can read the step counter while it is closed — that is a rule of the phone, not a missing feature. Leave this page open (walk mode keeps it awake on a dark screen) and every step is counted, with or without internet.","steps.gap":"The counter was asleep for about {n} minutes.","steps.gapadd":"Add those steps","steps.gapask":"Roughly how many minutes were you walking? We will count about 100 steps a minute.","steps.p":"Counts by itself while you move, using your phone's motion sensor. Leave this page open in your pocket and it keeps counting.",
 "steps.today":"steps today","steps.goal":"Daily goal","steps.autostart":"Start counting","steps.autostop":"Stop counting",
 "steps.progress":"{n} of {g} steps today ({p}%).","steps.goalreached":"Goal reached — well done today!",
+"steps.resume":"Continue counting","steps.silent":"No movement readings are arriving from this device. On a computer that is normal — there is no motion sensor. On a telephone, open Settings › Safari (or your browser) and allow Motion & Orientation, then tap again.","steps.live":"Reading the sensor: {r} times a second · movement {m}","steps.sens":"Sensitivity","steps.sens.high":"Gentle walking","steps.sens.normal":"Normal","steps.sens.low":"Only firm steps","steps.byhand":"Add by hand","steps.iosask":"Your telephone will ask for permission to read movement. Choose Allow.",
 "steps.permission":"Your browser needs permission to read movement. Tap \"Start counting\" and choose Allow.",
 "steps.counting":"Counting your steps — keep this page open.","steps.nosensor":"This device has no motion sensor, so automatic step counting isn't available here. Open the site on your phone to use it.",
 "contacts.h":"People you can call","contacts.p":"If something feels wrong, don't wait for an app — call your own doctor, or one of the contacts the site owner has listed below. If it's an emergency, call your local emergency number right away.",
@@ -1571,6 +1609,7 @@ I18N.en = {
 "settings.subnone":"No plan yet — sign in to start your 7-day free trial.",
 "settings.extrason":"Unlocked — {n} extra exercises, plus Grandparents & Grandchildren and Health AI, are available to you.",
 "settings.extrasoff":"Locked — this is a separate bonus pack, not part of any plan. €1 a month unlocks Grandparents & Grandchildren, Health AI, and 100+ extra exercises.",
+"footer.build":"Version {v} · built {d} — open Settings › What's in this version for the full list",
 "footer.p":"Steady & Strong — home workouts designed for you. Always listen to your body.",
 "wizard.title":"Create a workout plan","wizard.back":"Back","wizard.next":"Next","wizard.create":"Create plan",
 "wizard.step1of5":"Step 1 of 5","wizard.step2of5":"Step 2 of 5","wizard.step3of5":"Step 3 of 5","wizard.step4of5":"Step 4 of 5","wizard.step5of5":"Step 5 of 5",
@@ -1692,7 +1731,8 @@ I18N.pt = {
 "friends.h2":"Amigos","friends.p":"Adicione amigos por ID ou código QR, converse com eles e veja como lhes está a correr.","photo.add":"Pôr uma foto","photo.remove":"Tirar","photo.working":"A reduzir...","photo.done":"Guardada. Os seus amigos também a vão ver.","photo.removed":"Tirada — volta a letra.","photo.notimage":"Esse ficheiro não é uma imagem.","photo.failed":"Não foi possível ler essa imagem. Experimente outra.",
 "friends.username":"O seu nome visível","friends.yourid":"O seu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"Copiado!",
 "friends.tabmine":"Os meus amigos","friends.tabadd":"Adicionar amigo","friends.tabreq":"Pedidos",
-"call.calling":"A tocar em {name}...","call.connecting":"A ligar...","call.connected":"Ligados.","call.incoming":"{name} está a ligar","call.incomingp":"Atenda para se ouvirem e verem.","call.answer":"Atender","call.decline":"Recusar","call.declined":"Não puderam atender.","call.ended":"Chamada terminada.","call.failed":"Os dois aparelhos não se conseguiram alcançar. Costuma acontecer em redes móveis que bloqueiam ligações diretas — experimente Wi-Fi, ou acrescente um retransmissor no painel de administração.","call.nocam":"Não foi autorizada a câmara nem o microfone, por isso a chamada não pode começar.","call.nocloud":"As chamadas em direto precisam da lista partilhada configurada no painel de administração. Até lá, isto mostra apenas a sua própria câmara.","chat.newmsg":"{name}:","nick.label":"Como lhe quer chamar?","nick.save":"Guardar nome","nick.saved":"Guardado. Passa a ver {n} em todo o lado.","nick.cleared":"Nome apagado — volta o nome próprio dele.","nick.realname":"Nome dele: {n}",
+"call.calling":"A tocar em {name}...","call.connecting":"A ligar...","call.connected":"Ligados.","call.incoming":"{name} está a ligar","call.incomingp":"Atenda para se ouvirem e verem.","call.answer":"Atender","call.decline":"Recusar","call.declined":"Não puderam atender.","call.ended":"Chamada terminada.","call.failed":"Os dois aparelhos não se conseguiram alcançar. Costuma acontecer em redes móveis que bloqueiam ligações diretas — experimente Wi-Fi, ou acrescente um retransmissor no painel de administração.","call.nocam":"Não foi autorizada a câmara nem o microfone, por isso a chamada não pode começar.","call.nocloud":"As chamadas em direto precisam da lista partilhada configurada no painel de administração. Até lá, isto mostra apenas a sua própria câmara.","chat.clear":"Limpar conversa","chat.clearask":"Isto apaga a conversa toda para os dois. Continuar?","chat.delete":"Apagar esta mensagem","chat.deleted":"Mensagem apagada","block.btn":"Bloquear","block.un":"Desbloquear","block.on":"Bloqueou esta pessoa. Nada do que ela enviar chega até si.","block.h":"Pessoas bloqueadas","block.p":"Nada delas chega até si — nem mensagens, nem pedidos, nem chamadas. Elas nunca são avisadas, e pode desfazer aqui.","block.none":"Não há ninguém bloqueado.","block.refused":"Bloqueou essa pessoa. Desbloqueie-a primeiro nas Definições.","notify.h":"Avisar-me","notify.p":"Uma mensagem ou uma chamada chega até si mesmo com esta página atrás de outra janela. O telemóvel vibra de qualquer maneira; o aviso escrito precisa da sua autorização uma vez.","notify.btn":"Ligar os avisos","notify.on":"Os avisos estão ligados. Funcionam enquanto esta página estiver aberta, em qualquer janela.","notify.off":"Os avisos estão desligados — só verá as mensagens quando estiver a olhar para esta página.","notify.denied":"O navegador recusou os avisos para este site. Volte a ligá-los nas definições do navegador para esta página.","notify.nosupport":"Este navegador não consegue mostrar avisos.","call.log.out":"Ligou a {name}","call.log.in":"{name} ligou-lhe","call.log.missed":"Chamada perdida de {name}","call.log.noanswer":"{name} não atendeu","att.sending":"A enviar...","att.failed":"Não foi possível enviar esse ficheiro.","att.toobig":"Esse ficheiro tem {s} — grande demais para uma conversa sem servidor. O limite é {m}. As fotografias são reduzidas automaticamente, por isso essas passam sempre.","att.gone":"Um anexo antigo ({n}) foi largado para a conversa continuar a funcionar.",
+"chat.newmsg":"{name}:","nick.label":"Como lhe quer chamar?","nick.save":"Guardar nome","nick.saved":"Guardado. Passa a ver {n} em todo o lado.","nick.cleared":"Nome apagado — volta o nome próprio dele.","nick.realname":"Nome dele: {n}",
 "friends.scanh":"O seu código QR","friends.scanp":"Mostre isto a um amigo para ele o ler e adicioná-lo num instante.",
 "friends.scancamh":"Ler o código QR de um amigo","friends.scancamp":"Aponte a câmara ao código dele. O navegador vai pedir-lhe permissão para a câmara.",
 "friends.startscan":"Abrir câmara e ler","friends.stopscan":"Parar câmara","friends.scanphoto":"Ler a partir de uma foto","friends.qrretry":"Desenhar o código outra vez","friends.qrsave":"Guardar como imagem",
@@ -1751,6 +1791,7 @@ I18N.pt = {
 "coach.h":"Quanto é que a voz diz","coach.p":"Do silêncio, ao nome de cada exercício, até um treinador que o acompanha do princípio ao fim.","coach.off":"Nada","coach.names":"Só os nomes","coach.full":"Acompanhamento completo","coach.speedh":"Velocidade da fala","coach.speedp":"Mais devagar é mais fácil de seguir do outro lado da sala.","coach.slow":"Devagar","coach.normal":"Normal","coach.fast":"Rápido","coach.test":"Experimentar a voz","coach.sample":"É assim que o vou acompanhar. Costas direitas, e respire com calma.","coach.now":"Número {n} de {total}. {name}.","coach.seatedok":"Este pode fazer sentado, se preferir.","coach.restnow":"Agora descanse.","coach.breathe":"Continue a respirar — não prenda o ar.","coach.getready":"Prepare-se para o próximo.","coach.water":"Beba um golo de água.","coach.enc1":"É isso mesmo — firme e forte.","coach.enc2":"Está quase, continue.","coach.enc3":"Muito bem.","coach.enc4":"Devagar e controlado é melhor do que depressa.","coach.enc5":"Boa — mantenha-se direito.","steps.walkmode":"Vou dar uma caminhada","steps.walkstop":"Terminar a caminhada","steps.walkp":"O ecrã fica aceso com quase nada iluminado, para a contagem continuar no bolso. Não precisa de internet.","steps.walkmin":"{n} minutos a caminhar","steps.truth":"Nenhuma página da internet consegue ler o contador de passos com ela fechada — é uma regra do telemóvel, não uma falta da aplicação. Deixe esta página aberta (o modo caminhada mantém-na acordada com o ecrã escuro) e todos os passos são contados, com ou sem internet.","steps.gap":"O contador esteve adormecido cerca de {n} minutos.","steps.gapadd":"Somar esses passos","steps.gapask":"Mais ou menos quantos minutos andou a pé? Contamos cerca de 100 passos por minuto.","steps.p":"Conta sozinho enquanto se mexe, usando o sensor de movimento do telemóvel. Deixe esta página aberta no bolso e ele continua a contar.",
 "steps.today":"passos hoje","steps.goal":"Objetivo diário","steps.autostart":"Começar a contar","steps.autostop":"Parar de contar",
 "steps.progress":"{n} de {g} passos hoje ({p}%).","steps.goalreached":"Objetivo alcançado — muito bem hoje!",
+"steps.resume":"Continuar a contar","steps.silent":"Não está a chegar nenhuma leitura de movimento deste aparelho. Num computador isso é normal — não tem sensor de movimento. Num telemóvel, abra Definições › Safari (ou o seu navegador) e permita Movimento e Orientação, depois toque outra vez.","steps.live":"A ler o sensor: {r} vezes por segundo · movimento {m}","steps.sens":"Sensibilidade","steps.sens.high":"Passo leve","steps.sens.normal":"Normal","steps.sens.low":"Só passos firmes","steps.byhand":"Somar à mão","steps.iosask":"O telemóvel vai pedir autorização para ler o movimento. Escolha Permitir.",
 "steps.permission":"O navegador precisa de permissão para ler o movimento. Toque em \"Começar a contar\" e escolha Permitir.",
 "steps.counting":"A contar os seus passos — mantenha esta página aberta.","steps.nosensor":"Este dispositivo não tem sensor de movimento, por isso a contagem automática não está disponível aqui. Abra o site no telemóvel para a usar.",
 "contacts.h":"Pessoas que pode contactar","contacts.p":"Se algo lhe parecer errado, não espere por uma aplicação — contacte o seu médico, ou um dos contactos que o proprietário do site indicou abaixo. Em caso de emergência, ligue já para o número de emergência local.",
@@ -1774,6 +1815,7 @@ I18N.pt = {
 "settings.subnone":"Ainda sem plano — entre para começar os 7 dias grátis.",
 "settings.extrason":"Desbloqueado — {n} exercícios extra, mais Avós e Netos e IA de Saúde, estão disponíveis.",
 "settings.extrasoff":"Bloqueado — este é um pacote bónus à parte, que não faz parte de nenhum plano. Por 1 € por mês desbloqueia Avós e Netos, IA de Saúde e mais de 100 exercícios extra.",
+"footer.build":"Versão {v} · criada em {d} — abra Definições › O que tem esta versão para a lista completa",
 "footer.p":"Steady & Strong — treinos em casa pensados para si. Ouça sempre o seu corpo.",
 "wizard.title":"Criar um plano de treino","wizard.back":"Voltar","wizard.next":"Seguinte","wizard.create":"Criar plano",
 "wizard.step1of5":"Passo 1 de 5","wizard.step2of5":"Passo 2 de 5","wizard.step3of5":"Passo 3 de 5","wizard.step4of5":"Passo 4 de 5","wizard.step5of5":"Passo 5 de 5",
@@ -1895,7 +1937,8 @@ I18N.es = {
 "friends.h2":"Amigos","friends.p":"Añade amigos por ID o código QR, chatea con ellos y mira cómo les va.","photo.add":"Poner una foto","photo.remove":"Quitar","photo.working":"Reduciendo...","photo.done":"Guardada. Tus amigos también la verán.","photo.removed":"Quitada — vuelve la letra.","photo.notimage":"Ese archivo no es una imagen.","photo.failed":"No se ha podido leer esa imagen. Prueba con otra.",
 "friends.username":"Tu nombre visible","friends.yourid":"Tu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"¡Copiado!",
 "friends.tabmine":"Mis amigos","friends.tabadd":"Añadir amigo","friends.tabreq":"Solicitudes",
-"call.calling":"Llamando a {name}...","call.connecting":"Conectando...","call.connected":"Conectados.","call.incoming":"{name} te está llamando","call.incomingp":"Contesta para hablar y veros.","call.answer":"Contestar","call.decline":"Rechazar","call.declined":"No han podido contestar.","call.ended":"Llamada terminada.","call.failed":"Los dos dispositivos no han logrado alcanzarse. Suele pasar en redes móviles que bloquean las conexiones directas — prueba con Wi-Fi, o añade un repetidor en el panel.","call.nocam":"No se autorizó la cámara ni el micrófono, así que la llamada no puede empezar.","call.nocloud":"Las llamadas en directo necesitan la libreta compartida configurada en el panel. Hasta entonces esto solo muestra tu propia cámara.","chat.newmsg":"{name}:","nick.label":"¿Cómo quieres llamarle?","nick.save":"Guardar nombre","nick.saved":"Guardado. Verás {n} en todas partes.","nick.cleared":"Nombre borrado — vuelve su propio nombre.","nick.realname":"Su nombre: {n}",
+"call.calling":"Llamando a {name}...","call.connecting":"Conectando...","call.connected":"Conectados.","call.incoming":"{name} te está llamando","call.incomingp":"Contesta para hablar y veros.","call.answer":"Contestar","call.decline":"Rechazar","call.declined":"No han podido contestar.","call.ended":"Llamada terminada.","call.failed":"Los dos dispositivos no han logrado alcanzarse. Suele pasar en redes móviles que bloquean las conexiones directas — prueba con Wi-Fi, o añade un repetidor en el panel.","call.nocam":"No se autorizó la cámara ni el micrófono, así que la llamada no puede empezar.","call.nocloud":"Las llamadas en directo necesitan la libreta compartida configurada en el panel. Hasta entonces esto solo muestra tu propia cámara.","chat.clear":"Vaciar conversación","chat.clearask":"Esto borra toda la conversación para los dos. ¿Seguimos?","chat.delete":"Borrar este mensaje","chat.deleted":"Mensaje borrado","block.btn":"Bloquear","block.un":"Desbloquear","block.on":"Has bloqueado a esta persona. Nada de lo que envíe te llega.","block.h":"Personas bloqueadas","block.p":"Nada suyo te llega — ni mensajes, ni solicitudes, ni llamadas. Nunca se les avisa, y puedes deshacerlo aquí.","block.none":"No hay nadie bloqueado.","block.refused":"Has bloqueado a esa persona. Desbloquéala primero en Ajustes.","notify.h":"Avisarme","notify.p":"Un mensaje o una llamada te llega aunque esta página esté detrás de otra ventana. El móvil vibra igualmente; el aviso escrito necesita tu permiso una vez.","notify.btn":"Activar avisos","notify.on":"Los avisos están activados. Funcionan mientras esta página esté abierta, en cualquier ventana.","notify.off":"Los avisos están desactivados — solo verás los mensajes cuando estés mirando esta página.","notify.denied":"El navegador ha rechazado los avisos para este sitio. Vuelve a activarlos en los ajustes del navegador para esta página.","notify.nosupport":"Este navegador no puede mostrar avisos.","call.log.out":"Llamaste a {name}","call.log.in":"{name} te llamó","call.log.missed":"Llamada perdida de {name}","call.log.noanswer":"{name} no contestó","att.sending":"Enviando...","att.failed":"No se ha podido enviar ese archivo.","att.toobig":"Ese archivo pesa {s} — demasiado para un chat sin servidor. El límite es {m}. Las fotos se reducen solas, así que esas siempre pasan.","att.gone":"Se soltó un adjunto antiguo ({n}) para que la conversación siga funcionando.",
+"chat.newmsg":"{name}:","nick.label":"¿Cómo quieres llamarle?","nick.save":"Guardar nombre","nick.saved":"Guardado. Verás {n} en todas partes.","nick.cleared":"Nombre borrado — vuelve su propio nombre.","nick.realname":"Su nombre: {n}",
 "friends.scanh":"Tu código QR","friends.scanp":"Enséñaselo a un amigo para que lo escanee y te añada al instante.",
 "friends.scancamh":"Escanear el código QR de un amigo","friends.scancamp":"Apunta la cámara a su código. El navegador te pedirá permiso para la cámara.",
 "friends.startscan":"Abrir cámara y escanear","friends.stopscan":"Parar cámara","friends.scanphoto":"Escanear una foto","friends.qrretry":"Volver a dibujar el código","friends.qrsave":"Guardar como imagen",
@@ -1954,6 +1997,7 @@ I18N.es = {
 "coach.h":"Cuánto habla la voz","coach.p":"Desde el silencio, al nombre de cada ejercicio, hasta un entrenador que te acompaña.","coach.off":"Nada","coach.names":"Solo los nombres","coach.full":"Acompañamiento completo","coach.speedh":"Velocidad del habla","coach.speedp":"Más despacio es más fácil de seguir desde el otro lado de la sala.","coach.slow":"Despacio","coach.normal":"Normal","coach.fast":"Rápido","coach.test":"Probar la voz","coach.sample":"Así es como te voy a acompañar. Espalda recta, y respira con calma.","coach.now":"Número {n} de {total}. {name}.","coach.seatedok":"Este lo puedes hacer sentado, si lo prefieres.","coach.restnow":"Ahora descansa.","coach.breathe":"Sigue respirando — no aguantes el aire.","coach.getready":"Prepárate para el siguiente.","coach.water":"Bebe un sorbo de agua.","coach.enc1":"Eso es — firme y fuerte.","coach.enc2":"Ya casi, sigue.","coach.enc3":"Muy bien.","coach.enc4":"Despacio y controlado es mejor que rápido.","coach.enc5":"Bien — mantente erguido.","steps.walkmode":"Me voy a caminar","steps.walkstop":"Terminar el paseo","steps.walkp":"La pantalla se queda encendida casi sin nada iluminado, así el conteo sigue en el bolsillo. No hace falta internet.","steps.walkmin":"{n} minutos caminando","steps.truth":"Ninguna página web puede leer el contador de pasos con ella cerrada — es una regla del móvil, no una carencia de la aplicación. Deja esta página abierta (el modo paseo la mantiene despierta con la pantalla oscura) y se cuentan todos los pasos, con o sin internet.","steps.gap":"El contador estuvo dormido unos {n} minutos.","steps.gapadd":"Sumar esos pasos","steps.gapask":"¿Más o menos cuántos minutos anduviste? Contamos unos 100 pasos por minuto.","steps.p":"Cuenta solo mientras te mueves, usando el sensor de movimiento del móvil. Deja esta página abierta en el bolsillo y sigue contando.",
 "steps.today":"pasos hoy","steps.goal":"Objetivo diario","steps.autostart":"Empezar a contar","steps.autostop":"Dejar de contar",
 "steps.progress":"{n} de {g} pasos hoy ({p}%).","steps.goalreached":"¡Objetivo alcanzado — muy bien hoy!",
+"steps.resume":"Seguir contando","steps.silent":"No está llegando ninguna lectura de movimiento de este dispositivo. En un ordenador es normal — no tiene sensor de movimiento. En un móvil, abre Ajustes › Safari (o tu navegador) y permite Movimiento y Orientación, y vuelve a pulsar.","steps.live":"Leyendo el sensor: {r} veces por segundo · movimiento {m}","steps.sens":"Sensibilidad","steps.sens.high":"Paso suave","steps.sens.normal":"Normal","steps.sens.low":"Solo pasos firmes","steps.byhand":"Sumar a mano","steps.iosask":"El móvil pedirá permiso para leer el movimiento. Elige Permitir.",
 "steps.permission":"El navegador necesita permiso para leer el movimiento. Pulsa \"Empezar a contar\" y elige Permitir.",
 "steps.counting":"Contando tus pasos — deja esta página abierta.","steps.nosensor":"Este dispositivo no tiene sensor de movimiento, así que el conteo automático no está disponible aquí. Abre el sitio en tu móvil para usarlo.",
 "contacts.h":"Personas a las que puedes llamar","contacts.p":"Si algo va mal, no esperes a una aplicación — llama a tu médico, o a uno de los contactos que el propietario del sitio ha puesto abajo. Si es una emergencia, llama ya al número de emergencias local.",
@@ -1977,6 +2021,7 @@ I18N.es = {
 "settings.subnone":"Todavía sin plan — entra para empezar los 7 días gratis.",
 "settings.extrason":"Desbloqueado — {n} ejercicios extra, además de Abuelos y Nietos e IA de Salud, están disponibles para ti.",
 "settings.extrasoff":"Bloqueado — este es un pack de regalo aparte, no incluido en ningún plan. Por 1 € al mes desbloqueas Abuelos y Nietos, IA de Salud y más de 100 ejercicios extra.",
+"footer.build":"Versión {v} · creada el {d} — abre Ajustes › Qué trae esta versión para la lista completa",
 "footer.p":"Steady & Strong — entrenamientos en casa pensados para ti. Escucha siempre a tu cuerpo.",
 "wizard.title":"Crear un plan de entrenamiento","wizard.back":"Atrás","wizard.next":"Siguiente","wizard.create":"Crear plan",
 "wizard.step1of5":"Paso 1 de 5","wizard.step2of5":"Paso 2 de 5","wizard.step3of5":"Paso 3 de 5","wizard.step4of5":"Paso 4 de 5","wizard.step5of5":"Paso 5 de 5",
@@ -2098,7 +2143,8 @@ I18N.fr = {
 "friends.h2":"Amis","friends.p":"Ajoutez des amis par identifiant ou QR code, discutez avec eux et voyez comment ils avancent.","photo.add":"Mettre une photo","photo.remove":"Retirer","photo.working":"Réduction...","photo.done":"Enregistrée. Vos amis la verront aussi.","photo.removed":"Retirée — la lettre revient.","photo.notimage":"Ce fichier n'est pas une image.","photo.failed":"Impossible de lire cette image. Essayez-en une autre.",
 "friends.username":"Votre nom affiché","friends.yourid":"Votre identifiant :","friends.save":"Enregistrer le profil","friends.copyid":"Copier","friends.copied":"Copié !",
 "friends.tabmine":"Mes amis","friends.tabadd":"Ajouter un ami","friends.tabreq":"Demandes",
-"call.calling":"Appel de {name}...","call.connecting":"Connexion...","call.connected":"Connectés.","call.incoming":"{name} vous appelle","call.incomingp":"Répondez pour vous parler et vous voir.","call.answer":"Répondre","call.decline":"Refuser","call.declined":"Ils n'ont pas pu répondre.","call.ended":"Appel terminé.","call.failed":"Les deux appareils n'ont pas réussi à se joindre. Cela arrive souvent sur un réseau mobile qui bloque les connexions directes — essayez le Wi-Fi, ou ajoutez un relais dans le panneau.","call.nocam":"La caméra et le micro n'ont pas été autorisés : l'appel ne peut pas commencer.","call.nocloud":"Les appels en direct nécessitent le carnet partagé configuré dans le panneau. En attendant, ceci n'affiche que votre propre caméra.","chat.newmsg":"{name} :","nick.label":"Comment voulez-vous l'appeler ?","nick.save":"Enregistrer le nom","nick.saved":"Enregistré. Vous verrez {n} partout.","nick.cleared":"Nom effacé — son propre nom revient.","nick.realname":"Son nom : {n}",
+"call.calling":"Appel de {name}...","call.connecting":"Connexion...","call.connected":"Connectés.","call.incoming":"{name} vous appelle","call.incomingp":"Répondez pour vous parler et vous voir.","call.answer":"Répondre","call.decline":"Refuser","call.declined":"Ils n'ont pas pu répondre.","call.ended":"Appel terminé.","call.failed":"Les deux appareils n'ont pas réussi à se joindre. Cela arrive souvent sur un réseau mobile qui bloque les connexions directes — essayez le Wi-Fi, ou ajoutez un relais dans le panneau.","call.nocam":"La caméra et le micro n'ont pas été autorisés : l'appel ne peut pas commencer.","call.nocloud":"Les appels en direct nécessitent le carnet partagé configuré dans le panneau. En attendant, ceci n'affiche que votre propre caméra.","chat.clear":"Vider la conversation","chat.clearask":"Ceci efface toute la conversation pour vous deux. On continue ?","chat.delete":"Supprimer ce message","chat.deleted":"Message supprimé","block.btn":"Bloquer","block.un":"Débloquer","block.on":"Vous avez bloqué cette personne. Rien de ce qu'elle envoie ne vous parvient.","block.h":"Personnes bloquées","block.p":"Rien de leur part ne vous parvient — ni messages, ni demandes, ni appels. Elles n'en sont jamais informées, et vous pouvez annuler ici.","block.none":"Personne n'est bloqué.","block.refused":"Vous avez bloqué cette personne. Débloquez-la d'abord dans les Réglages.","notify.h":"Me prévenir","notify.p":"Un message ou un appel vous parvient même quand cette page est derrière une autre fenêtre. Le téléphone vibre dans tous les cas ; l'avis écrit demande votre autorisation une fois.","notify.btn":"Activer les avis","notify.on":"Les avis sont activés. Ils fonctionnent tant que cette page reste ouverte, dans n'importe quelle fenêtre.","notify.off":"Les avis sont désactivés — vous ne verrez les messages qu'en regardant cette page.","notify.denied":"Le navigateur a refusé les avis pour ce site. Réactivez-les dans ses réglages pour cette page.","notify.nosupport":"Ce navigateur ne peut pas afficher d'avis.","call.log.out":"Vous avez appelé {name}","call.log.in":"{name} vous a appelé","call.log.missed":"Appel manqué de {name}","call.log.noanswer":"{name} n'a pas répondu","att.sending":"Envoi...","att.failed":"Ce fichier n'a pas pu être envoyé.","att.toobig":"Ce fichier fait {s} — trop lourd pour une discussion sans serveur. La limite est {m}. Les photographies sont réduites automatiquement, elles passent donc toujours.","att.gone":"Une ancienne pièce jointe ({n}) a été abandonnée pour que la conversation continue de fonctionner.",
+"chat.newmsg":"{name} :","nick.label":"Comment voulez-vous l'appeler ?","nick.save":"Enregistrer le nom","nick.saved":"Enregistré. Vous verrez {n} partout.","nick.cleared":"Nom effacé — son propre nom revient.","nick.realname":"Son nom : {n}",
 "friends.scanh":"Votre QR code","friends.scanp":"Montrez-le à un ami pour qu'il le scanne et vous ajoute aussitôt.",
 "friends.scancamh":"Scanner le QR code d'un ami","friends.scancamp":"Pointez votre caméra sur son code. Le navigateur vous demandera d'abord l'autorisation.",
 "friends.startscan":"Ouvrir la caméra et scanner","friends.stopscan":"Arrêter la caméra","friends.scanphoto":"Scanner une photo","friends.qrretry":"Redessiner le code","friends.qrsave":"Enregistrer en image",
@@ -2157,6 +2203,7 @@ I18N.fr = {
 "coach.h":"Ce que la voix dit","coach.p":"Du silence, au simple nom de chaque exercice, jusqu'à un coach qui vous accompagne.","coach.off":"Rien","coach.names":"Seulement les noms","coach.full":"Accompagnement complet","coach.speedh":"Vitesse de parole","coach.speedp":"Plus lent se suit plus facilement à l'autre bout de la pièce.","coach.slow":"Lent","coach.normal":"Normal","coach.fast":"Rapide","coach.test":"Essayer la voix","coach.sample":"Voici comment je vais vous accompagner. Le dos droit, et respirez calmement.","coach.now":"Numéro {n} sur {total}. {name}.","coach.seatedok":"Celui-ci peut se faire assis, si vous préférez.","coach.restnow":"Reposez-vous maintenant.","coach.breathe":"Continuez à respirer — ne bloquez pas votre souffle.","coach.getready":"Préparez-vous pour le suivant.","coach.water":"Buvez une gorgée d'eau.","coach.enc1":"C'est ça — stable et solide.","coach.enc2":"Presque fini, continuez.","coach.enc3":"Très bien.","coach.enc4":"Lentement et en contrôle vaut mieux que vite.","coach.enc5":"Bien — restez bien droit.","steps.walkmode":"Je pars marcher","steps.walkstop":"Terminer la marche","steps.walkp":"L'écran reste allumé avec presque rien d'éclairé, le comptage continue donc dans la poche. Sans internet.","steps.walkmin":"{n} minutes de marche","steps.truth":"Aucune page web ne peut lire le compteur de pas lorsqu'elle est fermée — c'est une règle du téléphone, pas un manque de l'application. Laissez cette page ouverte (le mode marche la garde éveillée sur un écran sombre) et chaque pas est compté, avec ou sans internet.","steps.gap":"Le compteur a dormi environ {n} minutes.","steps.gapadd":"Ajouter ces pas","steps.gapask":"Combien de minutes avez-vous marché à peu près ? Nous comptons environ 100 pas par minute.","steps.p":"Compte tout seul pendant que vous marchez, grâce au capteur de mouvement du téléphone. Laissez cette page ouverte dans votre poche et le comptage continue.",
 "steps.today":"pas aujourd'hui","steps.goal":"Objectif quotidien","steps.autostart":"Commencer à compter","steps.autostop":"Arrêter de compter",
 "steps.progress":"{n} pas sur {g} aujourd'hui ({p} %).","steps.goalreached":"Objectif atteint — bravo pour aujourd'hui !",
+"steps.resume":"Continuer à compter","steps.silent":"Aucune lecture de mouvement n'arrive de cet appareil. Sur un ordinateur c'est normal — il n'y a pas de capteur. Sur un téléphone, ouvrez Réglages › Safari (ou votre navigateur) et autorisez Mouvement et orientation, puis touchez à nouveau.","steps.live":"Lecture du capteur : {r} fois par seconde · mouvement {m}","steps.sens":"Sensibilité","steps.sens.high":"Pas léger","steps.sens.normal":"Normal","steps.sens.low":"Seulement les pas fermes","steps.byhand":"Ajouter à la main","steps.iosask":"Le téléphone demandera l'autorisation de lire le mouvement. Choisissez Autoriser.",
 "steps.permission":"Le navigateur a besoin d'une autorisation pour lire le mouvement. Appuyez sur « Commencer à compter » puis Autoriser.",
 "steps.counting":"Vos pas sont comptés — gardez cette page ouverte.","steps.nosensor":"Cet appareil n'a pas de capteur de mouvement : le comptage automatique n'est pas disponible ici. Ouvrez le site sur votre téléphone pour l'utiliser.",
 "contacts.h":"Personnes à appeler","contacts.p":"Si quelque chose ne va pas, n'attendez pas une application — appelez votre médecin, ou l'un des contacts indiqués ci-dessous par le propriétaire du site. En cas d'urgence, appelez immédiatement le numéro d'urgence local.",
@@ -2180,6 +2227,7 @@ I18N.fr = {
 "settings.subnone":"Pas encore d'abonnement — connectez-vous pour démarrer les 7 jours gratuits.",
 "settings.extrason":"Débloqué — {n} exercices supplémentaires, plus Grands-parents et petits-enfants et l'IA Santé, sont disponibles.",
 "settings.extrasoff":"Verrouillé — c'est un pack bonus vendu à part, inclus dans aucune formule. 1 € par mois débloque Grands-parents et petits-enfants, l'IA Santé et plus de 100 exercices en plus.",
+"footer.build":"Version {v} · créée le {d} — ouvrez Réglages › Ce que contient cette version pour la liste complète",
 "footer.p":"Steady & Strong — des séances à la maison pensées pour vous. Écoutez toujours votre corps.",
 "wizard.title":"Créer un programme","wizard.back":"Retour","wizard.next":"Suivant","wizard.create":"Créer le programme",
 "wizard.step1of5":"Étape 1 sur 5","wizard.step2of5":"Étape 2 sur 5","wizard.step3of5":"Étape 3 sur 5","wizard.step4of5":"Étape 4 sur 5","wizard.step5of5":"Étape 5 sur 5",
@@ -2956,7 +3004,7 @@ function defaultState(){
     plans: [], friends: [], workoutLog: [], sessionLog: [],
     memory: { notes:[], facts:{} },
     injuries: [], goals: [],
-    friendNotes: {}, carer: null, quietNudge: null, balanceTests: [], painLog: {},
+    friendNotes: {}, carer: null, quietNudge: null, blocked: [], balanceTests: [], painLog: {},
     reminders: { enabled:false, days:[], time:"09:00", lastFired:null },
     /* paid and extras always start false: signing in never grants a pack. */
     auth: { loggedIn:false, email:null, name:null, trialStart:null, paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null, extrasSource:null },
@@ -3232,7 +3280,7 @@ async function saveAccount(){
     profile: STATE.profile, settings: STATE.settings, plans: STATE.plans,
     friends: STATE.friends, workoutLog: STATE.workoutLog, sessionLog: STATE.sessionLog,
     memory: STATE.memory, injuries: STATE.injuries, goals: STATE.goals, friendNotes: STATE.friendNotes, carer: STATE.carer,
-    balanceTests: STATE.balanceTests, painLog: STATE.painLog, photo: STATE.profile.photo || null,
+    balanceTests: STATE.balanceTests, painLog: STATE.painLog, photo: STATE.profile.photo || null, blocked: STATE.blocked,
     reminders: STATE.reminders, trialStart: STATE.auth.trialStart, paid: STATE.auth.paid,
     plan: STATE.auth.plan, planExpiry: STATE.auth.planExpiry,
     extras: STATE.auth.extras, extrasExpiry: STATE.auth.extrasExpiry, extrasSource: STATE.auth.extrasSource,
@@ -3542,6 +3590,7 @@ async function completeSignIn(email, opts){
     if(acc.steps)       STATE.steps = acc.steps;
     if(acc.carer !== undefined) STATE.carer = acc.carer;
     if(acc.photo !== undefined) STATE.profile.photo = acc.photo;
+    if(acc.blocked) STATE.blocked = acc.blocked;
     if(acc.balanceTests) STATE.balanceTests = acc.balanceTests;
     if(acc.painLog) STATE.painLog = acc.painLog;
     if(acc.location)    STATE.location = acc.location;
@@ -6026,6 +6075,7 @@ async function addFriendById(rawId, msgEl){
     return false;
   }
   if(id === STATE.profile.id){ if(msgEl) msgEl.textContent = t("friends.ownid"); return false; }
+  if(isBlocked(id)){ if(msgEl) msgEl.textContent = t("block.refused"); return false; }
   if(STATE.friends.some(function(f){ return f.id === id; })){ if(msgEl) msgEl.textContent = t("friends.already", { id: id }); return false; }
   if(msgEl) msgEl.textContent = t("friends.looking", { id: id });
   var dir = await Store.getJSON("directory:" + id, null);
@@ -6076,6 +6126,33 @@ function renderFriendsNote(){
   if(!el) return;
   if(CLOUD.base) el.textContent = CLOUD.checked && !CLOUD.live ? t("friends.cloudfail") : t("friends.cloudnote");
   else el.textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
+}
+/* --- Being told, even when looking elsewhere ---------------------------
+   A message or a ring is no use if it waits quietly. With permission the
+   browser shows a real notification; without it, the page still buzzes and
+   shows the message on screen. Nothing is ever sent to anybody's server. */
+var notifyReady = false;
+function canNotify(){ return ("Notification" in window) && Notification.permission === "granted"; }
+async function askNotify(){
+  if(!("Notification" in window)) return false;
+  if(Notification.permission === "granted"){ notifyReady = true; return true; }
+  if(Notification.permission === "denied") return false;
+  try{
+    var res = await Notification.requestPermission();
+    notifyReady = (res === "granted");
+    STATE.settings.notify = notifyReady;
+    saveState();
+    return notifyReady;
+  }catch(e){ return false; }
+}
+function notify(title, body, tag){
+  try{ if(navigator.vibrate) navigator.vibrate(tag === "call" ? [400,150,400] : 120); }catch(e){}
+  if(!canNotify() || !document.hidden) return;
+  try{
+    var n = new Notification(title, { body: body, tag: tag || "ss", renotify: true,
+      requireInteraction: tag === "call", icon: "./icon-192.png" });
+    n.onclick = function(){ try{ window.focus(); }catch(e){} n.close(); };
+  }catch(e){}
 }
 /* --- Someone keeping an eye out ---------------------------------------
    The person who pays for this is often a son or daughter, and what they
@@ -6144,10 +6221,18 @@ async function sendCarerNote(force){
   if(!STATE.carer || !STATE.carer.id) return false;
   var wk = weekKey();
   if(!force && STATE.carer.lastWeek === wk) return false;
+  var text = carerText();
   var list = await Store.getJSON("carer:" + STATE.carer.id, []);
-  list.push({ from: STATE.profile.id, text: carerText(), ts: Date.now(), week: wk });
+  list.push({ from: STATE.profile.id, text: text, ts: Date.now(), week: wk });
   if(list.length > 12) list = list.slice(-12);
   await Store.setJSON("carer:" + STATE.carer.id, list);
+  /* and into the conversation, where they will actually look */
+  var ckey = "chat:" + pairKey(STATE.profile.id, STATE.carer.id);
+  var msgs = await Store.getJSON(ckey, []);
+  msgs.push({ from: STATE.profile.id, text: text, ts: Date.now(), report: true });
+  if(msgs.length > 300) msgs = msgs.slice(-300);
+  await Store.setJSON(ckey, msgs);
+  if(currentChatId === STATE.carer.id){ chatSig = ""; loadChat(); }
   STATE.carer.lastWeek = wk;
   saveState();
   if(STATE.auth.loggedIn) await saveAccount();
@@ -6190,7 +6275,10 @@ async function pollRequests(){
   var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
   var confirmed = await checkIncomingLinks();
   if(confirmed) renderMyFriends();
-  var pending = reqs.filter(function(r){ return !STATE.friends.some(function(f){ return f.id === r.id; }); });
+  var pending = reqs.filter(function(r){
+    if(isBlocked(r.id)) return false;
+    return !STATE.friends.some(function(f){ return f.id === r.id; });
+  });
   var badge = document.getElementById("reqBadge");
   if(badge) badge.textContent = pending.length ? " (" + pending.length + ")" : "";
   if(!STATE.seenRequests) STATE.seenRequests = [];
@@ -6204,7 +6292,7 @@ async function pollRequests(){
   }
   return pending.length;
 }
-setInterval(pollRequests, 15000);
+setInterval(pollRequests, 8000);
 document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollRequests(); });
 var pendingInvite = null;
 async function handleInviteLink(){
@@ -6491,34 +6579,91 @@ function openChat(friendId){
   chatSig = "";
   unreadByFriend[friendId] = 0;
   renderChatBadges();
-  chatPollId = setInterval(loadChat, 3000);
+  renderBlockButton();
+  chatPollId = setInterval(loadChat, 2000);
   chatOverlay.classList.add("active");
 }
 var chatSig = "";
 function chatTime(ts){
   try{ return new Date(ts).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }); }catch(e){ return ""; }
 }
+function chatKeyWith(id){ return "chat:" + pairKey(STATE.profile.id, id); }
+/* Blocking: nothing from that person reaches you again — no messages, no
+   requests, no ringing — and it is kept on your side, so they are never told. */
+function isBlocked(id){ return (STATE.blocked || []).indexOf(id) !== -1; }
+async function setBlocked(id, on){
+  STATE.blocked = STATE.blocked || [];
+  if(on && !isBlocked(id)) STATE.blocked.push(id);
+  if(!on) STATE.blocked = STATE.blocked.filter(function(x){ return x !== id; });
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  renderMyFriends();
+  renderBlockButton();
+}
+function renderBlockButton(){
+  var b = document.getElementById("chatBlockBtn");
+  if(!b || !currentChatId) return;
+  b.textContent = isBlocked(currentChatId) ? t("block.un") : t("block.btn");
+  var input = document.getElementById("chatInput");
+  var send = document.getElementById("chatSendBtn");
+  var off = isBlocked(currentChatId);
+  input.disabled = off; send.disabled = off;
+  document.getElementById("chatStatus").textContent = off ? t("block.on") : "";
+}
 async function loadChat(){
   if(!currentChatId) return;
-  var msgs = await Store.getJSON("chat:" + pairKey(STATE.profile.id, currentChatId), []);
-  var sig = msgs.length + "|" + (msgs.length ? msgs[msgs.length-1].ts : 0);
+  var msgs = await Store.getJSON(chatKeyWith(currentChatId), []);
+  var sig = msgs.length + "|" + (msgs.length ? msgs[msgs.length-1].ts : 0) + "|" +
+            msgs.filter(function(m){ return m.deleted; }).length;
   if(sig === chatSig) return;                 /* nothing new: leave the scroll alone */
   var grew = chatSig && msgs.length;
   chatSig = sig;
   var wrap = document.getElementById("chatMessages");
   wrap.innerHTML = "";
-  msgs.forEach(function(m){
+  msgs.forEach(function(m, i){
+    var mine = m.from === STATE.profile.id;
     var div = document.createElement("div");
-    div.className = "msg " + (m.from === STATE.profile.id ? "me" : "them");
+    if(m.kind === "call"){
+      div.className = "msg call";
+      div.textContent = callLine(m, mine);
+      wrap.appendChild(div);
+      return;
+    }
+    div.className = "msg " + (mine ? "me" : "them") + (m.deleted ? " gone" : "");
     div.innerHTML = '<span></span><span class="msg-time">' + chatTime(m.ts) + '</span>';
-    div.firstChild.textContent = m.text;
+    div.firstChild.textContent = m.deleted ? t("chat.deleted") : m.text;
+    if(!m.deleted && m.att){
+      var holder = document.createElement("div");
+      if(m.att.dropped || !m.att.data){
+        holder.textContent = t("att.gone", { n: m.att.name || "" });
+        holder.style.opacity = ".65";
+      } else if(m.att.kind === "image"){
+        var im = document.createElement("img");
+        im.className = "att"; im.src = m.att.data; im.alt = m.att.name || "";
+        im.addEventListener("click", function(){ window.open(m.att.data, "_blank"); });
+        holder.appendChild(im);
+      } else {
+        var a = document.createElement("a");
+        a.className = "att-file"; a.href = m.att.data; a.download = m.att.name || "file";
+        a.textContent = "📄 " + (m.att.name || "file") + " · " + prettySize(m.att.size || 0);
+        holder.appendChild(a);
+      }
+      div.insertBefore(holder, div.lastChild);
+    }
+    if(mine && !m.deleted){
+      var del = document.createElement("button");
+      del.className = "msg-del"; del.type = "button"; del.title = t("chat.delete");
+      del.textContent = "×";
+      del.addEventListener("click", function(){ deleteMessage(m.ts); });
+      div.appendChild(del);
+    }
     wrap.appendChild(div);
   });
   wrap.scrollTop = wrap.scrollHeight;
   var last = msgs[msgs.length-1];
   if(grew && last && last.from !== STATE.profile.id){
     markChatSeen(currentChatId, last.ts);
-    try{ if(navigator.vibrate) navigator.vibrate(120); }catch(e){}
+    notify(friendName(currentChatId), (last.text || "").slice(0, 90), "msg");
   } else if(last){ markChatSeen(currentChatId, last.ts); }
 }
 /* Messages sent while you were elsewhere: a quiet check of each conversation,
@@ -6534,7 +6679,7 @@ async function pollChats(){
   var friends = STATE.friends.slice(0, 10);
   for(var i = 0; i < friends.length; i++){
     var f = friends[i];
-    if(f.id === currentChatId) continue;
+    if(f.id === currentChatId || isBlocked(f.id)) continue;
     var msgs = await Store.getJSON("chat:" + pairKey(STATE.profile.id, f.id), []);
     var theirs = msgs.filter(function(m){ return m.from !== STATE.profile.id; });
     if(!theirs.length) continue;
@@ -6544,6 +6689,7 @@ async function pollChats(){
     unreadByFriend[f.id] = n;
     if(n && last.ts > (unreadByFriend["_told:" + f.id] || 0)){
       unreadByFriend["_told:" + f.id] = last.ts;
+      notify(displayName(f), (last.text || "").slice(0, 90), "msg");
       var el = showUndoToast(t("chat.newmsg", { name: displayName(f) }) + " " + last.text.slice(0, 60), function(){});
       if(el){
         var open = document.createElement("button");
@@ -6563,7 +6709,7 @@ function renderChatBadges(){
     b.classList.toggle("btn-teal", true);
   });
 }
-setInterval(pollChats, 12000);
+setInterval(pollChats, 6000);
 document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollChats(); });
 async function sendChat(){
   var input = document.getElementById("chatInput");
@@ -6578,6 +6724,137 @@ async function sendChat(){
   chatSig = "";
   loadChat();
 }
+/* Deleting takes it off both sides, because the conversation is one shared
+   record. The space is left marked rather than silently closing up, so
+   nobody is left wondering what was there. */
+/* --- Attachments --------------------------------------------------------
+   With no file server, whatever is sent has to travel inside the message
+   itself. So a photograph is shrunk to something sensible first — 1000
+   pixels, which is plenty on a telephone — and anything that is not a
+   picture is only allowed through if it is genuinely small. Better an
+   honest limit than a conversation that stops loading. */
+var IMG_MAX_SIDE = 1000, FILE_MAX = 300 * 1024;
+function prettySize(n){
+  return n > 1024 * 1024 ? (n / 1048576).toFixed(1) + " MB" : Math.round(n / 1024) + " KB";
+}
+function shrinkImage(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onerror = function(){ reject(new Error("read")); };
+    reader.onload = function(){
+      var img = new Image();
+      img.onerror = function(){ reject(new Error("decode")); };
+      img.onload = function(){
+        try{
+          var w = img.width, h = img.height;
+          var scale = Math.min(1, IMG_MAX_SIDE / Math.max(w, h));
+          var c = document.createElement("canvas");
+          c.width = Math.round(w * scale); c.height = Math.round(h * scale);
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL("image/jpeg", 0.7));
+        }catch(e){ reject(e); }
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function readAsData(file){
+  return new Promise(function(resolve, reject){
+    var r = new FileReader();
+    r.onerror = function(){ reject(new Error("read")); };
+    r.onload = function(){ resolve(String(r.result)); };
+    r.readAsDataURL(file);
+  });
+}
+async function sendAttachment(file){
+  if(!file || !currentChatId) return;
+  var st = document.getElementById("chatStatus");
+  var isImage = /^image\//.test(file.type);
+  if(!isImage && file.size > FILE_MAX){
+    st.textContent = t("att.toobig", { s: prettySize(file.size), m: prettySize(FILE_MAX) });
+    return;
+  }
+  st.textContent = t("att.sending");
+  try{
+    var data = isImage ? await shrinkImage(file) : await readAsData(file);
+    if(data.length > 2200000){ st.textContent = t("att.toobig", { s: prettySize(data.length * 0.75), m: "1.5 MB" }); return; }
+    var key = chatKeyWith(currentChatId);
+    var msgs = await Store.getJSON(key, []);
+    msgs.push({ from: STATE.profile.id, ts: Date.now(), text: "",
+                att: { kind: isImage ? "image" : "file", name: file.name, size: file.size, data: data } });
+    if(msgs.length > 300) msgs = msgs.slice(-300);
+    /* keep the whole conversation to a sane size: the oldest attachments go
+       first, and the words they came with stay */
+    var budget = 3000000;
+    var total = JSON.stringify(msgs).length;
+    for(var i = 0; i < msgs.length && total > budget; i++){
+      if(msgs[i].att && msgs[i].att.data){
+        total -= msgs[i].att.data.length;
+        msgs[i].att.data = null;
+        msgs[i].att.dropped = true;
+      }
+    }
+    await Store.setJSON(key, msgs);
+    chatSig = "";
+    st.textContent = "";
+    loadChat();
+  }catch(e){ st.textContent = t("att.failed"); }
+}
+document.getElementById("chatAttachBtn").addEventListener("click", function(){
+  if(isBlocked(currentChatId)) return;
+  document.getElementById("chatFile").click();
+});
+document.getElementById("chatFile").addEventListener("change", function(e){
+  var f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(f) sendAttachment(f);
+});
+async function deleteMessage(ts){
+  if(!currentChatId) return;
+  var key = chatKeyWith(currentChatId);
+  var msgs = await Store.getJSON(key, []);
+  msgs = msgs.map(function(m){
+    if(m.ts === ts && m.from === STATE.profile.id){ m.deleted = true; m.text = ""; m.att = null; }
+    return m;
+  });
+  await Store.setJSON(key, msgs);
+  chatSig = "";
+  loadChat();
+}
+async function clearConversation(){
+  if(!currentChatId) return;
+  if(!confirm(t("chat.clearask"))) return;
+  await Store.setJSON(chatKeyWith(currentChatId), []);
+  chatSig = "";
+  loadChat();
+}
+/* Calls belong in the conversation: who rang, when, and for how long. */
+function callLine(m, mine){
+  var name = friendName(currentChatId);
+  if(m.missed) return mine ? t("call.log.noanswer", { name: name }) : t("call.log.missed", { name: name });
+  if(!m.secs) return mine ? t("call.log.out", { name: name }) : t("call.log.in", { name: name });
+  var mm = Math.floor(m.secs / 60), ss = m.secs % 60;
+  var len = mm + ":" + (ss < 10 ? "0" : "") + ss;
+  return (mine ? t("call.log.out", { name: name }) : t("call.log.in", { name: name })) + " · " + len;
+}
+async function noteCall(withId, secs, missed, outgoing){
+  if(!withId) return;
+  var key = "chat:" + pairKey(STATE.profile.id, withId);
+  var msgs = await Store.getJSON(key, []);
+  msgs.push({ kind:"call", from: outgoing ? STATE.profile.id : withId,
+              secs: secs || 0, missed: !!missed, video: callType === "video", ts: Date.now() });
+  if(msgs.length > 300) msgs = msgs.slice(-300);
+  await Store.setJSON(key, msgs);
+  if(currentChatId === withId){ chatSig = ""; loadChat(); }
+}
+document.getElementById("chatClearBtn").addEventListener("click", clearConversation);
+document.getElementById("chatBlockBtn").addEventListener("click", function(){
+  if(!currentChatId) return;
+  setBlocked(currentChatId, !isBlocked(currentChatId));
+});
+document.getElementById("chatCallBtn").addEventListener("click", function(){ if(currentChatId) openCall(currentChatId, false); });
+document.getElementById("chatVideoBtn").addEventListener("click", function(){ if(currentChatId) openCall(currentChatId, true); });
 document.getElementById("chatSendBtn").addEventListener("click", sendChat);
 document.getElementById("chatInput").addEventListener("keydown", function(e){ if(e.key === "Enter") sendChat(); });
 document.getElementById("chatCloseBtn").addEventListener("click", function(){
@@ -6609,6 +6886,37 @@ function iceConfig(){
   return { iceServers: list };
 }
 function callsPossible(){ return !!CLOUD.base && !!window.RTCPeerConnection; }
+/* A written notice is easy to miss and the telephone may be in a pocket, so
+   an incoming call also rings out loud — two notes, once a second, until it
+   is answered or refused. Made on the spot, so there is no sound file to
+   download and it works with no connection. */
+var ringCtx = null, ringTimer = null;
+function startRinging(){
+  stopRinging();
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    ringCtx = new AC();
+    var beep = function(freq, at, len){
+      var o = ringCtx.createOscillator(), g = ringCtx.createGain();
+      o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, ringCtx.currentTime + at);
+      g.gain.exponentialRampToValueAtTime(0.25, ringCtx.currentTime + at + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, ringCtx.currentTime + at + len);
+      o.connect(g); g.connect(ringCtx.destination);
+      o.start(ringCtx.currentTime + at); o.stop(ringCtx.currentTime + at + len + 0.05);
+    };
+    var ring = function(){ beep(880, 0, 0.35); beep(660, 0.4, 0.35); };
+    ring();
+    ringTimer = setInterval(ring, 1600);
+    try{ if(navigator.vibrate) navigator.vibrate([500, 400, 500, 400, 500]); }catch(e){}
+  }catch(e){}
+}
+function stopRinging(){
+  if(ringTimer){ clearInterval(ringTimer); ringTimer = null; }
+  if(ringCtx){ try{ ringCtx.close(); }catch(e){} ringCtx = null; }
+  try{ if(navigator.vibrate) navigator.vibrate(0); }catch(e){}
+}
 function myCallKey(){ return "call:" + STATE.profile.id; }
 function offerKeyFor(id){ return "call:" + id; }
 function answerKeyFor(id){ return "call:" + id + ":ans"; }
@@ -6719,10 +7027,12 @@ async function placeCall(friendId, wantsVideo){
   var offer = await pc.createOffer({ offerToReceiveAudio:true, offerToReceiveVideo:true });
   await pc.setLocalDescription(offer);
   await pushSignal({ offer: { type: offer.type, sdp: offer.sdp }, state:"ringing", to: friendId });
+  callLogged = false;
   startCallPolling();
 }
 async function answerCall(){
   if(!incoming) return;
+  stopRinging();
   callPeer = incoming.from; callRole = "callee"; callType = incoming.type || "video";
   callSentCands = []; callTakenCands = 0; callLive = false;
   document.getElementById("callAnswerRow").style.display = "none";
@@ -6734,11 +7044,14 @@ async function answerCall(){
   try{ await pc.setRemoteDescription(new RTCSessionDescription(incoming.offer)); }catch(e){ setCallNote(t("call.failed")); return; }
   var answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
+  callLogged = false;
   await pushSignal({ answer: { type: answer.type, sdp: answer.sdp }, state:"live", to: callPeer });
   (incoming.cands || []).forEach(async function(c){ try{ await pc.addIceCandidate(new RTCIceCandidate(c)); }catch(e){} });
   startCallPolling();
 }
 async function declineCall(){
+  stopRinging();
+  if(incoming && !pc){ await noteCall(incoming.from, 0, true, false); }
   if(incoming){
     try{ await Store.setJSON(answerKeyFor(incoming.from), { from: STATE.profile.id, state:"declined", ts: Date.now() }); }catch(e){}
     try{ await Store.setJSON(myCallKey(), {}); }catch(e){}
@@ -6758,13 +7071,19 @@ function stopCallStream(){
   document.getElementById("toggleMicBtn").textContent = t("friends.togglemic");
 }
 function closeCallWindow(){
+  stopRinging();
   clearInterval(callTimerId); callTicking = false;
   clearInterval(callPollId);
   stopCallStream();
   callOverlay.classList.remove("active");
   document.getElementById("callAnswerRow").style.display = "none";
 }
+var callLogged = false;
 async function hangUp(){
+  if(callPeer && !callLogged){
+    callLogged = true;
+    await noteCall(callPeer, callLive ? callSeconds : 0, !callLive, callRole === "caller");
+  }
   try{
     if(callPeer){
       var mine = callRole === "caller" ? offerKeyFor(callPeer) : answerKeyFor(callPeer);
@@ -6797,6 +7116,7 @@ async function pollIncoming(){
   if(!callsPossible() || !STATE.auth.loggedIn || pc || document.hidden) return;
   var rec = await Store.getJSON(myCallKey(), null);
   if(!rec || !rec.offer || rec.state !== "ringing") return;
+  if(isBlocked(rec.from)) return;
   if(Date.now() - (rec.ts || 0) > 60000) return;          /* stale ring */
   if(incoming && incoming.from === rec.from && incoming.ts === rec.ts) return;
   incoming = rec;
@@ -6806,7 +7126,8 @@ async function pollIncoming(){
   document.getElementById("callAnswerRow").style.display = "flex";
   document.getElementById("callTimer").textContent = "00:00";
   callOverlay.classList.add("active");
-  try{ if(navigator.vibrate) navigator.vibrate([400,200,400]); }catch(e){}
+  notify(t("call.incoming", { name: rec.name || friendName(rec.from) }), t("call.incomingp"), "call");
+  startRinging();
 }
 document.getElementById("answerCallBtn").addEventListener("click", answerCall);
 document.getElementById("declineCallBtn").addEventListener("click", declineCall);
@@ -6830,7 +7151,7 @@ document.getElementById("toggleMicBtn").addEventListener("click", function(){
     if(incoming && !pc) declineCall(); else hangUp();
   });
 });
-ringPollId = setInterval(pollIncoming, 5000);
+ringPollId = setInterval(pollIncoming, 3500);
 document.addEventListener("visibilitychange", function(){ if(!document.hidden) pollIncoming(); });
 /* ============ 12. HEALTH AI ============ */
 var RED_FLAGS = {
@@ -7790,9 +8111,18 @@ function renderInjuryHistory(){
   });
 }
 /* --- Step counter: fully automatic, no manual entry ------------------- */
-var stepMotionHandler = null, stepAutoActive = false;
+var stepMotionHandler = null, stepAutoActive = false, stepLiveTimer = null;
 var stepBuf = [], stepLastStepTs = 0;
+/* Every browser defines DeviceMotionEvent, including the ones on a desktop
+   computer that will never fire it. Saying "counting" on a machine with no
+   accelerometer is exactly why this looked broken: the number simply stayed
+   at zero. So we no longer trust the name being there — we start listening,
+   and if no readings arrive within three seconds we say so plainly. */
 function hasMotionSensor(){ return typeof window.DeviceMotionEvent !== "undefined"; }
+function needsMotionTap(){
+  return typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function";
+}
+var motionEvents = 0, motionRate = 0, motionLevel = 0, motionWatch = null, sensorVerdict = "";
 function todaySteps(){ return (STATE.steps.byDate && STATE.steps.byDate[dateStr()]) || 0; }
 var stepSaveTimer = null;
 function addSteps(n){
@@ -7809,10 +8139,6 @@ function addSteps(n){
 function renderSteps(){
   var panel = document.getElementById("stepPanel");
   if(!panel) return;
-  if(!hasMotionSensor()){
-    panel.innerHTML = '<h3>' + t("steps.h") + '</h3><p style="color:var(--ink-soft)">' + t("steps.nosensor") + '</p>';
-    return;
-  }
   var steps = todaySteps();
   var goal = STATE.steps.goal || STEP_GOAL_DEFAULT;
   var pct = Math.min(100, Math.round((steps / goal) * 100));
@@ -7822,9 +8148,22 @@ function renderSteps(){
   var status = t("steps.progress", { n: steps, g: goal, p: pct });
   if(steps >= goal) status += " " + t("steps.goalreached");
   if(stepAutoActive) status = t("steps.counting") + " " + status;
+  if(sensorVerdict) status = sensorVerdict + " " + status;
   document.getElementById("stepStatus").textContent = status;
   document.getElementById("stepAutoBtn").style.display = stepAutoActive ? "none" : "inline-flex";
+  document.getElementById("stepAutoBtn").textContent = needsMotionTap() && STATE.steps.iosOk ? t("steps.resume") : t("steps.autostart");
   document.getElementById("stepAutoStopBtn").style.display = stepAutoActive ? "inline-flex" : "none";
+  /* A live readout, because "it is not working" is impossible to look into
+     from here. If readings are arriving, the person can see them arriving. */
+  var live = document.getElementById("stepLive");
+  if(live){
+    live.style.display = stepAutoActive ? "block" : "none";
+    if(stepAutoActive){
+      live.textContent = t("steps.live", { r: motionRate, m: motionLevel.toFixed(2) });
+    }
+  }
+  var sens = document.getElementById("stepSens");
+  if(sens) sens.value = String(STATE.steps.sens || 1);
   var wk = document.getElementById("stepWeek");
   if(wk){
     var days = [], i, max = 1;
@@ -7882,6 +8221,7 @@ function handleMotion(e){
   if(!a || a.x === null || a.x === undefined) return;
   var ts = nowMs();
   lastMotionAt = ts;
+  motionEvents++;
   /* Gravity is the part that barely changes. The smoothing has to be slow —
      about a second — or it follows the step itself and cancels it out, which
      is exactly what made slow, gentle walking count as nothing. It is worked
@@ -7902,8 +8242,10 @@ function handleMotion(e){
   /* walking shows up as a swing of roughly 0.6 to 6 m/s2; a threshold that
      follows the recent movement copes with a phone in a pocket, in a hand or
      on a walking frame */
-  var thresholdUp = st.mean + Math.max(0.22, st.sd * 0.8);
-  var thresholdDown = st.mean + Math.max(0.10, st.sd * 0.3);
+  motionLevel = mag;
+  var sens = STATE.steps.sens || 1;              /* 0.6 catches gentler walking */
+  var thresholdUp = st.mean + Math.max(0.22 * sens, st.sd * 0.8);
+  var thresholdDown = st.mean + Math.max(0.10 * sens, st.sd * 0.3);
   var gap = ts - stepLastStepTs;
   if(stepArmed && mag > thresholdUp && st.sd > 0.10 && mag < 25){
     if(gap > 300 && gap < 2200){
@@ -7936,9 +8278,24 @@ function startStepAuto(){
   if(!hasMotionSensor()){ renderSteps(); return; }
   function beginListening(){
     accWindow = []; gravReady = false; gravLastTs = 0; stepArmed = true; stepStreak = 0; stepLastGap = 0;
+    motionEvents = 0; motionRate = 0; motionLevel = 0; sensorVerdict = "";
     stepMotionHandler = handleMotion;
     window.addEventListener("devicemotion", stepMotionHandler);
     stepAutoActive = true;
+    /* three seconds to prove the sensor is real */
+    clearTimeout(motionWatch);
+    motionWatch = setTimeout(function(){
+      if(motionEvents === 0){
+        sensorVerdict = t("steps.silent");
+        stopStepAuto();
+        document.getElementById("stepStatus").textContent = t("steps.silent");
+      }
+    }, 3000);
+    clearInterval(stepLiveTimer);
+    stepLiveTimer = setInterval(function(){
+      motionRate = motionEvents; motionEvents = 0;
+      if(stepAutoActive) renderSteps();
+    }, 1000);
     walkStartedAt = nowMs();
     STATE.steps.auto = true;
     STATE.steps.lastSeen = nowMs();
@@ -7966,6 +8323,8 @@ function stopStepAuto(){
   if(stepMotionHandler) window.removeEventListener("devicemotion", stepMotionHandler);
   stepMotionHandler = null;
   stepAutoActive = false;
+  clearTimeout(motionWatch);
+  clearInterval(stepLiveTimer);
   STATE.steps.auto = false;
   clearInterval(stepTickTimer);
   keepAwake(false);
@@ -7973,6 +8332,22 @@ function stopStepAuto(){
   persistSteps();
   renderSteps();
 }
+document.getElementById("stepSens").addEventListener("change", function(e){
+  STATE.steps.sens = parseFloat(e.target.value) || 1;
+  saveState();
+});
+document.querySelectorAll("[data-addsteps]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var n = parseInt(b.getAttribute("data-addsteps"), 10);
+    if(n < 0){
+      var s = dateStr();
+      STATE.steps.byDate = STATE.steps.byDate || {};
+      STATE.steps.byDate[s] = Math.max(0, (STATE.steps.byDate[s] || 0) + n);
+      renderSteps();
+    } else addSteps(n);
+    persistSteps();
+  });
+});
 document.getElementById("stepAutoBtn").addEventListener("click", startStepAuto);
 document.getElementById("stepAutoStopBtn").addEventListener("click", stopStepAuto);
 /* Walk mode: the honest answer to "count with the app closed". No browser
@@ -8038,8 +8413,10 @@ document.addEventListener("visibilitychange", function(){
 function autoStartStepsIfPossible(){
   if(!hasMotionSensor()) return;
   checkStepGap();
-  var needsTap = (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function");
-  if(needsTap && !STATE.steps.iosOk) return;    /* iOS asks once, with a tap */
+  /* On an iPhone the permission has to be asked for from a real tap, on
+     every single visit — starting by ourselves would fail silently, which is
+     precisely what it did before. So we show the button instead. */
+  if(needsMotionTap()) return;
   if(!("ontouchstart" in window)) return;       /* desktops have no useful sensor */
   startStepAuto();
 }
@@ -8822,6 +9199,18 @@ var FEATURES = [
    pt:"Um resumo mensal de uma página, para imprimir e levar ao médico ou mostrar à família",
    es:"Un resumen mensual de una página, para imprimir y llevar al médico o enseñar a la familia",
    fr:"Un bilan mensuel d'une page à imprimer pour le médecin ou la famille"},
+  {en:"Step counting now proves itself: if no readings arrive within three seconds it says so instead of sitting at zero, and it shows the sensor working live, with a sensitivity setting and buttons to add steps by hand",
+   pt:"A contagem de passos passa a provar-se: se não chegar nenhuma leitura em três segundos, diz-lho em vez de ficar a zero, e mostra o sensor a trabalhar em direto, com regulação de sensibilidade e botões para somar passos à mão",
+   es:"El conteo de pasos ahora se demuestra: si no llegan lecturas en tres segundos lo dice en vez de quedarse a cero, y muestra el sensor funcionando en directo, con ajuste de sensibilidad y botones para sumar pasos a mano",
+   fr:"Le comptage des pas se prouve désormais : si aucune lecture n'arrive en trois secondes, il le dit au lieu de rester à zéro, et il montre le capteur en direct, avec un réglage de sensibilité et des boutons pour ajouter des pas à la main"},
+  {en:"Messages arrive within two seconds, can be deleted for both sides, carry photographs and files, and calls appear in the conversation with who rang and for how long",
+   pt:"As mensagens chegam em dois segundos, podem ser apagadas dos dois lados, levam fotografias e ficheiros, e as chamadas aparecem na conversa com quem ligou e quanto tempo durou",
+   es:"Los mensajes llegan en dos segundos, se pueden borrar por ambos lados, llevan fotos y archivos, y las llamadas aparecen en la conversación con quién llamó y cuánto duró",
+   fr:"Les messages arrivent en deux secondes, peuvent être supprimés des deux côtés, portent photos et fichiers, et les appels apparaissent dans la conversation avec qui a appelé et combien de temps"},
+  {en:"An incoming call rings out loud and raises a notice, and anybody can be blocked — no messages, no requests, no ringing, and they are never told",
+   pt:"Uma chamada a entrar toca alto e levanta um aviso, e qualquer pessoa pode ser bloqueada — sem mensagens, sem pedidos, sem toque, e ela nunca é avisada",
+   es:"Una llamada entrante suena en alto y levanta un aviso, y se puede bloquear a cualquiera — sin mensajes, sin solicitudes, sin timbre, y nunca se le avisa",
+   fr:"Un appel entrant sonne à voix haute et affiche un avis, et n'importe qui peut être bloqué — ni messages, ni demandes, ni sonnerie, et la personne n'en sait rien"},
   {en:"A photograph instead of a letter — your own face, a grandchild, the dog — shrunk on your device and shown to your friends too",
    pt:"Uma fotografia em vez de uma letra — a sua cara, um neto, o cão — reduzida no seu aparelho e mostrada também aos seus amigos",
    es:"Una fotografía en vez de una letra — tu cara, un nieto, el perro — reducida en tu dispositivo y mostrada también a tus amigos",
@@ -8942,6 +9331,10 @@ var FEATURES = [
 function applyBuildTag(){
   try{ document.title = "Steady & Strong " + BUILD_TAG + " — " + t("meta.title"); }catch(e){}
   document.querySelectorAll(".build-tag").forEach(function(el){ el.textContent = BUILD_TAG; });
+  var foot = document.getElementById("footerBuild");
+  if(foot) foot.textContent = t("footer.build", { v: BUILD_TAG, d: APP_BUILD_DATE });
+  var wn = document.getElementById("whatsnewBuild");
+  if(wn && wn.textContent) renderWhatsNew();
 }
 /* If the cached worker is from an older release, the person is running a mix
    of the two. Better to know. */
@@ -9281,6 +9674,37 @@ function applyTheme(){
   document.getElementById("zoomOutBtn2").addEventListener("click", function(){ stepZoom(-1); });
   document.getElementById("zoomInBtn2").addEventListener("click", function(){ stepZoom(1); });
 })();
+function renderNotifyRow(){
+  var st = document.getElementById("notifyStatus");
+  var btn = document.getElementById("notifyBtn");
+  if(!st || !btn) return;
+  if(!("Notification" in window)){ st.textContent = t("notify.nosupport"); btn.style.display = "none"; return; }
+  if(Notification.permission === "granted"){ st.textContent = t("notify.on"); btn.style.display = "none"; }
+  else if(Notification.permission === "denied"){ st.textContent = t("notify.denied"); btn.style.display = "none"; }
+  else { st.textContent = t("notify.off"); btn.style.display = "inline-flex"; }
+}
+document.getElementById("notifyBtn").addEventListener("click", async function(){
+  await askNotify();
+  renderNotifyRow();
+});
+function renderBlockedList(){
+  var box = document.getElementById("blockedList");
+  if(!box) return;
+  var list = STATE.blocked || [];
+  if(!list.length){ box.innerHTML = '<p style="color:var(--ink-soft);margin:0">' + t("block.none") + '</p>'; return; }
+  box.innerHTML = "";
+  list.forEach(function(id){
+    var f = STATE.friends.filter(function(x){ return x.id === id; })[0];
+    var row = document.createElement("div");
+    row.className = "contact-card";
+    row.innerHTML = '<span><strong>' + (f ? displayName(f) : id) + '</strong> <span class="id-tag">' + id + '</span></span>';
+    var b = document.createElement("button");
+    b.className = "btn btn-secondary btn-sm"; b.type = "button"; b.textContent = t("block.un");
+    b.addEventListener("click", function(){ setBlocked(id, false); renderBlockedList(); });
+    row.appendChild(b);
+    box.appendChild(row);
+  });
+}
 document.getElementById("themeSelect").addEventListener("change", function(e){
   STATE.settings.theme = e.target.value;
   saveState();
@@ -9493,6 +9917,8 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   syncVoiceCheckboxes();
   syncVoiceCmdCheckboxes();
   applyTheme();
+  renderNotifyRow();
+  renderBlockedList();
   document.getElementById("settingsBigCue").checked = !!STATE.settings.bigCue;
   renderTodayButton();
   document.getElementById("coachSelect").value = STATE.settings.coach || "full";
