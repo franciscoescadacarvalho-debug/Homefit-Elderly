@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v17 — Home Workouts for You</title>
+<title>Steady &amp; Strong v18 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -293,6 +293,11 @@
   .msg-time{display:block;font-size:.72rem;opacity:.6;margin-top:.2rem}
   .call-video-wrap{position:relative;background:var(--teal-dark);border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:1rem}
   #callRemote{width:100%;height:100%;object-fit:cover;background:#000}
+  .call-video-wrap .call-placeholder{position:absolute;inset:0;background:#000;color:#fff;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:.6rem;text-align:center;padding:1rem;z-index:1}
+  .call-video-wrap .call-placeholder strong{font-size:1.35rem;font-family:var(--font-display)}
+  .call-video-wrap .call-placeholder span:last-child{color:#9a9a9a;font-size:.95rem}
+  .call-video-wrap #callAvatar{width:110px;height:110px;font-size:2.6rem}
   #callVideo.pip{position:absolute;right:10px;bottom:10px;width:30%;max-width:150px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.35);z-index:2}
   .call-video-wrap video{width:100%;height:100%;object-fit:cover}
   .call-placeholder{color:#fff;font-weight:700}
@@ -477,7 +482,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v17</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v18</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -957,6 +962,15 @@
         </div>
         <button class="btn btn-secondary" id="saveProfileBtn" data-i18n="friends.save">Save profile</button>
       </div>
+      <div class="warn-box" id="linkWarn" style="display:none;margin-top:1.4rem">
+        <strong data-i18n="link.h">Nothing can travel between telephones yet</strong>
+        <p id="linkWhy" style="margin:.4rem 0"></p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="linkCheckBtn" type="button" data-i18n="link.check">Check the connection</button>
+          <button class="btn btn-secondary btn-sm" id="linkHelpBtn" type="button" data-i18n="link.how">How do I set this up?</button>
+        </div>
+        <div id="linkReport" style="margin-top:.6rem"></div>
+      </div>
       <div class="note-box" style="margin-top:1.4rem" id="friendsNote"></div>
       <div class="friends-tabs" role="tablist" aria-label="Friends sections">
         <button class="friends-tab" role="tab" aria-selected="true" data-tab="mine" data-i18n="friends.tabmine">My friends</button>
@@ -1336,7 +1350,11 @@
     <h3 id="callWithName"></h3>
     <p class="note-box" id="callNote"></p>
     <div class="call-video-wrap">
-      <span class="call-placeholder" id="callPlaceholder">Camera off</span>
+      <div class="call-placeholder" id="callPlaceholder">
+        <span class="avatar-lg" id="callAvatar"></span>
+        <strong id="callAvatarName"></strong>
+        <span id="callAvatarNote"></span>
+      </div>
       <video id="callRemote" autoplay playsinline style="display:none"></video>
       <video id="callVideo" autoplay playsinline muted style="display:none"></video>
     </div>
@@ -1482,7 +1500,7 @@ var PLAN_DEFS = {
    "What's in this version", the backup file and the fault log all read this,
    so they can never disagree with one another again. Bump it here and in the
    first line of sw.js — the admin panel shouts if those two ever differ. */
-var BUILD_TAG = "v17";
+var BUILD_TAG = "v18";
 var APP_BUILD_DATE = "2026-07-31";
 var GRACE_DAYS = 1;      /* one missed day does not wipe out weeks of work */
 var EXTRAS_PRICE = 1.00;
@@ -1522,6 +1540,7 @@ I18N.en = {
 "streaks.statsh":"Your numbers","streaks.calnote":"Orange days are days you completed a session. Your streak counts the run of orange days up to today.",
 "stat.total":"Total sessions","stat.month":"This month","stat.week":"Per week average","stat.best":"Best streak","stat.minutes":"Minutes trained",
 "carer.h":"Someone who keeps an eye out for you","carer.p":"Choose one person from your friends and, once a week, they get a short note: how many times you trained, for how long, and your run of days. Nothing else is shared — no health notes, no messages, no doctor searches. You can stop it at any moment.","carer.save":"Save","carer.sendnow":"Send this week now","carer.nobody":"Nobody — keep it to myself","carer.on":"{name} gets a short note once a week.","carer.off":"Nobody is being told anything.","carer.inbox":"Notes people have sent you","carer.sent":"Sent.","carer.copied":"Copied — paste it into a message.","carer.msg":"{name} this week: {s} sessions, {m} minutes, {d} days in a row, {steps} steps.","quiet.msg":"It has been {n} days. No lecture — but even three minutes counts.","quiet.threemin":"Do three easy minutes",
+"link.h":"Nothing can travel between telephones yet","link.none":"This site has no shared address, so a message, a friend request or a call has nowhere to be left. Everything you do is being kept on this telephone only. Setting it up is free and takes about three minutes — the administrator does it once, for everybody.","link.broken":"There is a shared address, but it did not answer. Until it does, nothing reaches anybody else.","link.check":"Check the connection","link.how":"How do I set this up?","link.helptoast":"Settings › administrator panel › \"Friend requests between devices\". The steps are written there.","link.step1":"App {v} is running.","link.nosignin":"You are not signed in — sign in first, otherwise there is nobody to send to or from.","link.step2":"Signed in, your number is {id}.","link.step3":"Shared address configured: {u}","link.step3bad":"No shared address configured. This is the one thing missing, and nothing can work without it.","link.step4":"Writing a test...","link.step4ok":"Wrote to the shared address.","link.step4bad":"Could not write. The address may be wrong, or the database rules may forbid writing. In Firebase, Realtime Database › Rules should allow write under \"ss\".","link.step5ok":"Read the same thing back — the connection works both ways.","link.step5bad":"Wrote, but could not read back. Check the read rule.","link.step6ok":"Your profile is published, so friends can find you.","link.step6bad":"Your profile could not be published.","link.step7":"Your inbox has {n} waiting request(s).","link.done":"Everything is in order. Messages and calls will reach the other person.","chat.localonly":"No shared address is set up, so this message stays on this telephone. See the warning on the Friends page.","call.nocam.them":"Their camera is off.",
 "friends.h2":"Friends","friends.p":"Add friends by ID or QR code, chat with them, and see how they're doing.","photo.add":"Add a photo","photo.remove":"Remove","photo.working":"Making it smaller...","photo.done":"Saved. Your friends will see it too.","photo.removed":"Removed — back to the letter.","photo.notimage":"That file is not a picture.","photo.failed":"That picture could not be read. Try another one.",
 "friends.username":"Your display name","friends.yourid":"Your ID:","friends.save":"Save profile","friends.copyid":"Copy","friends.copied":"Copied!",
 "friends.tabmine":"My friends","friends.tabadd":"Add friend","friends.tabreq":"Requests",
@@ -1728,6 +1747,7 @@ I18N.pt = {
 "streaks.statsh":"Os seus números","streaks.calnote":"Os dias a laranja são dias em que concluiu uma sessão. A sua sequência conta os dias laranja seguidos até hoje.",
 "stat.total":"Sessões no total","stat.month":"Este mês","stat.week":"Média por semana","stat.best":"Melhor sequência","stat.minutes":"Minutos treinados",
 "carer.h":"Alguém que fica atento por si","carer.p":"Escolha uma pessoa dos seus amigos e, uma vez por semana, ela recebe um recado curto: quantas vezes treinou, quanto tempo, e a sua sequência de dias. Mais nada é partilhado — nem notas de saúde, nem conversas, nem pesquisas de médicos. Pode desligar quando quiser.","carer.save":"Guardar","carer.sendnow":"Enviar já o desta semana","carer.nobody":"Ninguém — fica só para mim","carer.on":"{name} recebe um recado curto uma vez por semana.","carer.off":"Não está a ser dito nada a ninguém.","carer.inbox":"Recados que lhe enviaram","carer.sent":"Enviado.","carer.copied":"Copiado — cole numa mensagem.","carer.msg":"{name} esta semana: {s} sessões, {m} minutos, {d} dias seguidos, {steps} passos.","quiet.msg":"Já passaram {n} dias. Sem sermões — mas até três minutos contam.","quiet.threemin":"Fazer três minutos leves",
+"link.h":"Ainda não pode viajar nada entre telemóveis","link.none":"Este site não tem um endereço partilhado, por isso uma mensagem, um pedido de amizade ou uma chamada não têm onde ficar. Tudo o que faz está a ser guardado só neste telemóvel. A configuração é gratuita e leva cerca de três minutos — o administrador faz uma vez, para toda a gente.","link.broken":"Há um endereço partilhado, mas não respondeu. Enquanto não responder, nada chega a mais ninguém.","link.check":"Verificar a ligação","link.how":"Como é que configuro isto?","link.helptoast":"Definições › painel de administração › \"Pedidos de amizade entre aparelhos\". Os passos estão lá escritos.","link.step1":"A aplicação {v} está a correr.","link.nosignin":"Não tem sessão iniciada — entre primeiro, senão não há de quem nem para quem enviar.","link.step2":"Sessão iniciada, o seu número é {id}.","link.step3":"Endereço partilhado configurado: {u}","link.step3bad":"Não há endereço partilhado configurado. É isto que falta, e sem isto nada pode funcionar.","link.step4":"A escrever um teste...","link.step4ok":"Escreveu no endereço partilhado.","link.step4bad":"Não conseguiu escrever. O endereço pode estar errado, ou as regras da base de dados podem proibir a escrita. No Firebase, Realtime Database › Rules deve permitir write em \"ss\".","link.step5ok":"Leu de volta a mesma coisa — a ligação funciona nos dois sentidos.","link.step5bad":"Escreveu, mas não conseguiu ler de volta. Verifique a regra de leitura.","link.step6ok":"O seu perfil está publicado, por isso os amigos conseguem encontrá-lo.","link.step6bad":"Não foi possível publicar o seu perfil.","link.step7":"A sua caixa tem {n} pedido(s) à espera.","link.done":"Está tudo em ordem. As mensagens e as chamadas vão chegar à outra pessoa.","chat.localonly":"Não há endereço partilhado configurado, por isso esta mensagem fica neste telemóvel. Veja o aviso na página dos Amigos.","call.nocam.them":"A câmara dela está desligada.",
 "friends.h2":"Amigos","friends.p":"Adicione amigos por ID ou código QR, converse com eles e veja como lhes está a correr.","photo.add":"Pôr uma foto","photo.remove":"Tirar","photo.working":"A reduzir...","photo.done":"Guardada. Os seus amigos também a vão ver.","photo.removed":"Tirada — volta a letra.","photo.notimage":"Esse ficheiro não é uma imagem.","photo.failed":"Não foi possível ler essa imagem. Experimente outra.",
 "friends.username":"O seu nome visível","friends.yourid":"O seu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"Copiado!",
 "friends.tabmine":"Os meus amigos","friends.tabadd":"Adicionar amigo","friends.tabreq":"Pedidos",
@@ -1934,6 +1954,7 @@ I18N.es = {
 "streaks.statsh":"Tus números","streaks.calnote":"Los días naranjas son días en que completaste una sesión. Tu racha cuenta los días naranjas seguidos hasta hoy.",
 "stat.total":"Sesiones en total","stat.month":"Este mes","stat.week":"Media por semana","stat.best":"Mejor racha","stat.minutes":"Minutos entrenados",
 "carer.h":"Alguien que está pendiente de ti","carer.p":"Elige a una persona de tus amigos y, una vez por semana, recibe una nota corta: cuántas veces entrenaste, cuánto tiempo y tu racha de días. No se comparte nada más — ni notas de salud, ni mensajes, ni búsquedas de médicos. Puedes pararlo cuando quieras.","carer.save":"Guardar","carer.sendnow":"Enviar ya el de esta semana","carer.nobody":"Nadie — que quede para mí","carer.on":"{name} recibe una nota corta una vez por semana.","carer.off":"No se le está contando nada a nadie.","carer.inbox":"Notas que te han enviado","carer.sent":"Enviado.","carer.copied":"Copiado — pégalo en un mensaje.","carer.msg":"{name} esta semana: {s} sesiones, {m} minutos, {d} días seguidos, {steps} pasos.","quiet.msg":"Han pasado {n} días. Sin sermones — pero hasta tres minutos cuentan.","quiet.threemin":"Hacer tres minutos suaves",
+"link.h":"Todavía no puede viajar nada entre móviles","link.none":"Este sitio no tiene una dirección compartida, así que un mensaje, una solicitud de amistad o una llamada no tienen dónde quedarse. Todo lo que haces se guarda solo en este móvil. Configurarlo es gratis y lleva unos tres minutos — el administrador lo hace una vez, para todos.","link.broken":"Hay una dirección compartida, pero no ha respondido. Mientras no responda, nada llega a nadie más.","link.check":"Comprobar la conexión","link.how":"¿Cómo configuro esto?","link.helptoast":"Ajustes › panel de administración › \"Solicitudes de amistad entre dispositivos\". Los pasos están escritos ahí.","link.step1":"La aplicación {v} está funcionando.","link.nosignin":"No has iniciado sesión — entra primero, si no no hay de quién ni a quién enviar.","link.step2":"Sesión iniciada, tu número es {id}.","link.step3":"Dirección compartida configurada: {u}","link.step3bad":"No hay dirección compartida configurada. Es lo único que falta, y sin ello nada puede funcionar.","link.step4":"Escribiendo una prueba...","link.step4ok":"Ha escrito en la dirección compartida.","link.step4bad":"No ha podido escribir. La dirección puede estar mal, o las reglas de la base de datos pueden prohibir la escritura. En Firebase, Realtime Database › Rules debe permitir write en \"ss\".","link.step5ok":"Ha leído lo mismo de vuelta — la conexión funciona en los dos sentidos.","link.step5bad":"Ha escrito, pero no ha podido leer de vuelta. Revisa la regla de lectura.","link.step6ok":"Tu perfil está publicado, así que tus amigos pueden encontrarte.","link.step6bad":"No se ha podido publicar tu perfil.","link.step7":"Tu bandeja tiene {n} solicitud(es) esperando.","link.done":"Todo está en orden. Los mensajes y las llamadas llegarán a la otra persona.","chat.localonly":"No hay dirección compartida configurada, así que este mensaje se queda en este móvil. Mira el aviso en la página de Amigos.","call.nocam.them":"Su cámara está apagada.",
 "friends.h2":"Amigos","friends.p":"Añade amigos por ID o código QR, chatea con ellos y mira cómo les va.","photo.add":"Poner una foto","photo.remove":"Quitar","photo.working":"Reduciendo...","photo.done":"Guardada. Tus amigos también la verán.","photo.removed":"Quitada — vuelve la letra.","photo.notimage":"Ese archivo no es una imagen.","photo.failed":"No se ha podido leer esa imagen. Prueba con otra.",
 "friends.username":"Tu nombre visible","friends.yourid":"Tu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"¡Copiado!",
 "friends.tabmine":"Mis amigos","friends.tabadd":"Añadir amigo","friends.tabreq":"Solicitudes",
@@ -2140,6 +2161,7 @@ I18N.fr = {
 "streaks.statsh":"Vos chiffres","streaks.calnote":"Les jours en orange sont les jours où vous avez terminé une séance. Votre série compte les jours orange consécutifs jusqu'à aujourd'hui.",
 "stat.total":"Séances au total","stat.month":"Ce mois-ci","stat.week":"Moyenne par semaine","stat.best":"Meilleure série","stat.minutes":"Minutes d'entraînement",
 "carer.h":"Quelqu'un qui veille sur vous","carer.p":"Choisissez une personne parmi vos amis : une fois par semaine, elle reçoit un mot court — combien de fois vous vous êtes entraîné, combien de temps, et votre série de jours. Rien d'autre n'est partagé : ni notes de santé, ni messages, ni recherches de médecins. Vous pouvez arrêter à tout moment.","carer.save":"Enregistrer","carer.sendnow":"Envoyer celui de cette semaine","carer.nobody":"Personne — je garde cela pour moi","carer.on":"{name} reçoit un mot court une fois par semaine.","carer.off":"Personne n'est informé de quoi que ce soit.","carer.inbox":"Les mots qu'on vous a envoyés","carer.sent":"Envoyé.","carer.copied":"Copié — collez-le dans un message.","carer.msg":"{name} cette semaine : {s} séances, {m} minutes, {d} jours d'affilée, {steps} pas.","quiet.msg":"Cela fait {n} jours. Aucun sermon — mais même trois minutes comptent.","quiet.threemin":"Faire trois minutes douces",
+"link.h":"Rien ne peut encore circuler entre les téléphones","link.none":"Ce site n'a pas d'adresse partagée : un message, une demande d'ami ou un appel n'ont nulle part où être déposés. Tout ce que vous faites reste sur ce téléphone. La mise en place est gratuite et prend environ trois minutes — l'administrateur le fait une fois, pour tout le monde.","link.broken":"Une adresse partagée existe, mais elle n'a pas répondu. Tant qu'elle ne répond pas, rien ne parvient à personne.","link.check":"Vérifier la connexion","link.how":"Comment mettre cela en place ?","link.helptoast":"Réglages › panneau d'administration › \"Demandes d'ami entre appareils\". Les étapes y sont écrites.","link.step1":"L'application {v} fonctionne.","link.nosignin":"Vous n'êtes pas connecté — connectez-vous d'abord, sinon il n'y a ni expéditeur ni destinataire.","link.step2":"Connecté, votre numéro est {id}.","link.step3":"Adresse partagée configurée : {u}","link.step3bad":"Aucune adresse partagée n'est configurée. C'est la seule chose qui manque, et rien ne peut fonctionner sans elle.","link.step4":"Écriture d'un test...","link.step4ok":"Écriture réussie à l'adresse partagée.","link.step4bad":"Écriture impossible. L'adresse est peut-être fausse, ou les règles de la base interdisent l'écriture. Dans Firebase, Realtime Database › Rules doit autoriser write sous \"ss\".","link.step5ok":"Relecture de la même chose — la connexion fonctionne dans les deux sens.","link.step5bad":"Écriture faite, mais relecture impossible. Vérifiez la règle de lecture.","link.step6ok":"Votre profil est publié, vos amis peuvent donc vous trouver.","link.step6bad":"Votre profil n'a pas pu être publié.","link.step7":"Votre boîte contient {n} demande(s) en attente.","link.done":"Tout est en ordre. Les messages et les appels parviendront à l'autre personne.","chat.localonly":"Aucune adresse partagée n'est configurée : ce message reste sur ce téléphone. Voyez l'avertissement sur la page Amis.","call.nocam.them":"Sa caméra est éteinte.",
 "friends.h2":"Amis","friends.p":"Ajoutez des amis par identifiant ou QR code, discutez avec eux et voyez comment ils avancent.","photo.add":"Mettre une photo","photo.remove":"Retirer","photo.working":"Réduction...","photo.done":"Enregistrée. Vos amis la verront aussi.","photo.removed":"Retirée — la lettre revient.","photo.notimage":"Ce fichier n'est pas une image.","photo.failed":"Impossible de lire cette image. Essayez-en une autre.",
 "friends.username":"Votre nom affiché","friends.yourid":"Votre identifiant :","friends.save":"Enregistrer le profil","friends.copyid":"Copier","friends.copied":"Copié !",
 "friends.tabmine":"Mes amis","friends.tabadd":"Ajouter un ami","friends.tabreq":"Demandes",
@@ -5994,6 +6016,7 @@ function renderFriendsView(){
   if(howto) howto.textContent = Store.isNative ? t("friends.howtoshared") : t("friends.howtolocal");
   renderMyFriends();
   renderCarerPanel();
+  renderLinkWarning();
   pollRequests();
   checkIncomingLinks().then(function(changed){ if(changed) renderMyFriends(); });
 }
@@ -6098,6 +6121,13 @@ async function addFriendById(rawId, msgEl){
   maybeRewardReferral(id);
   return true;
 }
+document.getElementById("linkCheckBtn").addEventListener("click", runLinkCheck);
+document.getElementById("linkHelpBtn").addEventListener("click", function(){
+  showView("settings");
+  var el = document.getElementById("ownerPanel") || document.getElementById("view-settings");
+  if(el) el.scrollIntoView({ behavior:"smooth" });
+  showUndoToast(t("link.helptoast"), function(){});
+});
 document.getElementById("carerSaveBtn").addEventListener("click", async function(){
   var id = document.getElementById("carerSelect").value;
   STATE.carer = id ? { id: id, since: Date.now(), lastWeek: null, alertQuiet: true } : null;
@@ -6121,6 +6151,51 @@ document.getElementById("addByIdBtn").addEventListener("click", async function()
 document.getElementById("addIdInput").addEventListener("keydown", function(e){
   if(e.key === "Enter"){ e.preventDefault(); document.getElementById("addByIdBtn").click(); }
 });
+/* --- Why is nothing arriving? -------------------------------------------
+   Messages, requests and calls all need one shared address to pass through.
+   Without it every telephone is talking to itself, which looks exactly like
+   a broken app. So instead of a quiet note, this states it plainly and — far
+   more usefully — actually tests each step and says which one failed. */
+function relayWorking(){ return !!CLOUD.base && (!CLOUD.checked || CLOUD.live); }
+function renderLinkWarning(){
+  var box = document.getElementById("linkWarn");
+  if(!box) return;
+  var bad = !CLOUD.base || (CLOUD.checked && !CLOUD.live);
+  box.style.display = bad ? "block" : "none";
+  var p = document.getElementById("linkWhy");
+  if(p) p.textContent = !CLOUD.base ? t("link.none") : t("link.broken");
+}
+async function runLinkCheck(){
+  var out = document.getElementById("linkReport");
+  var lines = [];
+  function say(state, text){
+    lines.push('<div>' + (state === "ok" ? "✅" : state === "bad" ? "❌" : "⏳") + " " + text + '</div>');
+    out.innerHTML = lines.join("");
+  }
+  out.innerHTML = "";
+  say("ok", t("link.step1", { v: BUILD_TAG }));
+  if(!STATE.auth.loggedIn){ say("bad", t("link.nosignin")); return; }
+  say("ok", t("link.step2", { id: STATE.profile.id }));
+  if(!CLOUD.base){ say("bad", t("link.step3bad")); return; }
+  say("ok", t("link.step3", { u: CLOUD.base }));
+  say("wait", t("link.step4"));
+  var wrote = await cloudSet("public:__check", "ping-" + Date.now());
+  lines.pop();
+  say(wrote ? "ok" : "bad", wrote ? t("link.step4ok") : t("link.step4bad"));
+  if(!wrote) return;
+  var back = await cloudGet("public:__check");
+  say(back ? "ok" : "bad", back ? t("link.step5ok") : t("link.step5bad"));
+  if(!back) return;
+  await publishPublicProfile();
+  var mine = await Store.getJSON("public:" + STATE.profile.id, null);
+  say(mine ? "ok" : "bad", mine ? t("link.step6ok") : t("link.step6bad"));
+  var reqs = await Store.getJSON("requests:" + STATE.profile.id, []);
+  say("ok", t("link.step7", { n: (reqs || []).length }));
+  CLOUD.live = true; CLOUD.checked = true;
+  renderLinkWarning();
+  renderFriendsNote();
+  say("ok", t("link.done"));
+}
 function renderFriendsNote(){
   var el = document.getElementById("friendsNote");
   if(!el) return;
@@ -6715,6 +6790,9 @@ async function sendChat(){
   var input = document.getElementById("chatInput");
   var text = input.value.trim();
   if(!text || !currentChatId) return;
+  if(!CLOUD.base){
+    document.getElementById("chatStatus").textContent = t("chat.localonly");
+  }
   var key = "chat:" + pairKey(STATE.profile.id, currentChatId);
   var msgs = await Store.getJSON(key, []);
   msgs.push({ from: STATE.profile.id, text:text, ts:Date.now() });
@@ -6946,15 +7024,46 @@ async function getLocalMedia(wantsVideo){
   document.getElementById("toggleMicBtn").textContent = t("friends.togglemicoff");
   return callStream;
 }
+/* With no picture coming in — camera off, audio-only, or still connecting —
+   the screen shows the person instead of a black rectangle: their photograph
+   if they have one, otherwise the initial in their colour, with their name
+   underneath. Far kinder than staring at nothing. */
+function showCallFace(note){
+  var f = STATE.friends.filter(function(x){ return x.id === callPeer; })[0];
+  var name = f ? displayName(f) : (incoming && incoming.name) || friendName(callPeer);
+  paintAvatar(document.getElementById("callAvatar"), f && f.photo, initials(name), callPeer || "SS-0");
+  document.getElementById("callAvatarName").textContent = name;
+  document.getElementById("callAvatarNote").textContent = note || "";
+  document.getElementById("callPlaceholder").style.display = "flex";
+  document.getElementById("callRemote").style.display = "none";
+}
+function hideCallFace(){
+  document.getElementById("callPlaceholder").style.display = "none";
+  document.getElementById("callRemote").style.display = "block";
+}
+/* A camera that is switched off still sends a track — one that carries no
+   picture. Watching for that is how we know to put the face back up. */
+function watchRemoteVideo(){
+  var rv = document.getElementById("callRemote");
+  clearInterval(remoteWatch);
+  remoteWatch = setInterval(function(){
+    if(!remoteStream) return;
+    var vids = remoteStream.getVideoTracks();
+    var live = vids.length && vids.some(function(tr){ return tr.enabled && !tr.muted && tr.readyState === "live"; });
+    if(live && rv.videoWidth > 0) hideCallFace();
+    else showCallFace(callLive ? t("call.nocam.them") : "");
+  }, 1200);
+}
+var remoteWatch = null;
 function newPeer(){
   var p = new RTCPeerConnection(iceConfig());
   remoteStream = new MediaStream();
   var rv = document.getElementById("callRemote");
   rv.srcObject = remoteStream;
+  showCallFace(t("call.connecting"));
+  watchRemoteVideo();
   p.ontrack = function(ev){
     ev.streams[0].getTracks().forEach(function(tr){ remoteStream.addTrack(tr); });
-    rv.style.display = "block";
-    document.getElementById("callPlaceholder").style.display = "none";
     document.getElementById("callVideo").classList.add("pip");
   };
   p.onicecandidate = function(ev){
@@ -7072,6 +7181,7 @@ function stopCallStream(){
 }
 function closeCallWindow(){
   stopRinging();
+  clearInterval(remoteWatch);
   clearInterval(callTimerId); callTicking = false;
   clearInterval(callPollId);
   stopCallStream();
@@ -7103,10 +7213,12 @@ function openCall(friendId, wantsVideo){
   document.getElementById("callWithName").textContent =
     (wantsVideo ? t("friends.video") : t("friends.audio")) + " · " + friendName(friendId);
   document.getElementById("callTimer").textContent = "00:00";
+  callPeer = friendId;
+  showCallFace(t("call.calling", { name: friendName(friendId) }));
   callOverlay.classList.add("active");
   if(callsPossible()) placeCall(friendId, wantsVideo);
   else {
-    setCallNote(t("call.nocloud"));
+    setCallNote(CLOUD.base ? t("call.failed") : t("call.nocloud"));
     getLocalMedia(wantsVideo).catch(function(){ setCallNote(t("call.nocam")); });
   }
 }
@@ -7120,8 +7232,10 @@ async function pollIncoming(){
   if(Date.now() - (rec.ts || 0) > 60000) return;          /* stale ring */
   if(incoming && incoming.from === rec.from && incoming.ts === rec.ts) return;
   incoming = rec;
+  callPeer = rec.from;
   document.getElementById("callWithName").textContent =
     t("call.incoming", { name: rec.name || friendName(rec.from) });
+  showCallFace(t("call.incomingp"));
   setCallNote(t("call.incomingp"));
   document.getElementById("callAnswerRow").style.display = "flex";
   document.getElementById("callTimer").textContent = "00:00";
@@ -7137,6 +7251,7 @@ function toggleCam(){
   if(!tracks.length){ return; }
   camOn = !camOn;
   tracks.forEach(function(tr){ tr.enabled = camOn; });
+  document.getElementById("callVideo").style.display = camOn ? "block" : "none";
   document.getElementById("toggleCamBtn").textContent = camOn ? t("friends.togglecamoff") : t("friends.togglecam");
 }
 document.getElementById("toggleCamBtn").addEventListener("click", toggleCam);
@@ -9199,6 +9314,14 @@ var FEATURES = [
    pt:"Um resumo mensal de uma página, para imprimir e levar ao médico ou mostrar à família",
    es:"Un resumen mensual de una página, para imprimir y llevar al médico o enseñar a la familia",
    fr:"Un bilan mensuel d'une page à imprimer pour le médecin ou la famille"},
+  {en:"When nothing can travel between telephones the app now says so on the Friends page, and a check button tests each step and names the one that failed",
+   pt:"Quando nada pode viajar entre telemóveis, a aplicação passa a dizê-lo na página dos Amigos, e um botão de verificação testa cada passo e diz qual falhou",
+   es:"Cuando nada puede viajar entre móviles, la aplicación ahora lo dice en la página de Amigos, y un botón de comprobación prueba cada paso y señala el que falló",
+   fr:"Quand rien ne peut circuler entre les téléphones, l'application le dit sur la page Amis, et un bouton de vérification teste chaque étape et nomme celle qui a échoué"},
+  {en:"On a call with no picture the screen shows the person — their photograph, or their initial in their colour, with their name — instead of a black rectangle",
+   pt:"Numa chamada sem imagem, o ecrã mostra a pessoa — a fotografia dela, ou a inicial na cor dela, com o nome — em vez de um retângulo preto",
+   es:"En una llamada sin imagen, la pantalla muestra a la persona — su foto, o su inicial en su color, con su nombre — en vez de un rectángulo negro",
+   fr:"Dans un appel sans image, l'écran montre la personne — sa photo, ou son initiale dans sa couleur, avec son nom — au lieu d'un rectangle noir"},
   {en:"Step counting now proves itself: if no readings arrive within three seconds it says so instead of sitting at zero, and it shows the sensor working live, with a sensitivity setting and buttons to add steps by hand",
    pt:"A contagem de passos passa a provar-se: se não chegar nenhuma leitura em três segundos, diz-lho em vez de ficar a zero, e mostra o sensor a trabalhar em direto, com regulação de sensibilidade e botões para somar passos à mão",
    es:"El conteo de pasos ahora se demuestra: si no llegan lecturas en tres segundos lo dice en vez de quedarse a cero, y muestra el sensor funcionando en directo, con ajuste de sensibilidad y botones para sumar pasos a mano",
