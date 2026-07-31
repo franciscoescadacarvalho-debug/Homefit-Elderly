@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steady &amp; Strong v14 — Home Workouts for You</title>
+<title>Steady &amp; Strong v16 — Home Workouts for You</title>
 <meta name="description" content="Simple, safe home workouts for older adults. No equipment needed — just a sturdy chair and a little time.">
 <meta name="theme-color" content="#1F5C54">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,6 +23,27 @@
     --shadow:0 6px 24px rgba(31,92,84,0.10);
     --font-display:'Fraunces',Georgia,serif; --font-body:'Atkinson Hyperlegible',Arial,sans-serif;
   }
+  body.theme-dark{
+    --bg:#14171A; --bg-card:#1E2226; --ink:#ECE9E3; --ink-soft:#AEB3B0;
+    --teal:#5FBFAE; --teal-dark:#8FD6C8; --teal-tint:#233833;
+    --marigold:#E8A33D; --marigold-dark:#F0BE73; --rose:#E08A78; --sage:#8FBF98;
+    --plum:#B79BCB; --line:#333A3F;
+    --shadow:0 6px 24px rgba(0,0,0,0.45);
+  }
+  body.theme-contrast{
+    --bg:#000000; --bg-card:#000000; --ink:#FFFFFF; --ink-soft:#F2F2F2;
+    --teal:#FFE100; --teal-dark:#FFE100; --teal-tint:#1A1A00;
+    --marigold:#FFE100; --marigold-dark:#FFE100; --rose:#FF8A70; --sage:#7CFF9B;
+    --plum:#D7A8FF; --line:#FFFFFF;
+    --shadow:none;
+  }
+  body.theme-contrast *{border-color:#FFF!important}
+  body.theme-contrast .btn{border:2px solid #FFF!important}
+  body.theme-contrast .panel,body.theme-contrast .exercise-card{border:2px solid #FFF}
+  #bigCue{position:fixed;left:0;right:0;bottom:0;background:var(--teal-dark);color:#fff;
+    font-size:clamp(1.4rem,4.5vw,2.4rem);font-weight:700;text-align:center;padding:.7rem 1rem;
+    z-index:9000;display:none;line-height:1.25}
+  #bigCue.on{display:block}
   *{box-sizing:border-box}
   html{font-size:112.5%;scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
@@ -62,6 +83,10 @@
   .text-size-controls span{font-size:.85rem;font-weight:700;color:var(--ink-soft)}
   .size-btn{background:var(--bg-card);border:2px solid var(--teal);color:var(--teal-dark);font-weight:700;border-radius:8px;min-width:44px;min-height:44px;cursor:pointer;font-family:var(--font-body)}
   .size-btn.active{background:var(--teal);color:#fff}
+  .size-btn:disabled{opacity:.4;cursor:default}
+  #zoomOutBtn{font-size:.85rem}#zoomInBtn{font-size:1.15rem}
+  .zoom-readout{min-width:56px;text-align:center;font-weight:700;color:var(--teal-dark);font-family:var(--font-body)}
+  .zoom-reset{font-size:1rem}
   .profile-pill{display:flex;align-items:center;gap:.5rem;background:var(--bg-card);border:2px solid var(--line);border-radius:999px;padding:.3rem .9rem .3rem .3rem;cursor:pointer;font-weight:700;color:var(--teal-dark);font-family:var(--font-body)}
   .profile-pill .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--font-display)}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:58px;padding:.9rem 1.8rem;border-radius:14px;font-family:var(--font-body);font-weight:700;font-size:1.15rem;cursor:pointer;border:2px solid transparent;text-decoration:none;transition:transform .12s ease,background .15s ease}
@@ -224,6 +249,8 @@
   .friends-tabpanel{display:none}
   .friends-tabpanel.active{display:block}
   .profile-card{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap}
+  .avatar-lg,.avatar-sm,.avatar{background-size:cover;background-position:center}
+  .has-photo{color:transparent!important;text-indent:-9999px}
   .avatar-lg{width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-size:1.8rem;font-weight:700;flex:none}
   .id-tag{font-family:monospace;background:var(--teal-tint);color:var(--teal-dark);padding:.2rem .6rem;border-radius:6px;font-size:.95rem}
   .friend-card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem;display:flex;gap:1rem;align-items:flex-start}
@@ -251,6 +278,11 @@
   .chat-input-row{display:flex;gap:.6rem;margin-top:.8rem}
   .chat-input-row input{flex:1}
   .call-modal .modal-box{max-width:520px;text-align:center}
+  #walkOverlay{position:fixed;inset:0;background:#000;color:#fff;display:none;align-items:center;justify-content:center;text-align:center;z-index:9998;padding:2rem}
+  #walkOverlay.on{display:flex}
+  #walkOverlay #walkSteps{font-size:23vw;line-height:1;font-weight:800;color:#f4f1ea}
+  #walkOverlay p{color:#8a8a8a;margin:.6rem 0}
+  #walkOverlay .btn{margin-top:1.6rem}
   .msg-time{display:block;font-size:.72rem;opacity:.6;margin-top:.2rem}
   .call-video-wrap{position:relative;background:var(--teal-dark);border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;margin-top:1rem}
   #callRemote{width:100%;height:100%;object-fit:cover;background:#000}
@@ -438,7 +470,7 @@
 <a class="skip-link" href="#main">Skip to main content</a>
 <header class="site-header">
   <div class="header-inner">
-    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v14</span></a>
+    <a class="logo" href="#" data-view-link="home"><span class="dot" aria-hidden="true"></span>Steady &amp; Strong<span class="build-tag">v16</span></a>
     <nav class="main-nav" aria-label="Main">
       <button data-view-link="home" class="active"><span data-i18n="nav.home">Home</span></button>
       <button data-view-link="library"><span data-i18n="nav.library">Exercises</span></button>
@@ -452,9 +484,10 @@
     <div class="header-right">
       <div class="text-size-controls" role="group" aria-label="Text size">
         <span data-i18n="nav.textsize">Text size</span>
-        <button type="button" class="size-btn" data-size="0">A</button>
-        <button type="button" class="size-btn active" data-size="1">A</button>
-        <button type="button" class="size-btn" data-size="2">A</button>
+        <button type="button" class="size-btn" id="zoomOutBtn" aria-label="Smaller text">A&minus;</button>
+        <output class="zoom-readout" id="zoomReadout" aria-live="polite">100%</output>
+        <button type="button" class="size-btn" id="zoomInBtn" aria-label="Bigger text">A+</button>
+        <button type="button" class="size-btn zoom-reset" id="zoomResetBtn" title="Back to normal">&#8635;</button>
       </div>
       <button class="btn btn-secondary btn-sm" id="authBtn" type="button">Sign in</button>
       <button class="profile-pill" id="profilePillBtn" type="button">
@@ -569,6 +602,10 @@
       </div>
       <div class="session-panel">
         <div id="builder">
+          <div id="todayBox" style="display:none;margin-bottom:1.2rem">
+            <button class="btn btn-primary" id="todayBtn" type="button" style="font-size:1.25rem;padding:1rem 1.6rem"></button>
+            <p class="desc-line" id="todayHint"></p>
+          </div>
           <h3 data-i18n="session.lengthq">How much time do you have today?</h3>
           <div class="length-choices" role="group" aria-label="Choose session length">
             <button class="length-btn" data-length="5" aria-pressed="false"><strong>5</strong><span data-i18n="session.min">minutes</span></button>
@@ -658,7 +695,10 @@
         <button class="filter-chip" data-filter="extras" aria-pressed="false" data-i18n="lib.extras">Extra pack only</button>
       </div>
       <div style="margin-bottom:1.6rem"><input class="text-input" id="libSearch" type="search" placeholder="Search exercises..." style="max-width:420px"></div>
-      <p id="libCount" style="font-weight:700;color:var(--ink-soft)"></p>
+      <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+        <p id="libCount" style="font-weight:700;color:var(--ink-soft);margin:0"></p>
+        <button class="btn btn-secondary btn-sm" id="printCardsBtn" type="button" data-i18n="cards.btn">Print these as cards</button>
+      </div>
       <div class="exercise-grid" id="exerciseGrid"></div>
       <div class="panel" style="margin-top:2rem">
         <h3 data-i18n="sugg.h">Missing an exercise?</h3>
@@ -744,6 +784,42 @@
         <p style="color:var(--ink-soft)" data-i18n="health.historyp">Saved to your account so your suggestions and plans can take them into account.</p>
         <div id="injuryHistory"></div>
       </div>
+      <div class="panel" style="margin-top:1.4rem" id="painPanel">
+        <h3 data-i18n="pain.h">How is the pain today?</h3>
+        <p style="color:var(--ink-soft)" data-i18n="pain.p">One tap a day. After a few weeks the line tells you something no single day can: whether this is getting better. The days you trained are marked underneath.</p>
+        <div id="painScale" style="display:flex;gap:.3rem;flex-wrap:wrap;margin:.6rem 0"></div>
+        <p class="reminder-status" id="painStatus"></p>
+        <div id="painChart" style="margin-top:.8rem"></div>
+      </div>
+      <div class="panel" style="margin-top:1.4rem" id="balanceTestPanel">
+        <h3 data-i18n="bt.h">Two checks your physiotherapist would do</h3>
+        <p style="color:var(--ink-soft)" data-i18n="bt.p">These are the same two timed checks used in clinics to see how steady you are on your feet. Do them once a month. They take under a minute, and the number going down over the months is worth more than any single result.</p>
+        <div class="warn-box" data-i18n="bt.safety">Have a sturdy chair against a wall and somebody nearby the first time. If you feel dizzy or unsafe, stop — that in itself is worth telling your doctor.</div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem">
+          <div class="panel" style="flex:1;min-width:250px;padding:1rem 1.2rem">
+            <h3 style="font-size:1.05rem" data-i18n="bt.sts.h">Stand up five times</h3>
+            <p style="color:var(--ink-soft);font-size:.93rem" data-i18n="bt.sts.p">Sit with your arms crossed on your chest. Stand up fully and sit down five times, as quickly as you safely can. Press start, then stop the moment you sit down the fifth time.</p>
+            <div class="call-timer" id="btStsTime">0.0 s</div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+              <button class="btn btn-teal btn-sm" id="btStsStart" type="button" data-i18n="bt.start">Start</button>
+              <button class="btn btn-rose btn-sm" id="btStsStop" type="button" style="display:none" data-i18n="bt.stop">Stop</button>
+            </div>
+            <p class="reminder-status" id="btStsResult"></p>
+          </div>
+          <div class="panel" style="flex:1;min-width:250px;padding:1rem 1.2rem">
+            <h3 style="font-size:1.05rem" data-i18n="bt.tug.h">Get up and walk three metres</h3>
+            <p style="color:var(--ink-soft);font-size:.93rem" data-i18n="bt.tug.p">From sitting: stand, walk three metres at your normal pace, turn, come back and sit down. Use your stick or frame if you normally do. Press start as you rise, stop as you sit.</p>
+            <div class="call-timer" id="btTugTime">0.0 s</div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+              <button class="btn btn-teal btn-sm" id="btTugStart" type="button" data-i18n="bt.start">Start</button>
+              <button class="btn btn-rose btn-sm" id="btTugStop" type="button" style="display:none" data-i18n="bt.stop">Stop</button>
+            </div>
+            <p class="reminder-status" id="btTugResult"></p>
+          </div>
+        </div>
+        <div id="btHistory" style="margin-top:1rem"></div>
+        <p style="color:var(--ink-soft);font-size:.88rem" data-i18n="bt.note">These numbers are a guide, not a diagnosis. Take them to your doctor or physiotherapist — they are exactly the kind of thing that is useful in a consultation.</p>
+      </div>
       <div class="panel" style="margin-top:1.4rem" id="doctorPanel">
         <h3 data-i18n="doc.h">Find care near you</h3>
         <p style="color:var(--ink-soft)" data-i18n="doc.p">Tell us roughly where you are and we'll show the emergency number for your country, any contacts the site owner has personally verified, and ready-made map searches for the right kind of professional for your symptoms.</p>
@@ -777,8 +853,11 @@
             <div class="reminder-row">
               <button class="btn btn-teal btn-sm" id="stepAutoBtn" type="button" data-i18n="steps.autostart">Start counting</button>
               <button class="btn btn-secondary btn-sm" id="stepAutoStopBtn" type="button" style="display:none" data-i18n="steps.autostop">Stop counting</button>
+              <button class="btn btn-secondary btn-sm" id="walkStartBtn" type="button" data-i18n="steps.walkmode">Going for a walk</button>
             </div>
             <p class="reminder-status" id="stepStatus"></p>
+            <p style="color:var(--ink-soft);font-size:.9rem" data-i18n="steps.truth">No web page can read the step counter while it is closed — that is a rule of the phone, not a missing feature. Leave this page open (walk mode keeps it awake on a dark screen) and every step is counted, with or without internet.</p>
+            <div id="stepWeek" style="display:flex;gap:.4rem;align-items:flex-end;margin-top:.8rem;height:60px"></div>
           </div>
         </div>
       </div>
@@ -840,7 +919,15 @@
     <div class="container">
       <div class="section-head"><h2 data-i18n="friends.h2">Friends</h2><p data-i18n="friends.p">Add friends by ID or QR code, chat with them, and see how they're doing.</p></div>
       <div class="panel profile-card">
-        <span class="avatar-lg" id="profileAvatarLg">Y</span>
+        <div style="text-align:center">
+          <span class="avatar-lg" id="profileAvatarLg">Y</span>
+          <div style="display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap;justify-content:center">
+            <button class="btn btn-secondary btn-sm" id="photoBtn" type="button" data-i18n="photo.add">Add a photo</button>
+            <button class="btn btn-secondary btn-sm" id="photoRemoveBtn" type="button" style="display:none" data-i18n="photo.remove">Remove</button>
+          </div>
+          <input type="file" id="photoFile" accept="image/*" style="display:none">
+          <p class="promo-status" id="photoStatus" style="max-width:190px"></p>
+        </div>
         <div style="flex:1;min-width:220px">
           <label class="field-label" for="usernameInput" data-i18n="friends.username">Your display name</label>
           <input class="text-input" id="usernameInput" type="text" value="You" maxlength="24">
@@ -886,6 +973,18 @@
       </div>
       <div class="friends-tabpanel" data-panel="requests"><div class="panel"><h3 data-i18n="friends.reqh">Friend requests</h3><div id="requestsList"></div></div></div>
     </div>
+    <div class="panel" style="margin-top:1.4rem">
+      <h3 data-i18n="carer.h">Someone who keeps an eye out for you</h3>
+      <p style="color:var(--ink-soft)" data-i18n="carer.p">Choose one person from your friends and, once a week, they get a short note: how many times you trained, for how long, and your run of days. Nothing else is shared — no health notes, no messages, no doctor searches. You can stop it at any moment.</p>
+      <div class="reminder-row">
+        <select class="text-input" id="carerSelect" style="max-width:260px"></select>
+        <button class="btn btn-teal btn-sm" id="carerSaveBtn" type="button" data-i18n="carer.save">Save</button>
+        <button class="btn btn-secondary btn-sm" id="carerSendBtn" type="button" data-i18n="carer.sendnow">Send this week now</button>
+      </div>
+      <p class="reminder-status" id="carerStatus"></p>
+      <div id="carerInbox" style="margin-top:1rem"></div>
+    </div>
+    </div>
   </section>
 </div>
 <!-- ============ SETTINGS ============ -->
@@ -899,13 +998,47 @@
           <select class="text-input" id="langSelect" style="max-width:220px"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option><option value="fr">Français</option></select>
         </div>
         <div class="settings-row"><div><h3 data-i18n="settings.voiceh">Voice announcements</h3><p data-i18n="settings.voicep">Read each exercise name aloud during guided sessions.</p></div><input type="checkbox" id="settingsVoiceToggle" style="width:26px;height:26px"></div>
+        <div class="settings-row"><div><h3 data-i18n="zoom.h">Size of everything</h3><p data-i18n="zoom.p">Not only the words: buttons, timers and drawings grow with the text, so nothing ends up too small to press. Ctrl and + or &minus; does the same from a keyboard.</p></div>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" id="zoomOutBtn2" type="button" aria-label="Smaller">A&minus;</button>
+            <select class="text-input" id="zoomSelect" style="max-width:130px"></select>
+            <button class="btn btn-secondary btn-sm" id="zoomInBtn2" type="button" aria-label="Bigger">A+</button>
+          </div></div>
+        <div class="settings-row"><div><h3 data-i18n="theme.h">Colours</h3><p data-i18n="theme.p">A dark screen is kinder at night; the high contrast setting uses pure black and yellow, which is what people with poor sight can read most easily.</p></div>
+          <select class="text-input" id="themeSelect" style="max-width:220px">
+            <option value="light" data-i18n="theme.light">Daylight</option>
+            <option value="dark" data-i18n="theme.dark">Dark</option>
+            <option value="contrast" data-i18n="theme.contrast">High contrast</option>
+          </select></div>
+        <div class="settings-row"><div><h3 data-i18n="cue.h">Big words on screen</h3><p data-i18n="cue.p">Everything the voice says also appears in large letters at the bottom of the screen — for anybody who does not hear it well, or has the sound off.</p></div><input type="checkbox" id="settingsBigCue" style="width:26px;height:26px"></div>
+        <div class="settings-row"><div><h3 data-i18n="coach.h">How much the voice says</h3><p data-i18n="coach.p">From silence, to just the name of each exercise, to a coach who talks you through it.</p></div>
+          <select class="text-input" id="coachSelect" style="max-width:220px">
+            <option value="off" data-i18n="coach.off">Nothing</option>
+            <option value="names" data-i18n="coach.names">Just the names</option>
+            <option value="full" data-i18n="coach.full">Full guidance</option>
+          </select></div>
+        <div class="settings-row"><div><h3 data-i18n="coach.speedh">Speaking speed</h3><p data-i18n="coach.speedp">Slower is easier to follow across a room.</p></div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <select class="text-input" id="voiceRateSelect" style="max-width:150px">
+              <option value="0.75" data-i18n="coach.slow">Slow</option>
+              <option value="0.9" data-i18n="coach.normal">Normal</option>
+              <option value="1.05" data-i18n="coach.fast">Brisk</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" id="voiceTestBtn" type="button" data-i18n="coach.test">Try the voice</button>
+          </div></div>
         <div class="settings-row"><div><h3 data-i18n="vc.h">Voice control</h3><p data-i18n="vc.p">During a guided session, listen through the microphone so you can say "next" or "pause" instead of reaching for the screen.</p></div><input type="checkbox" id="settingsVoiceCmd" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.reduceh">Reduce motion</h3><p data-i18n="settings.reducep">Turn off timer animation and moving demonstrations.</p></div><input type="checkbox" id="settingsReduceMotion" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.comforth">Comfort Assist</h3><p data-i18n="settings.comfortp">If we notice you increasing text size or re-reading a screen often, gently suggest larger text and simpler layout.</p></div><input type="checkbox" id="settingsComfortAssist" style="width:26px;height:26px"></div>
         <div class="settings-row"><div><h3 data-i18n="settings.accounth">Account</h3><p id="settingsAccountP"></p></div><button class="btn btn-secondary btn-sm" id="settingsAuthBtn" type="button">Sign in</button></div>
-        <div class="settings-row"><div><h3 data-i18n="settings.subh">Subscription</h3><p id="settingsSubP"></p></div><button class="btn btn-primary btn-sm" id="settingsUpgradeBtn" type="button" data-i18n="settings.manage">Manage plan</button></div>
+        <div class="settings-row"><div><h3 data-i18n="settings.subh">Subscription</h3><p id="settingsSubP"></p><p style="color:var(--ink-soft);font-size:.9rem" data-i18n="pay.withdraw">In the European Union you may change your mind within 14 days of paying and ask for your money back, unless you have used up the period you paid for. Write to the address in Settings → About and it will be returned.</p></div><div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary btn-sm" id="settingsUpgradeBtn" type="button" data-i18n="settings.manage">Manage plan</button><button class="btn btn-secondary btn-sm" id="settingsCancelBtn" type="button" style="display:none" data-i18n="settings.cancel">Cancel or get a refund</button></div></div>
         <div class="settings-row" id="familyRow" style="display:none"><div><h3 data-i18n="family.h">Share with your family</h3><p data-i18n="family.p">Send this code to the people you want to share your plan with. Each person enters it once, on their own account.</p><p style="margin-top:.4rem"><span data-i18n="family.code">Your family code</span>: <span class="id-tag" id="familyCode"></span></p><p style="margin-top:.3rem;color:var(--ink-soft)" id="familySeats"></p><ul id="familyMembers" style="margin-top:.4rem;padding-left:1.1rem"></ul></div><button class="btn btn-secondary btn-sm" id="familyShareBtn" type="button" data-i18n="family.sharebtn">Send the code</button></div>
         <div class="settings-row"><div><h3 data-i18n="settings.extrash">Grandparents &amp; Grandchildren + Health AI pack</h3><p id="settingsExtrasP"></p></div><button class="btn btn-teal btn-sm" id="settingsExtrasBtn" type="button" data-i18n="extras.unlockbtn">Unlock 100+ extra exercises</button></div>
+        <div class="settings-row"><div><h3 data-i18n="backup.h">Copy of everything</h3><p data-i18n="backup.p">Saves one small file with your plans, streaks, notes, pain diary and friends. Keep it somewhere safe, or use it to move to a new telephone without needing any account at all.</p></div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" id="exportBtn" type="button" data-i18n="backup.export">Save a copy</button>
+            <button class="btn btn-secondary btn-sm" id="importBtn" type="button" data-i18n="backup.import">Restore a copy</button>
+            <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+          </div></div>
         <div class="settings-row"><div><h3 data-i18n="settings.reseth">Reset all data — this deletes the account</h3><p data-i18n="settings.resetp">Wipes this device and permanently deletes your account: plans, friends, streaks, memory, health notes and sign-in. It cannot be undone.</p></div><button class="btn btn-rose btn-sm" id="resetDataBtn" data-i18n="settings.resetbtn">Erase and delete account</button></div>
       </div>
       <div class="panel">
@@ -1028,6 +1161,15 @@
           <li>Copy the address at the top — it looks like <code>https://your-project-default-rtdb.firebaseio.com</code> — and paste it below.</li>
           <li>Press Test. Then, in Rules, paste this so only the friends area stays open:<br><code>{ "rules": { "ss": { ".read": true, ".write": true } } }</code></li>
         </ol>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Version</h3>
+        <p class="promo-status" id="swVersion"></p>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Faults reported by people using the site</h3>
+        <div id="errorLog"></div>
+        <h3 style="margin-top:1.6rem;font-size:1.15rem">Payment guard (this is the important one)</h3>
+        <p style="color:var(--ink-soft);font-size:.95rem">Without this, a padlock is only good manners: anyone can add <code>?unlock=yearly</code> to the address and walk in. The file <code>stripe-worker.js</code> next to this page is a small free server that Stripe tells about every payment, in private. Put it up (its instructions are at the bottom of that file), paste its address here, and the app stops believing the address bar.</p>
+        <div class="field-group"><label class="field-label" for="apiUrlInput">Payment server address</label><input class="text-input" id="apiUrlInput" type="url" placeholder="https://steady-strong-pay.you.workers.dev"></div>
+        <button class="btn btn-secondary btn-sm" id="apiTestBtn" type="button">Test the payment server</button>
+        <p class="promo-status" id="apiTestStatus"></p>
         <div class="field-group"><label class="field-label" for="cloudUrlInput">Shared database address</label><input class="text-input" id="cloudUrlInput" type="url" placeholder="https://your-project-default-rtdb.firebaseio.com"></div>
         <button class="btn btn-secondary btn-sm" id="cloudTestBtn" type="button">Test the connection</button>
         <p class="promo-status" id="cloudTestStatus"></p>
@@ -1142,6 +1284,16 @@
   </div>
 </div>
 <!-- ============ CALL MODAL ============ -->
+<div id="bigCue" aria-live="polite"></div>
+<div id="walkOverlay">
+  <div>
+    <span id="walkSteps">0</span>
+    <p data-i18n="steps.today">steps today</p>
+    <p id="walkMinutes"></p>
+    <p data-i18n="steps.walkp">The screen stays on with almost nothing lit, so the counting carries on in your pocket. No internet needed.</p>
+    <button class="btn btn-primary" id="walkStopBtn" type="button" data-i18n="steps.walkstop">Finish the walk</button>
+  </div>
+</div>
 <div class="modal-overlay call-modal" id="callOverlay">
   <div class="modal-box">
     <button class="modal-close" id="callCloseBtn" aria-label="Close">&times;</button>
@@ -1279,7 +1431,8 @@ var PROMO_CODES = {
   "SPORTING": { pct:100, scope:"extras", secret:true,  note:"Secret — 100% off the bonus pack" },
   "ARJUN":    { pct:100, scope:"plan",   secret:true,  note:"Secret — 100% off any subscription plan" },
   "SERGIO":   { pct:25,  scope:"plan",   secret:true,  note:"Secret — 25% off any subscription plan" },
-  "WELCOME10":{ pct:10,  scope:"any",    secret:false, note:"Public — 10% off anything" }
+  "WELCOME10":{ pct:10,  scope:"any",    secret:false, note:"Public — 10% off anything" },
+  "PAND4!":   { pct:100, scope:"family", secret:true,  note:"Secret — 100% off the Family plans only" }
 };
 /* Subscription plans. The bonus pack is deliberately NOT in here: it is sold
    separately and never comes bundled with a plan. */
@@ -1289,12 +1442,20 @@ var PLAN_DEFS = {
   family:  { label:"Family (up to 4 people)", price:9.99, periodKey:"pay.permonth", days:30, seats:4 },
   familybig:{label:"Large family (5 to 8 people)", price:15.00, periodKey:"pay.permonth", days:30, seats:8 }
 };
+/* ONE place for the version. The title, the tag beside the logo, the line in
+   "What's in this version", the backup file and the fault log all read this,
+   so they can never disagree with one another again. Bump it here and in the
+   first line of sw.js — the admin panel shouts if those two ever differ. */
+var BUILD_TAG = "v16";
+var APP_BUILD_DATE = "2026-07-31";
 var GRACE_DAYS = 1;      /* one missed day does not wipe out weeks of work */
 var EXTRAS_PRICE = 1.00;
 var EXTRAS_GATED_VIEWS = ["together","health"];
 /* ============ 2. I18N ============ */
 var I18N = {};
 I18N.en = {
+"meta.title":"Home Workouts for You",
+"zoom.h":"Size of everything","zoom.p":"Not only the words: buttons, timers and drawings grow with the text, so nothing ends up too small to press. Ctrl and + or − does the same from a keyboard.","zoom.now":"Size {n} per cent.",
 "nav.home":"Home","nav.library":"Exercises","nav.together":"Grandparents & Grandchildren","nav.workouts":"My Workouts","nav.health":"Health AI","nav.friends":"Friends","nav.streaks":"Streaks","nav.settings":"Settings","nav.textsize":"Text size",
 "hero.eyebrow":"No gym. No equipment. No rush.","hero.h1":"Stay strong, right from your living room.",
 "hero.lede":"Simple exercises you can do sitting or standing, using nothing but a sturdy chair. Go at your own pace — every routine is designed with your safety first.",
@@ -1302,10 +1463,12 @@ I18N.en = {
 "reassure.h1":"Nothing to buy","reassure.p1":"Every routine uses things you already have — a sturdy chair, a wall, maybe two water bottles.",
 "reassure.h2":"Sit or stand — your choice","reassure.p2":"Most exercises offer a seated option, so you can build strength at whatever level feels right today.",
 "reassure.h3":"Go at your own pace","reassure.p3":"Choose a 5, 10, 15, or 30 minute session. Pause any time. There is no clock to beat.",
+"cards.btn":"Print these as cards","cards.title":"Exercise cards","pain.h":"How is the pain today?","pain.p":"One tap a day. After a few weeks the line tells you something no single day can: whether this is getting better. The days you trained are marked underneath.","pain.none":"Nothing marked for today.","pain.zero":"No pain today. Worth remembering on a bad day.","pain.saved":"Marked: {n} out of 10.","pain.legend":"Green bars are easy days, orange middling, red bad. The line underneath shows the days you trained.","pain.better":"Over this month the pain is about {n} points lower than it was.","pain.worse":"Over this month the pain is about {n} points higher — worth mentioning to your doctor.",
 "lib.h2":"Exercise library","lib.p":"Every move below can be done at home with no special equipment. Each one has its own moving demonstration and a link to a video.",
 "lib.all":"All exercises","lib.warmup":"Warm-up","lib.strength":"Strength","lib.balance":"Balance","lib.stretch":"Stretching","lib.cardio":"Gentle cardio","lib.core":"Core & posture","lib.extras":"Extra pack only",
 "lib.showing":"Showing {n} exercises","lib.search":"Search exercises...",
 "ex.watchvideo":"▶ Watch a demo video","ex.about":"About {n} sec","ex.locked":"In the bonus pack","ex.unlock":"Unlock","ex.worksOn":"Works on: {v}","ex.tip":"Tip","ex.newidea":"New idea for you",
+"theme.h":"Colours","theme.p":"A dark screen is kinder at night; the high contrast setting uses pure black and yellow, which is what people with poor sight can read most easily.","theme.light":"Daylight","theme.dark":"Dark","theme.contrast":"High contrast","cue.h":"Big words on screen","cue.p":"Everything the voice says also appears in large letters at the bottom of the screen — for anybody who does not hear it well, or has the sound off.","today.btn":"Start today's session ({n} min)","today.hint":"The same as you usually do: {f}. Everything else is below if you fancy a change.",
 "session.h2":"Guided session","session.p":"Pick a length and a focus below. We'll walk you through each exercise with a big timer, a moving demonstration and clear instructions.",
 "session.lengthq":"How much time do you have today?","session.min":"minutes","session.focusq":"What would you like to focus on?",
 "session.both":"Strength & Stretching","session.strengthonly":"Strength only","session.stretchonly":"Stretching only","session.balanceonly":"Balance only","session.togetheronly":"Grandparents & Grandchildren",
@@ -1322,7 +1485,9 @@ I18N.en = {
 "streaks.daylabel":"day streak","streaks.last30":"Last 30 days","streaks.leaderboard":"This month's leaderboard","streaks.rank":"Rank","streaks.name":"Name","streaks.sessions":"Sessions this month","streaks.streak":"Streak",
 "streaks.statsh":"Your numbers","streaks.calnote":"Orange days are days you completed a session. Your streak counts the run of orange days up to today.",
 "stat.total":"Total sessions","stat.month":"This month","stat.week":"Per week average","stat.best":"Best streak","stat.minutes":"Minutes trained",
-"friends.h2":"Friends","friends.p":"Add friends by ID or QR code, chat with them, and see how they're doing.","friends.username":"Your display name","friends.yourid":"Your ID:","friends.save":"Save profile","friends.copyid":"Copy","friends.copied":"Copied!",
+"carer.h":"Someone who keeps an eye out for you","carer.p":"Choose one person from your friends and, once a week, they get a short note: how many times you trained, for how long, and your run of days. Nothing else is shared — no health notes, no messages, no doctor searches. You can stop it at any moment.","carer.save":"Save","carer.sendnow":"Send this week now","carer.nobody":"Nobody — keep it to myself","carer.on":"{name} gets a short note once a week.","carer.off":"Nobody is being told anything.","carer.inbox":"Notes people have sent you","carer.sent":"Sent.","carer.copied":"Copied — paste it into a message.","carer.msg":"{name} this week: {s} sessions, {m} minutes, {d} days in a row, {steps} steps.","quiet.msg":"It has been {n} days. No lecture — but even three minutes counts.","quiet.threemin":"Do three easy minutes",
+"friends.h2":"Friends","friends.p":"Add friends by ID or QR code, chat with them, and see how they're doing.","photo.add":"Add a photo","photo.remove":"Remove","photo.working":"Making it smaller...","photo.done":"Saved. Your friends will see it too.","photo.removed":"Removed — back to the letter.","photo.notimage":"That file is not a picture.","photo.failed":"That picture could not be read. Try another one.",
+"friends.username":"Your display name","friends.yourid":"Your ID:","friends.save":"Save profile","friends.copyid":"Copy","friends.copied":"Copied!",
 "friends.tabmine":"My friends","friends.tabadd":"Add friend","friends.tabreq":"Requests",
 "call.calling":"Ringing {name}...","call.connecting":"Connecting...","call.connected":"Connected.","call.incoming":"{name} is calling","call.incomingp":"Answer to speak and see each other.","call.answer":"Answer","call.decline":"Decline","call.declined":"They could not take the call.","call.ended":"Call ended.","call.failed":"The two devices could not reach each other. This usually happens on a mobile network that blocks direct connections — try Wi-Fi, or add a relay in the admin panel.","call.nocam":"No camera or microphone was allowed, so the call cannot start.","call.nocloud":"Live calling needs the shared address set up in the admin panel. Until then this only shows your own camera.","chat.newmsg":"{name}:","nick.label":"What would you like to call them?","nick.save":"Save name","nick.saved":"Saved. You will see {n} everywhere.","nick.cleared":"Name cleared — their own name is back.","nick.realname":"Their own name: {n}",
 "friends.scanh":"Your QR code","friends.scanp":"Show this to a friend so they can scan it and add you instantly.",
@@ -1370,6 +1535,7 @@ I18N.en = {
 "health.newideas":"New exercises invented for you","health.newideasp":"These aren't in the library — they're built from your answers. Try them, and tell us if you'd like them added for everyone.",
 "health.saveidea":"I'd like this added","health.ideasent":"Thank you — sent to the site owner.",
 "health.askmore":"Tell me a bit more and I'll narrow it down.",
+"bt.h":"Two checks your physiotherapist would do","bt.p":"These are the same two timed checks used in clinics to see how steady you are on your feet. Do them once a month. They take under a minute, and the number going down over the months is worth more than any single result.","bt.safety":"Have a sturdy chair against a wall and somebody nearby the first time. If you feel dizzy or unsafe, stop — that in itself is worth telling your doctor.","bt.sts.h":"Stand up five times","bt.sts.p":"Sit with your arms crossed on your chest. Stand up fully and sit down five times, as quickly as you safely can. Press start, then stop the moment you sit down the fifth time.","bt.tug.h":"Get up and walk three metres","bt.tug.p":"From sitting: stand, walk three metres at your normal pace, turn, come back and sit down. Use your stick or frame if you normally do. Press start as you rise, stop as you sit.","bt.start":"Start","bt.stop":"Stop","bt.go":"Off you go.","bt.result":"{s} seconds.","bt.good":"That is in the usual range for an active older adult.","bt.watch":"That is a little slower than usual for this test — worth mentioning at your next appointment.","bt.high":"That is well above the usual range. Please show this to your doctor or physiotherapist.","bt.better":"{n} seconds faster than last time.","bt.slower":"{n} seconds slower than last time.","bt.history":"Your last checks","bt.note":"These numbers are a guide, not a diagnosis. Take them to your doctor or physiotherapist — they are exactly the kind of thing that is useful in a consultation.",
 "doc.h":"Find care near you","doc.p":"Tell us roughly where you are and we'll show the emergency number for your country, any contacts the site owner has personally verified, and ready-made map searches for the right kind of professional for your symptoms.",
 "doc.country":"Country","doc.city":"Town or postcode","doc.useloc":"Use my location","doc.find":"Show care near me",
 "doc.needloc":"Please pick a country, and add a town if you can.","doc.locating":"Finding your location...","doc.locfail":"Your browser wouldn't share your location. Type your town instead.","doc.locok":"Location found — using your coordinates.",
@@ -1378,7 +1544,8 @@ I18N.en = {
 "doc.search":"The right kind of professional for what you described","doc.searchp":"These buttons open a map search near you. We don't invent phone numbers — the map shows you real, current listings with their own numbers and opening hours.",
 "doc.openmap":"Open map search","doc.opendir":"Search phone listings","doc.call":"Call","doc.matchnote":"Matched to: {v}",
 "doc.spec.physio":"Physiotherapist","doc.spec.ortho":"Orthopaedic doctor","doc.spec.gp":"Family doctor / GP","doc.spec.rheum":"Rheumatologist","doc.spec.neuro":"Neurologist","doc.spec.cardio":"Cardiologist","doc.spec.pulmo":"Lung specialist","doc.spec.podiat":"Foot specialist","doc.spec.ent":"Ear, nose & throat","doc.spec.trainer":"Personal trainer","doc.spec.nutri":"Dietitian","doc.spec.other":"Other",
-"steps.h":"Daily steps","steps.p":"Counts by itself while you move, using your phone's motion sensor. Leave this page open in your pocket and it keeps counting.",
+"steps.h":"Daily steps",
+"coach.h":"How much the voice says","coach.p":"From silence, to just the name of each exercise, to a coach who talks you through it.","coach.off":"Nothing","coach.names":"Just the names","coach.full":"Full guidance","coach.speedh":"Speaking speed","coach.speedp":"Slower is easier to follow across a room.","coach.slow":"Slow","coach.normal":"Normal","coach.fast":"Brisk","coach.test":"Try the voice","coach.sample":"This is how I will guide you. Sit tall, and breathe easily.","coach.now":"Number {n} of {total}. {name}.","coach.seatedok":"You can do this one sitting down if you prefer.","coach.restnow":"Rest now.","coach.breathe":"Keep breathing — do not hold your breath.","coach.getready":"Ready for the next one.","coach.water":"Have a sip of water.","coach.enc1":"That is it — steady and strong.","coach.enc2":"Nearly there, keep going.","coach.enc3":"Lovely work.","coach.enc4":"Slow and controlled is better than fast.","coach.enc5":"Good — stay tall.","steps.walkmode":"Going for a walk","steps.walkstop":"Finish the walk","steps.walkp":"The screen stays on with almost nothing lit, so the counting carries on in your pocket. No internet needed.","steps.walkmin":"{n} minutes walking","steps.truth":"No web page can read the step counter while it is closed — that is a rule of the phone, not a missing feature. Leave this page open (walk mode keeps it awake on a dark screen) and every step is counted, with or without internet.","steps.gap":"The counter was asleep for about {n} minutes.","steps.gapadd":"Add those steps","steps.gapask":"Roughly how many minutes were you walking? We will count about 100 steps a minute.","steps.p":"Counts by itself while you move, using your phone's motion sensor. Leave this page open in your pocket and it keeps counting.",
 "steps.today":"steps today","steps.goal":"Daily goal","steps.autostart":"Start counting","steps.autostop":"Stop counting",
 "steps.progress":"{n} of {g} steps today ({p}%).","steps.goalreached":"Goal reached — well done today!",
 "steps.permission":"Your browser needs permission to read movement. Tap \"Start counting\" and choose Allow.",
@@ -1395,6 +1562,7 @@ I18N.en = {
 "settings.reduceh":"Reduce motion","settings.reducep":"Turn off timer animation and moving demonstrations.",
 "settings.comforth":"Comfort Assist","settings.comfortp":"If we notice you increasing text size or re-reading a screen often, gently suggest larger text and simpler layout.",
 "settings.accounth":"Account","settings.subh":"Subscription","settings.manage":"Manage plan","settings.extrash":"Grandparents & Grandchildren + Health AI pack",
+"update.msg":"There is a newer version of this site.","update.btn":"Get the new version","backup.h":"Copy of everything","backup.p":"Saves one small file with your plans, streaks, notes, pain diary and friends. Keep it somewhere safe, or use it to move to a new telephone without needing any account at all.","backup.export":"Save a copy","backup.import":"Restore a copy","backup.bad":"That file is not a Steady & Strong copy.","backup.confirm":"This will replace what is on this device with the copy from {d}. Carry on?","backup.done":"Restored. The page will open again with your things.",
 "settings.reseth":"Reset all data","settings.resetp":"Clears plans, friends, streaks, and settings from this browser.","settings.resetbtn":"Reset data",
 "settings.notsignedin":"You're not signed in — sign in to save your plans, memory and streak across devices.",
 "settings.signedinas":"Signed in as {email}","settings.signout":"Sign out","settings.signin":"Sign in",
@@ -1450,6 +1618,7 @@ I18N.en = {
 "pay.afterpay":"You'll pay on Stripe's own secure page. As soon as you come back here, your access switches on.",
 "pay.notsetup":"Payments aren't switched on yet — the site owner still has to paste the Stripe link in the administrator panel.",
 "pay.unlocked":"Payment received — your access is on. Thank you!",
+"pay.pending":"Thank you. The payment is being confirmed — this usually takes a few seconds. If nothing opens in a minute, close and open the page again.","pay.withdraw":"In the European Union you may change your mind within 14 days of paying and ask for your money back, unless you have used up the period you paid for. Write to the address in Settings → About and it will be returned.","settings.cancel":"Cancel or get a refund","settings.cancelling":"Opening...","settings.cancelmanual":"Write to {email} and your subscription will be cancelled and refunded where the law requires it.",
 "guard.blocked":"Screen hidden — this page is protected.","guard.why":"Screenshots and recordings of other people's health information are not allowed here.",
 "resume.q":"You left a session unfinished. Carry on where you stopped?","resume.yes":"Carry on","resume.no":"Start fresh",
 "settings.contrasth":"Extra contrast","settings.contrastp":"Stronger black-on-white colours, for tired eyes or bright rooms.",
@@ -1488,6 +1657,8 @@ I18N.en = {
 "common.cancel":"Cancel","common.save":"Save","common.close":"Close","common.yes":"Yes","common.no":"No"
 };
 I18N.pt = {
+"meta.title":"Exercícios em casa para si",
+"zoom.h":"Tamanho de tudo","zoom.p":"Não é só a letra: os botões, os cronómetros e os desenhos crescem com o texto, para nada ficar pequeno demais para carregar. Ctrl e + ou − faz o mesmo pelo teclado.","zoom.now":"Tamanho {n} por cento.",
 "nav.home":"Início","nav.library":"Exercícios","nav.together":"Avós e Netos","nav.workouts":"Os Meus Treinos","nav.health":"IA de Saúde","nav.friends":"Amigos","nav.streaks":"Sequências","nav.settings":"Definições","nav.textsize":"Tamanho do texto",
 "hero.eyebrow":"Sem ginásio. Sem equipamento. Sem pressa.","hero.h1":"Mantenha-se forte, na sua própria sala.",
 "hero.lede":"Exercícios simples que pode fazer sentado ou de pé, precisando apenas de uma cadeira firme. Ao seu ritmo — cada rotina foi pensada a começar pela sua segurança.",
@@ -1495,10 +1666,12 @@ I18N.pt = {
 "reassure.h1":"Nada para comprar","reassure.p1":"Cada rotina usa coisas que já tem em casa — uma cadeira firme, uma parede, talvez duas garrafas de água.",
 "reassure.h2":"Sentado ou de pé — como preferir","reassure.p2":"A maioria dos exercícios tem uma versão sentada, para treinar ao nível que hoje lhe parecer certo.",
 "reassure.h3":"Ao seu próprio ritmo","reassure.p3":"Escolha uma sessão de 5, 10, 15 ou 30 minutos. Faça pausa quando quiser. Não há relógio para vencer.",
+"cards.btn":"Imprimir isto em fichas","cards.title":"Fichas de exercícios","pain.h":"Como está a dor hoje?","pain.p":"Um toque por dia. Ao fim de algumas semanas a linha diz-lhe o que nenhum dia isolado diz: se isto está a melhorar. Os dias em que treinou ficam marcados por baixo.","pain.none":"Hoje ainda não marcou nada.","pain.zero":"Hoje sem dores. Vale a pena lembrar-se disto num dia mau.","pain.saved":"Marcado: {n} em 10.","pain.legend":"As barras verdes são dias fáceis, as laranja assim-assim, as vermelhas maus. A linha por baixo mostra os dias em que treinou.","pain.better":"Ao longo deste mês a dor está cerca de {n} pontos mais baixa do que estava.","pain.worse":"Ao longo deste mês a dor está cerca de {n} pontos mais alta — vale a pena falar disso com o seu médico.",
 "lib.h2":"Biblioteca de exercícios","lib.p":"Todos os movimentos podem ser feitos em casa sem equipamento especial. Cada um tem a sua própria demonstração animada e um vídeo.",
 "lib.all":"Todos os exercícios","lib.warmup":"Aquecimento","lib.strength":"Força","lib.balance":"Equilíbrio","lib.stretch":"Alongamento","lib.cardio":"Cardio suave","lib.core":"Core e postura","lib.extras":"Só do pacote extra",
 "lib.showing":"A mostrar {n} exercícios","lib.search":"Procurar exercícios...",
 "ex.watchvideo":"▶ Ver vídeo de demonstração","ex.about":"Cerca de {n} seg","ex.locked":"No pacote bónus","ex.unlock":"Desbloquear","ex.worksOn":"Trabalha: {v}","ex.tip":"Dica","ex.newidea":"Ideia nova para si",
+"theme.h":"Cores","theme.p":"O ecrã escuro é mais suave à noite; o alto contraste usa preto e amarelo puros, que é o que quem vê mal lê com mais facilidade.","theme.light":"Luz do dia","theme.dark":"Escuro","theme.contrast":"Alto contraste","cue.h":"Palavras grandes no ecrã","cue.p":"Tudo o que a voz diz aparece também em letras grandes no fundo do ecrã — para quem não ouve bem, ou tem o som desligado.","today.btn":"Começar a sessão de hoje ({n} min)","today.hint":"O mesmo do costume: {f}. Tudo o resto está aqui em baixo, se lhe apetecer mudar.",
 "session.h2":"Sessão guiada","session.p":"Escolha a duração e o foco. Guiamo-lo por cada exercício com um temporizador grande, uma demonstração animada e instruções claras.",
 "session.lengthq":"Quanto tempo tem hoje?","session.min":"minutos","session.focusq":"Em que se quer focar?",
 "session.both":"Força e Alongamento","session.strengthonly":"Apenas força","session.stretchonly":"Apenas alongamento","session.balanceonly":"Apenas equilíbrio","session.togetheronly":"Avós e Netos",
@@ -1515,7 +1688,9 @@ I18N.pt = {
 "streaks.daylabel":"dias seguidos","streaks.last30":"Últimos 30 dias","streaks.leaderboard":"Classificação deste mês","streaks.rank":"Posição","streaks.name":"Nome","streaks.sessions":"Sessões este mês","streaks.streak":"Sequência",
 "streaks.statsh":"Os seus números","streaks.calnote":"Os dias a laranja são dias em que concluiu uma sessão. A sua sequência conta os dias laranja seguidos até hoje.",
 "stat.total":"Sessões no total","stat.month":"Este mês","stat.week":"Média por semana","stat.best":"Melhor sequência","stat.minutes":"Minutos treinados",
-"friends.h2":"Amigos","friends.p":"Adicione amigos por ID ou código QR, converse com eles e veja como lhes está a correr.","friends.username":"O seu nome visível","friends.yourid":"O seu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"Copiado!",
+"carer.h":"Alguém que fica atento por si","carer.p":"Escolha uma pessoa dos seus amigos e, uma vez por semana, ela recebe um recado curto: quantas vezes treinou, quanto tempo, e a sua sequência de dias. Mais nada é partilhado — nem notas de saúde, nem conversas, nem pesquisas de médicos. Pode desligar quando quiser.","carer.save":"Guardar","carer.sendnow":"Enviar já o desta semana","carer.nobody":"Ninguém — fica só para mim","carer.on":"{name} recebe um recado curto uma vez por semana.","carer.off":"Não está a ser dito nada a ninguém.","carer.inbox":"Recados que lhe enviaram","carer.sent":"Enviado.","carer.copied":"Copiado — cole numa mensagem.","carer.msg":"{name} esta semana: {s} sessões, {m} minutos, {d} dias seguidos, {steps} passos.","quiet.msg":"Já passaram {n} dias. Sem sermões — mas até três minutos contam.","quiet.threemin":"Fazer três minutos leves",
+"friends.h2":"Amigos","friends.p":"Adicione amigos por ID ou código QR, converse com eles e veja como lhes está a correr.","photo.add":"Pôr uma foto","photo.remove":"Tirar","photo.working":"A reduzir...","photo.done":"Guardada. Os seus amigos também a vão ver.","photo.removed":"Tirada — volta a letra.","photo.notimage":"Esse ficheiro não é uma imagem.","photo.failed":"Não foi possível ler essa imagem. Experimente outra.",
+"friends.username":"O seu nome visível","friends.yourid":"O seu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"Copiado!",
 "friends.tabmine":"Os meus amigos","friends.tabadd":"Adicionar amigo","friends.tabreq":"Pedidos",
 "call.calling":"A tocar em {name}...","call.connecting":"A ligar...","call.connected":"Ligados.","call.incoming":"{name} está a ligar","call.incomingp":"Atenda para se ouvirem e verem.","call.answer":"Atender","call.decline":"Recusar","call.declined":"Não puderam atender.","call.ended":"Chamada terminada.","call.failed":"Os dois aparelhos não se conseguiram alcançar. Costuma acontecer em redes móveis que bloqueiam ligações diretas — experimente Wi-Fi, ou acrescente um retransmissor no painel de administração.","call.nocam":"Não foi autorizada a câmara nem o microfone, por isso a chamada não pode começar.","call.nocloud":"As chamadas em direto precisam da lista partilhada configurada no painel de administração. Até lá, isto mostra apenas a sua própria câmara.","chat.newmsg":"{name}:","nick.label":"Como lhe quer chamar?","nick.save":"Guardar nome","nick.saved":"Guardado. Passa a ver {n} em todo o lado.","nick.cleared":"Nome apagado — volta o nome próprio dele.","nick.realname":"Nome dele: {n}",
 "friends.scanh":"O seu código QR","friends.scanp":"Mostre isto a um amigo para ele o ler e adicioná-lo num instante.",
@@ -1563,6 +1738,7 @@ I18N.pt = {
 "health.newideas":"Exercícios novos inventados para si","health.newideasp":"Estes não estão na biblioteca — foram construídos a partir das suas respostas. Experimente e diga-nos se gostaria que fossem acrescentados para todos.",
 "health.saveidea":"Gostava que fosse acrescentado","health.ideasent":"Obrigado — enviado ao proprietário do site.",
 "health.askmore":"Conte-me um pouco mais e eu afino as sugestões.",
+"bt.h":"Dois testes que o seu fisioterapeuta faria","bt.p":"São os mesmos dois testes cronometrados que se usam nas clínicas para ver como está o seu equilíbrio. Faça-os uma vez por mês. Levam menos de um minuto, e o número a descer ao longo dos meses vale mais do que qualquer resultado isolado.","bt.safety":"Tenha uma cadeira firme encostada à parede e alguém por perto da primeira vez. Se sentir tonturas ou insegurança, pare — isso, por si só, merece ser dito ao médico.","bt.sts.h":"Levantar-se cinco vezes","bt.sts.p":"Sente-se com os braços cruzados no peito. Levante-se por completo e sente-se cinco vezes, o mais depressa que conseguir em segurança. Carregue em começar e pare assim que se sentar à quinta vez.","bt.tug.h":"Levantar e andar três metros","bt.tug.p":"Sentado: levante-se, ande três metros ao seu passo normal, dê a volta, regresse e sente-se. Use a bengala ou o andarilho se costuma usar. Carregue em começar ao levantar-se e em parar ao sentar-se.","bt.start":"Começar","bt.stop":"Parar","bt.go":"Pode ir.","bt.result":"{s} segundos.","bt.good":"Está dentro do habitual para um adulto mais velho e ativo.","bt.watch":"Está um pouco mais lento do que o habitual neste teste — vale a pena falar disso na próxima consulta.","bt.high":"Está bastante acima do habitual. Mostre isto ao seu médico ou fisioterapeuta, por favor.","bt.better":"{n} segundos mais rápido do que da última vez.","bt.slower":"{n} segundos mais lento do que da última vez.","bt.history":"Os seus últimos testes","bt.note":"Estes números são uma orientação, não um diagnóstico. Leve-os ao seu médico ou fisioterapeuta — são precisamente o tipo de coisa que é útil numa consulta.",
 "doc.h":"Encontrar ajuda perto de si","doc.p":"Diga-nos mais ou menos onde está e mostramos o número de emergência do seu país, os contactos que o proprietário do site verificou pessoalmente, e pesquisas de mapa já preparadas para o tipo de profissional certo para os seus sintomas.",
 "doc.country":"País","doc.city":"Localidade ou código postal","doc.useloc":"Usar a minha localização","doc.find":"Mostrar ajuda perto de mim",
 "doc.needloc":"Escolha um país e, se puder, escreva a localidade.","doc.locating":"A obter a sua localização...","doc.locfail":"O navegador não partilhou a sua localização. Escreva a localidade.","doc.locok":"Localização encontrada — a usar as suas coordenadas.",
@@ -1571,7 +1747,8 @@ I18N.pt = {
 "doc.search":"O tipo de profissional certo para o que descreveu","doc.searchp":"Estes botões abrem uma pesquisa de mapa perto de si. Não inventamos números de telefone — o mapa mostra-lhe locais reais e atualizados, com os próprios números e horários.",
 "doc.openmap":"Abrir pesquisa no mapa","doc.opendir":"Procurar contactos telefónicos","doc.call":"Ligar","doc.matchnote":"Escolhido por: {v}",
 "doc.spec.physio":"Fisioterapeuta","doc.spec.ortho":"Ortopedista","doc.spec.gp":"Médico de família","doc.spec.rheum":"Reumatologista","doc.spec.neuro":"Neurologista","doc.spec.cardio":"Cardiologista","doc.spec.pulmo":"Pneumologista","doc.spec.podiat":"Podologista","doc.spec.ent":"Otorrinolaringologista","doc.spec.trainer":"Personal trainer","doc.spec.nutri":"Nutricionista","doc.spec.other":"Outro",
-"steps.h":"Passos diários","steps.p":"Conta sozinho enquanto se mexe, usando o sensor de movimento do telemóvel. Deixe esta página aberta no bolso e ele continua a contar.",
+"steps.h":"Passos diários",
+"coach.h":"Quanto é que a voz diz","coach.p":"Do silêncio, ao nome de cada exercício, até um treinador que o acompanha do princípio ao fim.","coach.off":"Nada","coach.names":"Só os nomes","coach.full":"Acompanhamento completo","coach.speedh":"Velocidade da fala","coach.speedp":"Mais devagar é mais fácil de seguir do outro lado da sala.","coach.slow":"Devagar","coach.normal":"Normal","coach.fast":"Rápido","coach.test":"Experimentar a voz","coach.sample":"É assim que o vou acompanhar. Costas direitas, e respire com calma.","coach.now":"Número {n} de {total}. {name}.","coach.seatedok":"Este pode fazer sentado, se preferir.","coach.restnow":"Agora descanse.","coach.breathe":"Continue a respirar — não prenda o ar.","coach.getready":"Prepare-se para o próximo.","coach.water":"Beba um golo de água.","coach.enc1":"É isso mesmo — firme e forte.","coach.enc2":"Está quase, continue.","coach.enc3":"Muito bem.","coach.enc4":"Devagar e controlado é melhor do que depressa.","coach.enc5":"Boa — mantenha-se direito.","steps.walkmode":"Vou dar uma caminhada","steps.walkstop":"Terminar a caminhada","steps.walkp":"O ecrã fica aceso com quase nada iluminado, para a contagem continuar no bolso. Não precisa de internet.","steps.walkmin":"{n} minutos a caminhar","steps.truth":"Nenhuma página da internet consegue ler o contador de passos com ela fechada — é uma regra do telemóvel, não uma falta da aplicação. Deixe esta página aberta (o modo caminhada mantém-na acordada com o ecrã escuro) e todos os passos são contados, com ou sem internet.","steps.gap":"O contador esteve adormecido cerca de {n} minutos.","steps.gapadd":"Somar esses passos","steps.gapask":"Mais ou menos quantos minutos andou a pé? Contamos cerca de 100 passos por minuto.","steps.p":"Conta sozinho enquanto se mexe, usando o sensor de movimento do telemóvel. Deixe esta página aberta no bolso e ele continua a contar.",
 "steps.today":"passos hoje","steps.goal":"Objetivo diário","steps.autostart":"Começar a contar","steps.autostop":"Parar de contar",
 "steps.progress":"{n} de {g} passos hoje ({p}%).","steps.goalreached":"Objetivo alcançado — muito bem hoje!",
 "steps.permission":"O navegador precisa de permissão para ler o movimento. Toque em \"Começar a contar\" e escolha Permitir.",
@@ -1588,6 +1765,7 @@ I18N.pt = {
 "settings.reduceh":"Reduzir movimento","settings.reducep":"Desligar a animação do temporizador e as demonstrações animadas.",
 "settings.comforth":"Apoio de Conforto","settings.comfortp":"Se notarmos que aumenta o tamanho do texto ou relê o ecrã com frequência, sugerimos com calma texto maior e um esquema mais simples.",
 "settings.accounth":"Conta","settings.subh":"Subscrição","settings.manage":"Gerir plano","settings.extrash":"Pacote Avós e Netos + IA de Saúde",
+"update.msg":"Há uma versão mais recente deste site.","update.btn":"Obter a versão nova","backup.h":"Cópia de tudo","backup.p":"Guarda um ficheiro pequeno com os seus planos, sequências, notas, diário da dor e amigos. Guarde-o em sítio seguro, ou use-o para mudar de telemóvel sem precisar de conta nenhuma.","backup.export":"Guardar uma cópia","backup.import":"Repor uma cópia","backup.bad":"Esse ficheiro não é uma cópia do Steady & Strong.","backup.confirm":"Isto vai substituir o que está neste aparelho pela cópia de {d}. Continuar?","backup.done":"Reposto. A página vai abrir outra vez com as suas coisas.",
 "settings.reseth":"Repor todos os dados","settings.resetp":"Apaga planos, amigos, sequências e definições deste navegador.","settings.resetbtn":"Repor dados",
 "settings.notsignedin":"Não tem sessão iniciada — entre para guardar os seus planos, memória e sequência em todos os dispositivos.",
 "settings.signedinas":"Sessão iniciada como {email}","settings.signout":"Terminar sessão","settings.signin":"Iniciar sessão",
@@ -1643,6 +1821,7 @@ I18N.pt = {
 "pay.afterpay":"Vai pagar na página segura da própria Stripe. Assim que voltar aqui, o seu acesso é ativado.",
 "pay.notsetup":"Os pagamentos ainda não estão ligados — o proprietário do site tem de colar o link da Stripe no painel de administrador.",
 "pay.unlocked":"Pagamento recebido — o seu acesso está ativo. Obrigado!",
+"pay.pending":"Obrigado. O pagamento está a ser confirmado — costuma demorar poucos segundos. Se não abrir nada dentro de um minuto, feche e abra a página outra vez.","pay.withdraw":"Na União Europeia pode mudar de ideias nos 14 dias seguintes ao pagamento e pedir o dinheiro de volta, salvo se já tiver gasto o período que pagou. Escreva para o endereço em Definições → Sobre e será devolvido.","settings.cancel":"Cancelar ou pedir reembolso","settings.cancelling":"A abrir...","settings.cancelmanual":"Escreva para {email} e a assinatura será cancelada, com reembolso nos casos em que a lei o exige.",
 "guard.blocked":"Ecrã escondido — esta página está protegida.","guard.why":"Não são permitidas capturas nem gravações de informação de saúde de outras pessoas.",
 "resume.q":"Deixou uma sessão a meio. Quer continuar de onde parou?","resume.yes":"Continuar","resume.no":"Começar de novo",
 "settings.contrasth":"Contraste reforçado","settings.contrastp":"Cores mais fortes, preto sobre branco, para olhos cansados ou salas muito claras.",
@@ -1681,6 +1860,8 @@ I18N.pt = {
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Fechar","common.yes":"Sim","common.no":"Não"
 };
 I18N.es = {
+"meta.title":"Ejercicios en casa para ti",
+"zoom.h":"Tamaño de todo","zoom.p":"No solo la letra: los botones, los cronómetros y los dibujos crecen con el texto, para que nada quede demasiado pequeño para pulsar. Ctrl y + o − hace lo mismo desde el teclado.","zoom.now":"Tamaño {n} por ciento.",
 "nav.home":"Inicio","nav.library":"Ejercicios","nav.together":"Abuelos y Nietos","nav.workouts":"Mis Entrenamientos","nav.health":"IA de Salud","nav.friends":"Amigos","nav.streaks":"Rachas","nav.settings":"Ajustes","nav.textsize":"Tamaño del texto",
 "hero.eyebrow":"Sin gimnasio. Sin equipo. Sin prisa.","hero.h1":"Mantente fuerte, desde tu propio salón.",
 "hero.lede":"Ejercicios sencillos que puedes hacer sentado o de pie, con solo una silla firme. A tu ritmo — cada rutina está pensada empezando por tu seguridad.",
@@ -1688,10 +1869,12 @@ I18N.es = {
 "reassure.h1":"Nada que comprar","reassure.p1":"Cada rutina usa cosas que ya tienes — una silla firme, una pared, quizá dos botellas de agua.",
 "reassure.h2":"Sentado o de pie — tú eliges","reassure.p2":"La mayoría de los ejercicios tienen versión sentada, para entrenar al nivel que hoy te parezca bien.",
 "reassure.h3":"A tu propio ritmo","reassure.p3":"Elige una sesión de 5, 10, 15 o 30 minutos. Pausa cuando quieras. No hay reloj que batir.",
+"cards.btn":"Imprimir esto en fichas","cards.title":"Fichas de ejercicios","pain.h":"¿Cómo va el dolor hoy?","pain.p":"Un toque al día. Al cabo de unas semanas la línea te dice lo que ningún día suelto puede decir: si esto va a mejor. Los días que entrenaste quedan marcados debajo.","pain.none":"Hoy no has marcado nada.","pain.zero":"Hoy sin dolor. Conviene recordarlo en un día malo.","pain.saved":"Marcado: {n} sobre 10.","pain.legend":"Las barras verdes son días fáciles, las naranjas regulares, las rojas malos. La línea de debajo muestra los días que entrenaste.","pain.better":"A lo largo de este mes el dolor está unos {n} puntos más bajo que antes.","pain.worse":"A lo largo de este mes el dolor está unos {n} puntos más alto — conviene comentarlo con tu médico.",
 "lib.h2":"Biblioteca de ejercicios","lib.p":"Todos los movimientos se pueden hacer en casa sin equipo especial. Cada uno tiene su propia demostración animada y un vídeo.",
 "lib.all":"Todos los ejercicios","lib.warmup":"Calentamiento","lib.strength":"Fuerza","lib.balance":"Equilibrio","lib.stretch":"Estiramiento","lib.cardio":"Cardio suave","lib.core":"Core y postura","lib.extras":"Solo del pack extra",
 "lib.showing":"Mostrando {n} ejercicios","lib.search":"Buscar ejercicios...",
 "ex.watchvideo":"▶ Ver vídeo de demostración","ex.about":"Unos {n} seg","ex.locked":"En el pack de regalo","ex.unlock":"Desbloquear","ex.worksOn":"Trabaja: {v}","ex.tip":"Consejo","ex.newidea":"Idea nueva para ti",
+"theme.h":"Colores","theme.p":"La pantalla oscura es más suave de noche; el alto contraste usa negro y amarillo puros, que es lo que mejor lee quien ve mal.","theme.light":"Luz de día","theme.dark":"Oscuro","theme.contrast":"Alto contraste","cue.h":"Palabras grandes en pantalla","cue.p":"Todo lo que dice la voz aparece también en letras grandes abajo — para quien no oye bien, o tiene el sonido apagado.","today.btn":"Empezar la sesión de hoy ({n} min)","today.hint":"Lo mismo de siempre: {f}. Todo lo demás está abajo, por si te apetece cambiar.",
 "session.h2":"Sesión guiada","session.p":"Elige la duración y el enfoque. Te guiamos en cada ejercicio con un temporizador grande, una demostración animada e instrucciones claras.",
 "session.lengthq":"¿Cuánto tiempo tienes hoy?","session.min":"minutos","session.focusq":"¿En qué quieres centrarte?",
 "session.both":"Fuerza y Estiramiento","session.strengthonly":"Solo fuerza","session.stretchonly":"Solo estiramiento","session.balanceonly":"Solo equilibrio","session.togetheronly":"Abuelos y Nietos",
@@ -1708,7 +1891,9 @@ I18N.es = {
 "streaks.daylabel":"días seguidos","streaks.last30":"Últimos 30 días","streaks.leaderboard":"Clasificación de este mes","streaks.rank":"Puesto","streaks.name":"Nombre","streaks.sessions":"Sesiones este mes","streaks.streak":"Racha",
 "streaks.statsh":"Tus números","streaks.calnote":"Los días naranjas son días en que completaste una sesión. Tu racha cuenta los días naranjas seguidos hasta hoy.",
 "stat.total":"Sesiones en total","stat.month":"Este mes","stat.week":"Media por semana","stat.best":"Mejor racha","stat.minutes":"Minutos entrenados",
-"friends.h2":"Amigos","friends.p":"Añade amigos por ID o código QR, chatea con ellos y mira cómo les va.","friends.username":"Tu nombre visible","friends.yourid":"Tu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"¡Copiado!",
+"carer.h":"Alguien que está pendiente de ti","carer.p":"Elige a una persona de tus amigos y, una vez por semana, recibe una nota corta: cuántas veces entrenaste, cuánto tiempo y tu racha de días. No se comparte nada más — ni notas de salud, ni mensajes, ni búsquedas de médicos. Puedes pararlo cuando quieras.","carer.save":"Guardar","carer.sendnow":"Enviar ya el de esta semana","carer.nobody":"Nadie — que quede para mí","carer.on":"{name} recibe una nota corta una vez por semana.","carer.off":"No se le está contando nada a nadie.","carer.inbox":"Notas que te han enviado","carer.sent":"Enviado.","carer.copied":"Copiado — pégalo en un mensaje.","carer.msg":"{name} esta semana: {s} sesiones, {m} minutos, {d} días seguidos, {steps} pasos.","quiet.msg":"Han pasado {n} días. Sin sermones — pero hasta tres minutos cuentan.","quiet.threemin":"Hacer tres minutos suaves",
+"friends.h2":"Amigos","friends.p":"Añade amigos por ID o código QR, chatea con ellos y mira cómo les va.","photo.add":"Poner una foto","photo.remove":"Quitar","photo.working":"Reduciendo...","photo.done":"Guardada. Tus amigos también la verán.","photo.removed":"Quitada — vuelve la letra.","photo.notimage":"Ese archivo no es una imagen.","photo.failed":"No se ha podido leer esa imagen. Prueba con otra.",
+"friends.username":"Tu nombre visible","friends.yourid":"Tu ID:","friends.save":"Guardar perfil","friends.copyid":"Copiar","friends.copied":"¡Copiado!",
 "friends.tabmine":"Mis amigos","friends.tabadd":"Añadir amigo","friends.tabreq":"Solicitudes",
 "call.calling":"Llamando a {name}...","call.connecting":"Conectando...","call.connected":"Conectados.","call.incoming":"{name} te está llamando","call.incomingp":"Contesta para hablar y veros.","call.answer":"Contestar","call.decline":"Rechazar","call.declined":"No han podido contestar.","call.ended":"Llamada terminada.","call.failed":"Los dos dispositivos no han logrado alcanzarse. Suele pasar en redes móviles que bloquean las conexiones directas — prueba con Wi-Fi, o añade un repetidor en el panel.","call.nocam":"No se autorizó la cámara ni el micrófono, así que la llamada no puede empezar.","call.nocloud":"Las llamadas en directo necesitan la libreta compartida configurada en el panel. Hasta entonces esto solo muestra tu propia cámara.","chat.newmsg":"{name}:","nick.label":"¿Cómo quieres llamarle?","nick.save":"Guardar nombre","nick.saved":"Guardado. Verás {n} en todas partes.","nick.cleared":"Nombre borrado — vuelve su propio nombre.","nick.realname":"Su nombre: {n}",
 "friends.scanh":"Tu código QR","friends.scanp":"Enséñaselo a un amigo para que lo escanee y te añada al instante.",
@@ -1756,6 +1941,7 @@ I18N.es = {
 "health.newideas":"Ejercicios nuevos inventados para ti","health.newideasp":"Estos no están en la biblioteca — se han construido a partir de tus respuestas. Pruébalos y dinos si quieres que se añadan para todos.",
 "health.saveidea":"Me gustaría que se añadiera","health.ideasent":"Gracias — enviado al propietario del sitio.",
 "health.askmore":"Cuéntame un poco más y afino las sugerencias.",
+"bt.h":"Dos pruebas que haría tu fisioterapeuta","bt.p":"Son las mismas dos pruebas cronometradas que se usan en las clínicas para ver qué tal andas de equilibrio. Hazlas una vez al mes. Duran menos de un minuto, y que el número baje con los meses vale más que cualquier resultado suelto.","bt.safety":"Ten una silla firme contra la pared y a alguien cerca la primera vez. Si notas mareo o inseguridad, para — eso ya merece contárselo al médico.","bt.sts.h":"Levantarse cinco veces","bt.sts.p":"Siéntate con los brazos cruzados sobre el pecho. Levántate del todo y siéntate cinco veces, tan rápido como puedas con seguridad. Pulsa empezar y para en cuanto te sientes la quinta vez.","bt.tug.h":"Levantarse y andar tres metros","bt.tug.p":"Sentado: levántate, anda tres metros a tu paso normal, date la vuelta, vuelve y siéntate. Usa el bastón o el andador si sueles usarlo. Pulsa empezar al levantarte y parar al sentarte.","bt.start":"Empezar","bt.stop":"Parar","bt.go":"Ya puedes.","bt.result":"{s} segundos.","bt.good":"Está dentro de lo normal para una persona mayor activa.","bt.watch":"Es algo más lento de lo habitual en esta prueba — conviene comentarlo en la próxima consulta.","bt.high":"Está bastante por encima de lo habitual. Enséñaselo a tu médico o fisioterapeuta, por favor.","bt.better":"{n} segundos más rápido que la vez anterior.","bt.slower":"{n} segundos más lento que la vez anterior.","bt.history":"Tus últimas pruebas","bt.note":"Estos números son una orientación, no un diagnóstico. Llévalos a tu médico o fisioterapeuta — son justo el tipo de dato útil en una consulta.",
 "doc.h":"Encontrar ayuda cerca de ti","doc.p":"Dinos más o menos dónde estás y te mostramos el número de emergencias de tu país, los contactos que el propietario del sitio ha verificado personalmente, y búsquedas de mapa ya preparadas para el tipo de profesional adecuado a tus síntomas.",
 "doc.country":"País","doc.city":"Localidad o código postal","doc.useloc":"Usar mi ubicación","doc.find":"Mostrar ayuda cerca de mí",
 "doc.needloc":"Elige un país y, si puedes, escribe la localidad.","doc.locating":"Obteniendo tu ubicación...","doc.locfail":"El navegador no compartió tu ubicación. Escribe tu localidad.","doc.locok":"Ubicación encontrada — usando tus coordenadas.",
@@ -1764,7 +1950,8 @@ I18N.es = {
 "doc.search":"El tipo de profesional adecuado para lo que has descrito","doc.searchp":"Estos botones abren una búsqueda de mapa cerca de ti. No inventamos números de teléfono — el mapa te muestra sitios reales y actuales, con sus propios números y horarios.",
 "doc.openmap":"Abrir búsqueda en el mapa","doc.opendir":"Buscar teléfonos","doc.call":"Llamar","doc.matchnote":"Elegido por: {v}",
 "doc.spec.physio":"Fisioterapeuta","doc.spec.ortho":"Traumatólogo","doc.spec.gp":"Médico de familia","doc.spec.rheum":"Reumatólogo","doc.spec.neuro":"Neurólogo","doc.spec.cardio":"Cardiólogo","doc.spec.pulmo":"Neumólogo","doc.spec.podiat":"Podólogo","doc.spec.ent":"Otorrinolaringólogo","doc.spec.trainer":"Entrenador personal","doc.spec.nutri":"Dietista","doc.spec.other":"Otro",
-"steps.h":"Pasos diarios","steps.p":"Cuenta solo mientras te mueves, usando el sensor de movimiento del móvil. Deja esta página abierta en el bolsillo y sigue contando.",
+"steps.h":"Pasos diarios",
+"coach.h":"Cuánto habla la voz","coach.p":"Desde el silencio, al nombre de cada ejercicio, hasta un entrenador que te acompaña.","coach.off":"Nada","coach.names":"Solo los nombres","coach.full":"Acompañamiento completo","coach.speedh":"Velocidad del habla","coach.speedp":"Más despacio es más fácil de seguir desde el otro lado de la sala.","coach.slow":"Despacio","coach.normal":"Normal","coach.fast":"Rápido","coach.test":"Probar la voz","coach.sample":"Así es como te voy a acompañar. Espalda recta, y respira con calma.","coach.now":"Número {n} de {total}. {name}.","coach.seatedok":"Este lo puedes hacer sentado, si lo prefieres.","coach.restnow":"Ahora descansa.","coach.breathe":"Sigue respirando — no aguantes el aire.","coach.getready":"Prepárate para el siguiente.","coach.water":"Bebe un sorbo de agua.","coach.enc1":"Eso es — firme y fuerte.","coach.enc2":"Ya casi, sigue.","coach.enc3":"Muy bien.","coach.enc4":"Despacio y controlado es mejor que rápido.","coach.enc5":"Bien — mantente erguido.","steps.walkmode":"Me voy a caminar","steps.walkstop":"Terminar el paseo","steps.walkp":"La pantalla se queda encendida casi sin nada iluminado, así el conteo sigue en el bolsillo. No hace falta internet.","steps.walkmin":"{n} minutos caminando","steps.truth":"Ninguna página web puede leer el contador de pasos con ella cerrada — es una regla del móvil, no una carencia de la aplicación. Deja esta página abierta (el modo paseo la mantiene despierta con la pantalla oscura) y se cuentan todos los pasos, con o sin internet.","steps.gap":"El contador estuvo dormido unos {n} minutos.","steps.gapadd":"Sumar esos pasos","steps.gapask":"¿Más o menos cuántos minutos anduviste? Contamos unos 100 pasos por minuto.","steps.p":"Cuenta solo mientras te mueves, usando el sensor de movimiento del móvil. Deja esta página abierta en el bolsillo y sigue contando.",
 "steps.today":"pasos hoy","steps.goal":"Objetivo diario","steps.autostart":"Empezar a contar","steps.autostop":"Dejar de contar",
 "steps.progress":"{n} de {g} pasos hoy ({p}%).","steps.goalreached":"¡Objetivo alcanzado — muy bien hoy!",
 "steps.permission":"El navegador necesita permiso para leer el movimiento. Pulsa \"Empezar a contar\" y elige Permitir.",
@@ -1781,6 +1968,7 @@ I18N.es = {
 "settings.reduceh":"Reducir movimiento","settings.reducep":"Desactivar la animación del temporizador y las demostraciones animadas.",
 "settings.comforth":"Ayuda de Confort","settings.comfortp":"Si notamos que aumentas el tamaño del texto o relees la pantalla a menudo, te sugerimos con calma texto más grande y un diseño más sencillo.",
 "settings.accounth":"Cuenta","settings.subh":"Suscripción","settings.manage":"Gestionar plan","settings.extrash":"Pack Abuelos y Nietos + IA de Salud",
+"update.msg":"Hay una versión más reciente de este sitio.","update.btn":"Obtener la versión nueva","backup.h":"Copia de todo","backup.p":"Guarda un archivo pequeño con tus planes, rachas, notas, diario del dolor y amigos. Guárdalo en un sitio seguro, o úsalo para cambiar de móvil sin necesitar ninguna cuenta.","backup.export":"Guardar una copia","backup.import":"Restaurar una copia","backup.bad":"Ese archivo no es una copia de Steady & Strong.","backup.confirm":"Esto reemplazará lo que hay en este dispositivo por la copia del {d}. ¿Seguimos?","backup.done":"Restaurado. La página se abrirá otra vez con tus cosas.",
 "settings.reseth":"Restablecer todos los datos","settings.resetp":"Borra planes, amigos, rachas y ajustes de este navegador.","settings.resetbtn":"Restablecer datos",
 "settings.notsignedin":"No has iniciado sesión — entra para guardar tus planes, memoria y racha en todos los dispositivos.",
 "settings.signedinas":"Sesión iniciada como {email}","settings.signout":"Cerrar sesión","settings.signin":"Iniciar sesión",
@@ -1836,6 +2024,7 @@ I18N.es = {
 "pay.afterpay":"Pagarás en la página segura de la propia Stripe. En cuanto vuelvas aquí, tu acceso se activa.",
 "pay.notsetup":"Los pagos aún no están activados — el propietario del sitio todavía tiene que pegar el enlace de Stripe en el panel de administrador.",
 "pay.unlocked":"Pago recibido — tu acceso está activo. ¡Gracias!",
+"pay.pending":"Gracias. El pago se está confirmando — suele tardar unos segundos. Si no se abre nada en un minuto, cierra y abre la página otra vez.","pay.withdraw":"En la Unión Europea puedes cambiar de idea en los 14 días siguientes al pago y pedir la devolución, salvo que ya hayas agotado el periodo pagado. Escribe a la dirección en Ajustes → Acerca de y se te devolverá.","settings.cancel":"Cancelar o pedir reembolso","settings.cancelling":"Abriendo...","settings.cancelmanual":"Escribe a {email} y se cancelará la suscripción, con reembolso donde la ley lo exige.",
 "guard.blocked":"Pantalla oculta — esta página está protegida.","guard.why":"No se permiten capturas ni grabaciones de información de salud de otras personas.",
 "resume.q":"Dejaste una sesión a medias. ¿Sigues donde lo dejaste?","resume.yes":"Continuar","resume.no":"Empezar de nuevo",
 "settings.contrasth":"Contraste reforzado","settings.contrastp":"Colores más fuertes, negro sobre blanco, para ojos cansados o salas muy iluminadas.",
@@ -1874,6 +2063,8 @@ I18N.es = {
 "common.cancel":"Cancelar","common.save":"Guardar","common.close":"Cerrar","common.yes":"Sí","common.no":"No"
 };
 I18N.fr = {
+"meta.title":"Exercices à la maison pour vous",
+"zoom.h":"Taille de tout","zoom.p":"Pas seulement le texte : les boutons, les minuteurs et les dessins grandissent avec lui, pour que rien ne devienne trop petit à toucher. Ctrl et + ou − fait la même chose au clavier.","zoom.now":"Taille {n} pour cent.",
 "nav.home":"Accueil","nav.library":"Exercices","nav.together":"Grands-parents et petits-enfants","nav.workouts":"Mes séances","nav.health":"IA Santé","nav.friends":"Amis","nav.streaks":"Séries","nav.settings":"Réglages","nav.textsize":"Taille du texte",
 "hero.eyebrow":"Pas de salle. Pas de matériel. Pas de précipitation.","hero.h1":"Restez fort, depuis votre salon.",
 "hero.lede":"Des exercices simples à faire assis ou debout, avec pour tout matériel une chaise solide. À votre rythme — chaque routine est pensée en commençant par votre sécurité.",
@@ -1881,10 +2072,12 @@ I18N.fr = {
 "reassure.h1":"Rien à acheter","reassure.p1":"Chaque routine utilise ce que vous avez déjà — une chaise solide, un mur, peut-être deux bouteilles d'eau.",
 "reassure.h2":"Assis ou debout — à vous de voir","reassure.p2":"La plupart des exercices ont une version assise, pour travailler au niveau qui vous convient aujourd'hui.",
 "reassure.h3":"À votre propre rythme","reassure.p3":"Choisissez une séance de 5, 10, 15 ou 30 minutes. Faites une pause quand vous voulez. Aucun chrono à battre.",
+"cards.btn":"Imprimer en fiches","cards.title":"Fiches d'exercices","pain.h":"Comment va la douleur aujourd'hui ?","pain.p":"Un appui par jour. Au bout de quelques semaines, la courbe dit ce qu'aucune journée isolée ne peut dire : si cela s'améliore. Les jours d'entraînement sont marqués en dessous.","pain.none":"Rien de noté pour aujourd'hui.","pain.zero":"Aucune douleur aujourd'hui. Bon à se rappeler un mauvais jour.","pain.saved":"Noté : {n} sur 10.","pain.legend":"Les barres vertes sont les jours faciles, les oranges moyens, les rouges difficiles. La ligne en dessous montre les jours d'entraînement.","pain.better":"Sur ce mois, la douleur est environ {n} points plus basse qu'avant.","pain.worse":"Sur ce mois, la douleur est environ {n} points plus haute — à signaler à votre médecin.",
 "lib.h2":"Bibliothèque d'exercices","lib.p":"Tous les mouvements se font à la maison sans matériel particulier. Chacun a sa propre démonstration animée et une vidéo.",
 "lib.all":"Tous les exercices","lib.warmup":"Échauffement","lib.strength":"Renforcement","lib.balance":"Équilibre","lib.stretch":"Étirements","lib.cardio":"Cardio doux","lib.core":"Gainage et posture","lib.extras":"Pack bonus uniquement",
 "lib.showing":"{n} exercices affichés","lib.search":"Rechercher des exercices...",
 "ex.watchvideo":"▶ Voir une vidéo de démonstration","ex.about":"Environ {n} s","ex.locked":"Dans le pack bonus","ex.unlock":"Débloquer","ex.worksOn":"Travaille : {v}","ex.tip":"Astuce","ex.newidea":"Nouvelle idée pour vous",
+"theme.h":"Couleurs","theme.p":"L'écran sombre est plus doux le soir ; le contraste élevé utilise du noir et du jaune purs, ce que lisent le plus facilement les personnes malvoyantes.","theme.light":"Lumière du jour","theme.dark":"Sombre","theme.contrast":"Contraste élevé","cue.h":"Gros mots à l'écran","cue.p":"Tout ce que dit la voix apparaît aussi en grandes lettres en bas de l'écran — pour qui entend mal, ou a coupé le son.","today.btn":"Commencer la séance du jour ({n} min)","today.hint":"Comme d'habitude : {f}. Tout le reste est en dessous si vous voulez changer.",
 "session.h2":"Séance guidée","session.p":"Choisissez la durée et l'objectif. On vous guide sur chaque exercice avec un grand minuteur, une démonstration animée et des consignes claires.",
 "session.lengthq":"Combien de temps avez-vous aujourd'hui ?","session.min":"minutes","session.focusq":"Sur quoi voulez-vous travailler ?",
 "session.both":"Renforcement et étirements","session.strengthonly":"Renforcement seul","session.stretchonly":"Étirements seuls","session.balanceonly":"Équilibre seul","session.togetheronly":"Grands-parents et petits-enfants",
@@ -1901,7 +2094,9 @@ I18N.fr = {
 "streaks.daylabel":"jours d'affilée","streaks.last30":"30 derniers jours","streaks.leaderboard":"Classement du mois","streaks.rank":"Rang","streaks.name":"Nom","streaks.sessions":"Séances ce mois-ci","streaks.streak":"Série",
 "streaks.statsh":"Vos chiffres","streaks.calnote":"Les jours en orange sont les jours où vous avez terminé une séance. Votre série compte les jours orange consécutifs jusqu'à aujourd'hui.",
 "stat.total":"Séances au total","stat.month":"Ce mois-ci","stat.week":"Moyenne par semaine","stat.best":"Meilleure série","stat.minutes":"Minutes d'entraînement",
-"friends.h2":"Amis","friends.p":"Ajoutez des amis par identifiant ou QR code, discutez avec eux et voyez comment ils avancent.","friends.username":"Votre nom affiché","friends.yourid":"Votre identifiant :","friends.save":"Enregistrer le profil","friends.copyid":"Copier","friends.copied":"Copié !",
+"carer.h":"Quelqu'un qui veille sur vous","carer.p":"Choisissez une personne parmi vos amis : une fois par semaine, elle reçoit un mot court — combien de fois vous vous êtes entraîné, combien de temps, et votre série de jours. Rien d'autre n'est partagé : ni notes de santé, ni messages, ni recherches de médecins. Vous pouvez arrêter à tout moment.","carer.save":"Enregistrer","carer.sendnow":"Envoyer celui de cette semaine","carer.nobody":"Personne — je garde cela pour moi","carer.on":"{name} reçoit un mot court une fois par semaine.","carer.off":"Personne n'est informé de quoi que ce soit.","carer.inbox":"Les mots qu'on vous a envoyés","carer.sent":"Envoyé.","carer.copied":"Copié — collez-le dans un message.","carer.msg":"{name} cette semaine : {s} séances, {m} minutes, {d} jours d'affilée, {steps} pas.","quiet.msg":"Cela fait {n} jours. Aucun sermon — mais même trois minutes comptent.","quiet.threemin":"Faire trois minutes douces",
+"friends.h2":"Amis","friends.p":"Ajoutez des amis par identifiant ou QR code, discutez avec eux et voyez comment ils avancent.","photo.add":"Mettre une photo","photo.remove":"Retirer","photo.working":"Réduction...","photo.done":"Enregistrée. Vos amis la verront aussi.","photo.removed":"Retirée — la lettre revient.","photo.notimage":"Ce fichier n'est pas une image.","photo.failed":"Impossible de lire cette image. Essayez-en une autre.",
+"friends.username":"Votre nom affiché","friends.yourid":"Votre identifiant :","friends.save":"Enregistrer le profil","friends.copyid":"Copier","friends.copied":"Copié !",
 "friends.tabmine":"Mes amis","friends.tabadd":"Ajouter un ami","friends.tabreq":"Demandes",
 "call.calling":"Appel de {name}...","call.connecting":"Connexion...","call.connected":"Connectés.","call.incoming":"{name} vous appelle","call.incomingp":"Répondez pour vous parler et vous voir.","call.answer":"Répondre","call.decline":"Refuser","call.declined":"Ils n'ont pas pu répondre.","call.ended":"Appel terminé.","call.failed":"Les deux appareils n'ont pas réussi à se joindre. Cela arrive souvent sur un réseau mobile qui bloque les connexions directes — essayez le Wi-Fi, ou ajoutez un relais dans le panneau.","call.nocam":"La caméra et le micro n'ont pas été autorisés : l'appel ne peut pas commencer.","call.nocloud":"Les appels en direct nécessitent le carnet partagé configuré dans le panneau. En attendant, ceci n'affiche que votre propre caméra.","chat.newmsg":"{name} :","nick.label":"Comment voulez-vous l'appeler ?","nick.save":"Enregistrer le nom","nick.saved":"Enregistré. Vous verrez {n} partout.","nick.cleared":"Nom effacé — son propre nom revient.","nick.realname":"Son nom : {n}",
 "friends.scanh":"Votre QR code","friends.scanp":"Montrez-le à un ami pour qu'il le scanne et vous ajoute aussitôt.",
@@ -1949,6 +2144,7 @@ I18N.fr = {
 "health.newideas":"Des exercices inventés pour vous","health.newideasp":"Ceux-ci ne sont pas dans la bibliothèque — ils sont construits à partir de vos réponses. Essayez-les et dites-nous si vous voulez qu'on les ajoute pour tout le monde.",
 "health.saveidea":"J'aimerais qu'il soit ajouté","health.ideasent":"Merci — envoyé au propriétaire du site.",
 "health.askmore":"Dites-m'en un peu plus et j'affinerai.",
+"bt.h":"Deux tests que ferait votre kinésithérapeute","bt.p":"Ce sont les deux mêmes tests chronométrés utilisés en cabinet pour évaluer votre stabilité. Faites-les une fois par mois. Ils prennent moins d'une minute, et le chiffre qui baisse au fil des mois vaut bien plus qu'un résultat isolé.","bt.safety":"Placez une chaise solide contre un mur et faites-vous accompagner la première fois. Si vous avez des vertiges ou vous sentez peu sûr, arrêtez — cela mérite déjà d'en parler à votre médecin.","bt.sts.h":"Se lever cinq fois","bt.sts.p":"Asseyez-vous, les bras croisés sur la poitrine. Levez-vous complètement et rasseyez-vous cinq fois, aussi vite que possible en sécurité. Appuyez sur départ, puis sur stop dès que vous vous rasseyez la cinquième fois.","bt.tug.h":"Se lever et marcher trois mètres","bt.tug.p":"Assis : levez-vous, marchez trois mètres à votre allure normale, faites demi-tour, revenez et rasseyez-vous. Prenez votre canne ou votre déambulateur si c'est l'habitude. Départ en vous levant, stop en vous rasseyant.","bt.start":"Départ","bt.stop":"Stop","bt.go":"Allez-y.","bt.result":"{s} secondes.","bt.good":"C'est dans les valeurs habituelles pour une personne âgée active.","bt.watch":"C'est un peu plus lent que d'ordinaire pour ce test — à signaler au prochain rendez-vous.","bt.high":"C'est nettement au-dessus des valeurs habituelles. Montrez-le à votre médecin ou kinésithérapeute.","bt.better":"{n} secondes de moins que la dernière fois.","bt.slower":"{n} secondes de plus que la dernière fois.","bt.history":"Vos derniers tests","bt.note":"Ces chiffres sont un repère, pas un diagnostic. Apportez-les à votre médecin ou kinésithérapeute — c'est exactement le genre d'information utile en consultation.",
 "doc.h":"Trouver de l'aide près de chez vous","doc.p":"Dites-nous à peu près où vous êtes : nous affichons le numéro d'urgence de votre pays, les contacts que le propriétaire du site a vérifiés lui-même, et des recherches cartographiques prêtes à l'emploi pour le bon type de professionnel.",
 "doc.country":"Pays","doc.city":"Commune ou code postal","doc.useloc":"Utiliser ma position","doc.find":"Afficher l'aide près de moi",
 "doc.needloc":"Choisissez un pays et, si possible, indiquez la commune.","doc.locating":"Recherche de votre position...","doc.locfail":"Le navigateur n'a pas partagé votre position. Saisissez votre commune.","doc.locok":"Position trouvée — vos coordonnées sont utilisées.",
@@ -1957,7 +2153,8 @@ I18N.fr = {
 "doc.search":"Le bon professionnel pour ce que vous décrivez","doc.searchp":"Ces boutons ouvrent une recherche cartographique près de chez vous. Nous n'inventons aucun numéro de téléphone — la carte vous montre des lieux réels et à jour, avec leurs propres numéros et horaires.",
 "doc.openmap":"Ouvrir la recherche sur la carte","doc.opendir":"Chercher des numéros","doc.call":"Appeler","doc.matchnote":"Choisi d'après : {v}",
 "doc.spec.physio":"Kinésithérapeute","doc.spec.ortho":"Orthopédiste","doc.spec.gp":"Médecin traitant","doc.spec.rheum":"Rhumatologue","doc.spec.neuro":"Neurologue","doc.spec.cardio":"Cardiologue","doc.spec.pulmo":"Pneumologue","doc.spec.podiat":"Podologue","doc.spec.ent":"ORL","doc.spec.trainer":"Coach sportif","doc.spec.nutri":"Diététicien","doc.spec.other":"Autre",
-"steps.h":"Pas quotidiens","steps.p":"Compte tout seul pendant que vous marchez, grâce au capteur de mouvement du téléphone. Laissez cette page ouverte dans votre poche et le comptage continue.",
+"steps.h":"Pas quotidiens",
+"coach.h":"Ce que la voix dit","coach.p":"Du silence, au simple nom de chaque exercice, jusqu'à un coach qui vous accompagne.","coach.off":"Rien","coach.names":"Seulement les noms","coach.full":"Accompagnement complet","coach.speedh":"Vitesse de parole","coach.speedp":"Plus lent se suit plus facilement à l'autre bout de la pièce.","coach.slow":"Lent","coach.normal":"Normal","coach.fast":"Rapide","coach.test":"Essayer la voix","coach.sample":"Voici comment je vais vous accompagner. Le dos droit, et respirez calmement.","coach.now":"Numéro {n} sur {total}. {name}.","coach.seatedok":"Celui-ci peut se faire assis, si vous préférez.","coach.restnow":"Reposez-vous maintenant.","coach.breathe":"Continuez à respirer — ne bloquez pas votre souffle.","coach.getready":"Préparez-vous pour le suivant.","coach.water":"Buvez une gorgée d'eau.","coach.enc1":"C'est ça — stable et solide.","coach.enc2":"Presque fini, continuez.","coach.enc3":"Très bien.","coach.enc4":"Lentement et en contrôle vaut mieux que vite.","coach.enc5":"Bien — restez bien droit.","steps.walkmode":"Je pars marcher","steps.walkstop":"Terminer la marche","steps.walkp":"L'écran reste allumé avec presque rien d'éclairé, le comptage continue donc dans la poche. Sans internet.","steps.walkmin":"{n} minutes de marche","steps.truth":"Aucune page web ne peut lire le compteur de pas lorsqu'elle est fermée — c'est une règle du téléphone, pas un manque de l'application. Laissez cette page ouverte (le mode marche la garde éveillée sur un écran sombre) et chaque pas est compté, avec ou sans internet.","steps.gap":"Le compteur a dormi environ {n} minutes.","steps.gapadd":"Ajouter ces pas","steps.gapask":"Combien de minutes avez-vous marché à peu près ? Nous comptons environ 100 pas par minute.","steps.p":"Compte tout seul pendant que vous marchez, grâce au capteur de mouvement du téléphone. Laissez cette page ouverte dans votre poche et le comptage continue.",
 "steps.today":"pas aujourd'hui","steps.goal":"Objectif quotidien","steps.autostart":"Commencer à compter","steps.autostop":"Arrêter de compter",
 "steps.progress":"{n} pas sur {g} aujourd'hui ({p} %).","steps.goalreached":"Objectif atteint — bravo pour aujourd'hui !",
 "steps.permission":"Le navigateur a besoin d'une autorisation pour lire le mouvement. Appuyez sur « Commencer à compter » puis Autoriser.",
@@ -1974,6 +2171,7 @@ I18N.fr = {
 "settings.reduceh":"Réduire les animations","settings.reducep":"Désactiver l'animation du minuteur et les démonstrations animées.",
 "settings.comforth":"Assistance Confort","settings.comfortp":"Si nous remarquons que vous agrandissez souvent le texte ou relisez l'écran, nous vous proposons calmement un texte plus grand et une mise en page plus simple.",
 "settings.accounth":"Compte","settings.subh":"Abonnement","settings.manage":"Gérer l'abonnement","settings.extrash":"Pack Grands-parents et petits-enfants + IA Santé",
+"update.msg":"Une version plus récente de ce site est disponible.","update.btn":"Obtenir la nouvelle version","backup.h":"Copie de tout","backup.p":"Enregistre un petit fichier avec vos programmes, séries, notes, journal de la douleur et amis. Gardez-le en lieu sûr, ou servez-vous-en pour changer de téléphone sans aucun compte.","backup.export":"Enregistrer une copie","backup.import":"Restaurer une copie","backup.bad":"Ce fichier n'est pas une copie de Steady & Strong.","backup.confirm":"Ceci remplacera ce qui est sur cet appareil par la copie du {d}. On continue ?","backup.done":"Restauré. La page va se rouvrir avec vos affaires.",
 "settings.reseth":"Réinitialiser toutes les données","settings.resetp":"Efface les programmes, amis, séries et réglages de ce navigateur.","settings.resetbtn":"Réinitialiser",
 "settings.notsignedin":"Vous n'êtes pas connecté — connectez-vous pour enregistrer vos programmes, votre mémoire et votre série sur tous vos appareils.",
 "settings.signedinas":"Connecté en tant que {email}","settings.signout":"Se déconnecter","settings.signin":"Se connecter",
@@ -2029,6 +2227,7 @@ I18N.fr = {
 "pay.afterpay":"Vous payez sur la page sécurisée de Stripe. Dès votre retour ici, votre accès s'active.",
 "pay.notsetup":"Les paiements ne sont pas encore activés — le propriétaire doit coller le lien Stripe dans le panneau d'administration.",
 "pay.unlocked":"Paiement reçu — votre accès est actif. Merci !",
+"pay.pending":"Merci. Le paiement est en cours de confirmation — cela prend en général quelques secondes. Si rien ne s'ouvre au bout d'une minute, fermez et rouvrez la page.","pay.withdraw":"Dans l'Union européenne, vous pouvez changer d'avis dans les 14 jours suivant le paiement et demander un remboursement, sauf si la période payée est déjà consommée. Écrivez à l'adresse dans Réglages → À propos et vous serez remboursé.","settings.cancel":"Annuler ou se faire rembourser","settings.cancelling":"Ouverture...","settings.cancelmanual":"Écrivez à {email} et l'abonnement sera annulé, avec remboursement là où la loi l'exige.",
 "guard.blocked":"Écran masqué — cette page est protégée.","guard.why":"Les captures et enregistrements d'informations de santé d'autrui ne sont pas autorisés ici.",
 "resume.q":"Vous avez laissé une séance en cours. Reprendre où vous vous étiez arrêté ?","resume.yes":"Reprendre","resume.no":"Recommencer",
 "settings.contrasth":"Contraste renforcé","settings.contrastp":"Des couleurs plus franches, noir sur blanc, pour les yeux fatigués ou les pièces très éclairées.",
@@ -2364,6 +2563,31 @@ var DEMO_KEYS = Object.keys(DEMO);
 function demoSVG(key){
   var fn = DEMO[key] || DEMO.generic;
   return frame(fn());
+}
+/* --- Only draw what is actually on screen ------------------------------
+   Seventy-three moving drawings, all built at once, is a slow first minute
+   on an old telephone and a poor connection. Each card now gets its drawing
+   the moment it comes into view, and never before. */
+var demoWatcher = null;
+function watchDemos(root){
+  var targets = (root || document).querySelectorAll("[data-demo-key]:not([data-demo-done])");
+  if(!("IntersectionObserver" in window)){
+    targets.forEach(function(el){ fillDemo(el); });
+    return;
+  }
+  if(!demoWatcher){
+    demoWatcher = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ fillDemo(en.target); demoWatcher.unobserve(en.target); }
+      });
+    }, { rootMargin: "300px 0px" });
+  }
+  targets.forEach(function(el){ demoWatcher.observe(el); });
+}
+function fillDemo(el){
+  if(el.getAttribute("data-demo-done")) return;
+  el.setAttribute("data-demo-done", "1");
+  el.innerHTML = demoSVG(el.getAttribute("data-demo-key"));
 }
 /* ============ 4. EXERCISE DATA ============ */
 var CATEGORY_COLOR = { warmup:"#E8A33D", strength:"#1F5C54", balance:"#C9705F", stretch:"#7FA687", cardio:"#5B6EAE", core:"#A15B9E", together:"#7A5B8F" };
@@ -2728,11 +2952,11 @@ function colorFor(seed){
 function defaultState(){
   return {
     profile: { id: randomId(), name: "You" },
-    settings: { lang:"en", voice:false, voiceCmd:false, reduceMotion:false, extrasPrefs:[], comfortAssist:false },
+    settings: { lang:"en", voice:false, voiceCmd:false, coach:"full", voiceRate:0.9, theme:"light", bigCue:false, reduceMotion:false, extrasPrefs:[], comfortAssist:false },
     plans: [], friends: [], workoutLog: [], sessionLog: [],
     memory: { notes:[], facts:{} },
     injuries: [], goals: [],
-    friendNotes: {},
+    friendNotes: {}, carer: null, quietNudge: null, balanceTests: [], painLog: {},
     reminders: { enabled:false, days:[], time:"09:00", lastFired:null },
     /* paid and extras always start false: signing in never grants a pack. */
     auth: { loggedIn:false, email:null, name:null, trialStart:null, paid:false, plan:null, planExpiry:null, extras:false, extrasExpiry:null, extrasSource:null },
@@ -2747,7 +2971,7 @@ function defaultState(){
     referral: { earned:false, from:[] },
     customExercises: {},
     hiddenExercises: [],
-    a11y: { sizeBumps:0, comfortSuggested:false }
+    a11y: { sizeBumps:0, comfortSuggested:false, zoom:2 }
   };
 }
 var STATE = defaultState();
@@ -2795,6 +3019,9 @@ function applyExerciseOverrides(){
 var BUILT_IN = {
   cloudUrl: "",                 /* https://xxxx-default-rtdb.firebaseio.com  */
   turn: { url:"", user:"", pass:"" },  /* optional relay for stubborn networks   */
+  apiUrl: "",                   /* https://steady-strong-pay.<you>.workers.dev
+                                   see stripe-worker.js — while this is empty
+                                   the padlocks are courtesy only            */
   googleClientId: "",           /* 1234-abc.apps.googleusercontent.com       */
   stripe: { monthly:"", yearly:"", family:"", familybig:"", extras:"" }
 };
@@ -2819,7 +3046,7 @@ function cloudNormalise(u){
   }catch(e){}
   CLOUD.base = cloudNormalise(u || BUILT_IN.cloudUrl);
 })();
-var SOCIAL_RE = /^(directory:|public:|requests:|chat:|call:|family:)/;
+var SOCIAL_RE = /^(directory:|public:|requests:|chat:|call:|family:|carer:)/;
 function cloudKey(key){ return key.replace(/[^A-Za-z0-9_-]/g, "_"); }
 function cloudUrlFor(key){ return CLOUD.base + "/ss/social/" + cloudKey(key) + ".json"; }
 async function cloudGet(key){
@@ -2856,6 +3083,35 @@ async function cloudTest(){
   var back = await cloudGet("public:__ping");
   CLOUD.live = (back === stamp);
   return CLOUD.live;
+}
+/* --- Who is really allowed in ------------------------------------------
+   Coming back from Stripe proves nothing: anybody can type ?unlock=yearly
+   into the address bar. When a payment server is configured (see the file
+   stripe-worker.js) it becomes the only voice that counts — the app asks it
+   who paid, and the address bar is ignored. With no server the old, trusting
+   behaviour stays, and the admin panel says so plainly. */
+var API = { base:"", live:false, checked:false, lastError:"" };
+(function readApi(){
+  var u = "";
+  try{
+    var m = (location.search || "").match(/[?&]api=([^&]+)/);
+    if(m){ u = decodeURIComponent(m[1]); localStorage.setItem("ss_api", u); }
+    else { u = localStorage.getItem("ss_api") || ""; }
+  }catch(e){}
+  API.base = (u || BUILT_IN.apiUrl || "").trim().replace(/\/+$/, "");
+})();
+function apiOn(){ return !!API.base; }
+async function apiGet(path){
+  if(!API.base) return null;
+  try{
+    var ctl = new AbortController();
+    var to = setTimeout(function(){ ctl.abort(); }, 9000);
+    var r = await fetch(API.base + path, { signal: ctl.signal, cache:"no-store" });
+    clearTimeout(to);
+    if(!r.ok){ API.lastError = "HTTP " + r.status; return null; }
+    API.live = true;
+    return await r.json();
+  }catch(e){ API.lastError = String(e && e.message || e); return null; }
 }
 var Store = (function(){
   var native = (typeof window !== "undefined" && window.storage && typeof window.storage.get === "function") ? window.storage : null;
@@ -2919,21 +3175,35 @@ function suggestDomain(dom){
   });
   return (bestD > 0 && bestD <= 2) ? best : null;
 }
-async function domainAcceptsMail(dom){
+/* Two resolvers, because one being unreachable is not evidence that a
+   domain is real. Only when a resolver actually answers "no such mail
+   service" is the address turned away. */
+var DNS_HOSTS = ["https://cloudflare-dns.com/dns-query", "https://dns.google/resolve"];
+async function dnsAsk(host, dom, type){
+  var ctl = new AbortController();
+  var to = setTimeout(function(){ ctl.abort(); }, 4500);
   try{
-    var ctl = new AbortController();
-    setTimeout(function(){ ctl.abort(); }, 4000);
-    var r = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(dom) + "&type=MX",
+    var r = await fetch(host + "?name=" + encodeURIComponent(dom) + "&type=" + type,
       { headers: { accept: "application/dns-json" }, signal: ctl.signal });
-    if(!r.ok) return true;                       /* lookup unavailable: do not block */
+    clearTimeout(to);
+    if(!r.ok) return null;                       /* no opinion */
     var j = await r.json();
-    if(j.Answer && j.Answer.length) return true;
-    /* Some small domains take mail on the A record instead of an MX one. */
-    var r2 = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(dom) + "&type=A",
-      { headers: { accept: "application/dns-json" } });
-    var j2 = await r2.json();
-    return !!(j2.Answer && j2.Answer.length);
-  }catch(e){ return true; }
+    if(j.Status !== undefined && j.Status !== 0 && j.Status !== 3) return null;
+    return !!(j.Answer && j.Answer.length);
+  }catch(e){ clearTimeout(to); return null; }
+}
+async function domainAcceptsMail(dom){
+  for(var i = 0; i < DNS_HOSTS.length; i++){
+    var mx = await dnsAsk(DNS_HOSTS[i], dom, "MX");
+    if(mx === true) return true;
+    if(mx === false){
+      /* some small domains take mail on the A record instead */
+      var a = await dnsAsk(DNS_HOSTS[i], dom, "A");
+      if(a === true) return true;
+      if(a === false) return false;              /* a real answer: no such domain */
+    }
+  }
+  return true;                                   /* nobody answered: never lock anyone out */
 }
 async function validateEmail(raw, statusFn){
   var email = normEmail(raw);
@@ -2961,7 +3231,8 @@ async function saveAccount(){
     passHash: STATE.auth._passHash, name: STATE.auth.name, google: !!STATE.auth.google,
     profile: STATE.profile, settings: STATE.settings, plans: STATE.plans,
     friends: STATE.friends, workoutLog: STATE.workoutLog, sessionLog: STATE.sessionLog,
-    memory: STATE.memory, injuries: STATE.injuries, goals: STATE.goals, friendNotes: STATE.friendNotes,
+    memory: STATE.memory, injuries: STATE.injuries, goals: STATE.goals, friendNotes: STATE.friendNotes, carer: STATE.carer,
+    balanceTests: STATE.balanceTests, painLog: STATE.painLog, photo: STATE.profile.photo || null,
     reminders: STATE.reminders, trialStart: STATE.auth.trialStart, paid: STATE.auth.paid,
     plan: STATE.auth.plan, planExpiry: STATE.auth.planExpiry,
     extras: STATE.auth.extras, extrasExpiry: STATE.auth.extrasExpiry, extrasSource: STATE.auth.extrasSource,
@@ -2970,9 +3241,9 @@ async function saveAccount(){
   await Store.setJSON("account:" + normEmail(STATE.auth.email), blob);
   /* Name and ID only: the shared address book may be readable by anyone who
      has the database address, so no e-mail ever leaves this device. */
-  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name });
+  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name, photo:STATE.profile.photo || null });
   await Store.setJSON("public:" + STATE.profile.id, {
-    id:STATE.profile.id, name:STATE.profile.name, streak:computeStreak(),
+    id:STATE.profile.id, name:STATE.profile.name, photo:STATE.profile.photo || null, streak:computeStreak(),
     sessions:sessionsThisMonth(), total:STATE.workoutLog.length,
     avgWeek:avgPerWeek(), minutes:totalMinutes(), updated:Date.now()
   });
@@ -2981,9 +3252,9 @@ async function saveAccount(){
 }
 async function publishPublicProfile(){
   if(!STATE.auth.loggedIn) return;
-  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name });
+  await Store.setJSON("directory:" + STATE.profile.id, { id:STATE.profile.id, name:STATE.profile.name, photo:STATE.profile.photo || null });
   await Store.setJSON("public:" + STATE.profile.id, {
-    id:STATE.profile.id, name:STATE.profile.name, streak:computeStreak(),
+    id:STATE.profile.id, name:STATE.profile.name, photo:STATE.profile.photo || null, streak:computeStreak(),
     sessions:sessionsThisMonth(), total:STATE.workoutLog.length,
     avgWeek:avgPerWeek(), minutes:totalMinutes(), updated:Date.now()
   });
@@ -3000,7 +3271,7 @@ function showView(name){
   if(name === "workouts") renderPlansList();
   if(name === "streaks")  renderStreaksView();
   if(name === "friends")  renderFriendsView();
-  if(name === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); }
+  if(name === "health")   { renderInjuryHistory(); renderSteps(); renderHealthContacts(); renderCountrySelect(); renderBalanceHistory(); renderPainScale(); renderPainChart(); }
   if(name === "settings"){ renderAccountSettings(); renderMemory(); renderWhatsNew(); renderLegal(); renderStars(); loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); }); }
 }
 function tryShowView(target){
@@ -3056,16 +3327,54 @@ document.addEventListener("click", function(e){
   e.preventDefault();
   tryShowView(el.getAttribute("data-view-link"));
 });
-var SIZE_STEPS = ["112.5%","130%","150%"];
-document.querySelectorAll(".size-btn").forEach(function(btn){
-  btn.addEventListener("click", function(){
-    document.querySelectorAll(".size-btn").forEach(function(b){ b.classList.remove("active"); });
-    btn.classList.add("active");
-    document.documentElement.style.fontSize = SIZE_STEPS[parseInt(btn.getAttribute("data-size"),10)] || SIZE_STEPS[1];
-    STATE.a11y.sizeBumps = (STATE.a11y.sizeBumps || 0) + 1;
-    saveState();
-    maybeSuggestComfortAssist();
-  });
+/* --- Making everything bigger, or smaller ------------------------------
+   Three fixed sizes was too blunt: for some people the biggest was still too
+   small, for others the smallest was too big. Now it is a proper zoom in
+   steps of about ten per cent, from 90% to 220%, with the number shown, the
+   keyboard shortcuts people already know, and a way straight back to normal.
+   It is remembered, and because the whole app is sized in rem, the buttons
+   and timers grow with the words instead of staying small. */
+var ZOOM_STEPS = [90, 100, 112.5, 125, 140, 155, 175, 195, 220];
+var ZOOM_NORMAL = 2;
+var SIZE_STEPS = ["112.5%","130%","150%"];        /* kept: older code reads it */
+function zoomIndex(){
+  var i = STATE.a11y.zoom;
+  if(typeof i !== "number" || i < 0 || i >= ZOOM_STEPS.length) return ZOOM_NORMAL;
+  return i;
+}
+function applyZoom(announce){
+  var i = zoomIndex();
+  document.documentElement.style.fontSize = ZOOM_STEPS[i] + "%";
+  var out = document.getElementById("zoomReadout");
+  if(out) out.textContent = Math.round(ZOOM_STEPS[i]) + "%";
+  var minus = document.getElementById("zoomOutBtn"), plus = document.getElementById("zoomInBtn");
+  if(minus) minus.disabled = (i === 0);
+  if(plus) plus.disabled = (i === ZOOM_STEPS.length - 1);
+  var reset = document.getElementById("zoomResetBtn");
+  if(reset) reset.style.display = (i === ZOOM_NORMAL) ? "none" : "inline-flex";
+  var sel = document.getElementById("zoomSelect");
+  if(sel) sel.value = String(i);
+  if(announce && STATE.settings.voice) say(t("zoom.now", { n: Math.round(ZOOM_STEPS[i]) }));
+}
+function stepZoom(dir){
+  var i = zoomIndex() + dir;
+  if(i < 0 || i >= ZOOM_STEPS.length) return;
+  STATE.a11y.zoom = i;
+  if(dir > 0) STATE.a11y.sizeBumps = (STATE.a11y.sizeBumps || 0) + 1;
+  saveState();
+  applyZoom(true);
+  maybeSuggestComfortAssist();
+}
+function resetZoom(){ STATE.a11y.zoom = ZOOM_NORMAL; saveState(); applyZoom(true); }
+document.getElementById("zoomOutBtn").addEventListener("click", function(){ stepZoom(-1); });
+document.getElementById("zoomInBtn").addEventListener("click", function(){ stepZoom(1); });
+document.getElementById("zoomResetBtn").addEventListener("click", resetZoom);
+/* The shortcuts everybody already knows. */
+document.addEventListener("keydown", function(e){
+  if(!(e.ctrlKey || e.metaKey)) return;
+  if(e.key === "+" || e.key === "="){ e.preventDefault(); stepZoom(1); }
+  else if(e.key === "-" || e.key === "_"){ e.preventDefault(); stepZoom(-1); }
+  else if(e.key === "0"){ e.preventDefault(); resetZoom(); }
 });
 document.querySelectorAll(".eye-btn").forEach(function(btn){
   btn.addEventListener("click", function(e){
@@ -3231,6 +3540,10 @@ async function completeSignIn(email, opts){
     STATE.friendNotes = acc.friendNotes || {};
     if(acc.reminders)   STATE.reminders = acc.reminders;
     if(acc.steps)       STATE.steps = acc.steps;
+    if(acc.carer !== undefined) STATE.carer = acc.carer;
+    if(acc.photo !== undefined) STATE.profile.photo = acc.photo;
+    if(acc.balanceTests) STATE.balanceTests = acc.balanceTests;
+    if(acc.painLog) STATE.painLog = acc.painLog;
     if(acc.location)    STATE.location = acc.location;
   } else {
     /* Brand-new account: free trial only. No plan, and definitely no bonus pack. */
@@ -3245,6 +3558,7 @@ async function completeSignIn(email, opts){
   saveState();
   await saveAccount();
   finishAuthSuccess();
+  syncEntitlement();
 }
 document.getElementById("authSubmitBtn").addEventListener("click", async function(){
   var btn = this;
@@ -3263,6 +3577,10 @@ document.getElementById("authSubmitBtn").addEventListener("click", async functio
       if(existing){ showAuthError(t("auth.exists")); return; }
       await completeSignIn(email, { forceCreate:true, name:name, passHash:simpleHash(pass) });
     } else {
+      /* Accounts made before this check existed could hold a made-up address.
+         Sign-in is the last chance to catch that. */
+      var shape = await validateEmail(email, showAuthError);
+      if(!shape.ok){ showAuthError(shape.msg); return; }
       var acc = await Store.getJSON("account:" + email, null);
       if(!acc){ showAuthError(t("auth.nofound")); return; }
       if(acc.google && !acc.passHash){ showAuthError(t("auth.gpassacct")); return; }
@@ -3433,9 +3751,60 @@ async function handleReturnFromStripe(){
     return;
   }
   try{ history.replaceState({}, "", location.pathname); }catch(e){}
+  if(apiOn()){
+    /* Stripe needs a moment to tell the server; try a few times before
+       giving up, and never open anything on the say-so of the address. */
+    var got = await waitForEntitlement(key, 6);
+    alert(got ? t("pay.unlocked") : t("pay.pending"));
+    return;
+  }
   var amount = key === "extras" ? EXTRAS_PRICE : PLAN_DEFS[key].price;
   var ok = await grantProduct(key, amount);
   if(ok) alert(t("pay.unlocked"));
+}
+function entitlementSaysYes(ent, key){
+  if(!ent) return false;
+  if(key === "extras") return !!ent.extras;
+  if(key) return !!ent.paid;
+  return !!ent.paid || !!ent.extras;
+}
+async function waitForEntitlement(key, tries){
+  for(var i = 0; i < (tries || 1); i++){
+    var ent = await syncEntitlement();
+    if(entitlementSaysYes(ent, key)) return true;
+    await new Promise(function(r){ setTimeout(r, 2500); });
+  }
+  return false;
+}
+/* Asked at every start, and after every return from Stripe. The server is
+   the truth; whatever this device believes is corrected to match. */
+async function syncEntitlement(){
+  if(!apiOn() || !STATE.auth.loggedIn || !STATE.auth.email) return null;
+  var ent = await apiGet("/entitlement?email=" + encodeURIComponent(normEmail(STATE.auth.email)));
+  API.checked = true;
+  if(!ent) return null;                       /* offline: leave things be */
+  var changed = false;
+  var paid = !!ent.paid;
+  if(paid !== !!STATE.auth.paid){ STATE.auth.paid = paid; changed = true; }
+  if((ent.plan || null) !== (STATE.auth.plan || null)){ STATE.auth.plan = ent.plan || null; changed = true; }
+  if((ent.planExpiry || null) !== (STATE.auth.planExpiry || null)){ STATE.auth.planExpiry = ent.planExpiry || null; changed = true; }
+  var ex = !!ent.extras;
+  if(ex !== !!STATE.auth.extras){ STATE.auth.extras = ex; changed = true; }
+  if(ex){ STATE.auth.extrasSource = "paid"; STATE.auth.extrasExpiry = ent.extrasExpiry || null; }
+  else if(STATE.auth.extrasSource === "paid"){ STATE.auth.extrasSource = null; STATE.auth.extrasExpiry = null; changed = true; }
+  if(ent.familyCode && ent.familyCode !== STATE.auth.familyCode){
+    STATE.auth.familyCode = ent.familyCode; STATE.auth.familyOwner = true; changed = true;
+  }
+  if(changed){
+    saveState();
+    await saveAccount();
+    refreshChrome();
+    restoreGatedViews();
+    renderLibrary();
+    renderGG();
+    renderFamilyRow();
+  }
+  return ent;
 }
 var pendingUnlock = null;
 function finishAuthSuccess(){
@@ -3477,6 +3846,22 @@ function refreshChrome(){
   renderLock();
   loadOwnerSettings().then(function(){ renderOwnerPanel(); renderSupportFab(); });
 }
+async function openBillingPortal(){
+  var btn = document.getElementById("settingsCancelBtn");
+  if(!apiOn()){
+    showUndoToast(t("settings.cancelmanual", { email: ownerSettings.ownerEmail || DEFAULT_OWNER_EMAIL }), function(){});
+    return;
+  }
+  btn.disabled = true;
+  var was = btn.textContent;
+  btn.textContent = t("settings.cancelling");
+  var r = await apiGet("/portal?email=" + encodeURIComponent(normEmail(STATE.auth.email)) +
+                       "&return=" + encodeURIComponent(location.href.split("?")[0]));
+  btn.disabled = false; btn.textContent = was;
+  if(r && r.url) window.location.href = r.url;
+  else showUndoToast(t("settings.cancelmanual", { email: ownerSettings.ownerEmail || DEFAULT_OWNER_EMAIL }), function(){});
+}
+document.getElementById("settingsCancelBtn").addEventListener("click", openBillingPortal);
 function renderAccountSettings(){
   var p = document.getElementById("settingsAccountP");
   var btn = document.getElementById("settingsAuthBtn");
@@ -3499,6 +3884,8 @@ function renderAccountSettings(){
     var td = trialDaysLeft();
     sp.textContent = td > 0 ? sent("trialLeftPlain", { d: daysPhrase(td) }) : t("settings.subended");
   }
+  var cb = document.getElementById("settingsCancelBtn");
+  if(cb) cb.style.display = (STATE.auth.loggedIn && (STATE.auth.paid || STATE.auth.extras)) ? "inline-flex" : "none";
   var ep = document.getElementById("settingsExtrasP");
   var eb = document.getElementById("settingsExtrasBtn");
   if(extrasActive()){
@@ -3522,7 +3909,8 @@ function specLabel(k){ return t("doc.spec." + (k || "other")); }
 var ownerSettings = { ownerEmail: DEFAULT_OWNER_EMAIL, extraEmails:[],
   stripe:{ monthly: BUILT_IN.stripe.monthly, yearly: BUILT_IN.stripe.yearly, family: BUILT_IN.stripe.family, familybig: BUILT_IN.stripe.familybig, extras: BUILT_IN.stripe.extras },
   liveMode:true, contacts: [], supportPhone: "", googleClientId: BUILT_IN.googleClientId, cloudUrl: CLOUD.base,
-  turn: { url: BUILT_IN.turn.url, user: BUILT_IN.turn.user, pass: BUILT_IN.turn.pass }, captureGuard: true };
+  turn: { url: BUILT_IN.turn.url, user: BUILT_IN.turn.user, pass: BUILT_IN.turn.pass },
+  apiUrl: BUILT_IN.apiUrl, captureGuard: true };
 var ownerLoaded = false;
 async function loadOwnerSettings(){
   if(ownerLoaded) return ownerSettings;
@@ -3536,6 +3924,7 @@ async function loadOwnerSettings(){
     if(saved.googleClientId) ownerSettings.googleClientId = saved.googleClientId;
     if(saved.cloudUrl) ownerSettings.cloudUrl = saved.cloudUrl;
     if(saved.turn) ownerSettings.turn = Object.assign(ownerSettings.turn, saved.turn);
+    if(saved.apiUrl) ownerSettings.apiUrl = saved.apiUrl;
     if(saved.captureGuard !== undefined) ownerSettings.captureGuard = !!saved.captureGuard;
   }
   ownerLoaded = true;
@@ -3561,7 +3950,9 @@ function renderPromoTable(){
   var rows = '<thead><tr><th>Code</th><th>Discount</th><th>Applies to</th><th>Visibility</th></tr></thead><tbody>';
   Object.keys(PROMO_CODES).forEach(function(code){
     var c = PROMO_CODES[code];
-    var scope = c.scope === "extras" ? "Bonus pack (Grandparents & Grandchildren + Health AI)" : (c.scope === "plan" ? "Subscription plans" : "Anything");
+    var scope = c.scope === "extras" ? "Bonus pack (Grandparents & Grandchildren + Health AI)"
+      : c.scope === "plan" ? "Subscription plans"
+      : c.scope === "family" ? "Family plans only" : "Anything";
     rows += '<tr><td><code>' + code + '</code></td><td>' + c.pct + '% off</td><td>' + scope + '</td><td>' + (c.secret ? "Secret" : "Public") + '</td></tr>';
   });
   tb.innerHTML = rows + '</tbody>';
@@ -3751,10 +4142,14 @@ async function renderOwnerPanel(){
   document.getElementById("admSupportPhone").value = ownerSettings.supportPhone || "";
   document.getElementById("googleClientIdInput").value = ownerSettings.googleClientId || "";
   document.getElementById("cloudUrlInput").value = ownerSettings.cloudUrl || CLOUD.base || "";
+  document.getElementById("apiUrlInput").value = ownerSettings.apiUrl || API.base || "";
+  var guard = document.getElementById("apiTestStatus");
+  if(guard && !guard.textContent) guard.textContent = apiOn() ? "A payment server is configured." : "No payment server yet — padlocks can be walked around.";
   var snip = document.getElementById("builtInSnippet");
   if(snip){
     snip.textContent = 'var BUILT_IN = {\n' +
       '  cloudUrl: "' + (ownerSettings.cloudUrl || CLOUD.base || "") + '",\n' +
+      '  apiUrl: "' + (ownerSettings.apiUrl || API.base || "") + '",\n' +
       '  googleClientId: "' + (ownerSettings.googleClientId || "") + '",\n' +
       '  stripe: { monthly:"' + (ownerSettings.stripe.monthly || "") + '", yearly:"' + (ownerSettings.stripe.yearly || "") +
       '", family:"' + (ownerSettings.stripe.family || "") + '", familybig:"' + (ownerSettings.stripe.familybig || "") +
@@ -3773,6 +4168,8 @@ async function renderOwnerPanel(){
   renderAdminContactsList();
   renderSkipList();
   renderOwnerReviews();
+  renderErrorLog();
+  checkWorkerVersion();
 }
 document.getElementById("lockPackBtn").addEventListener("click", async function(){
   STATE.auth.extras = false;
@@ -3802,6 +4199,9 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   ownerSettings.stripe.extras  = document.getElementById("stripeExtrasInput").value.trim();
   ownerSettings.supportPhone = document.getElementById("admSupportPhone").value.trim();
   ownerSettings.googleClientId = document.getElementById("googleClientIdInput").value.trim();
+  ownerSettings.apiUrl = (document.getElementById("apiUrlInput").value || "").trim().replace(/\/+$/, "");
+  API.base = ownerSettings.apiUrl;
+  try{ if(API.base) localStorage.setItem("ss_api", API.base); else localStorage.removeItem("ss_api"); }catch(e){}
   ownerSettings.cloudUrl = cloudNormalise(document.getElementById("cloudUrlInput").value);
   CLOUD.base = ownerSettings.cloudUrl;
   try{ if(CLOUD.base) localStorage.setItem("ss_cloud", CLOUD.base); else localStorage.removeItem("ss_cloud"); }catch(e){}
@@ -3818,6 +4218,18 @@ document.getElementById("saveOwnerSettingsBtn").addEventListener("click", async 
   setupGoogleSignIn();
   if(CLOUD.base){ publishPublicProfile(); pollRequests(); }
   renderFriendsNote();
+});
+document.getElementById("apiTestBtn").addEventListener("click", async function(){
+  var st = document.getElementById("apiTestStatus");
+  API.base = (document.getElementById("apiUrlInput").value || "").trim().replace(/\/+$/, "");
+  if(!API.base){ st.textContent = "Paste the Worker address first."; return; }
+  st.textContent = "Testing...";
+  var r = await apiGet("/health");
+  if(!r){ st.textContent = "No answer (" + (API.lastError || "unknown") + "). Check the address, and that the Worker is deployed."; return; }
+  var mine = await apiGet("/entitlement?email=" + encodeURIComponent(normEmail(STATE.auth.email || "test@example.com")));
+  st.textContent = mine
+    ? "Working. The server answers, and it is now the only thing that opens a padlock."
+    : "The server is up, but /entitlement did not answer — check the KV namespace is bound as SS.";
 });
 document.getElementById("cloudTestBtn").addEventListener("click", async function(){
   var st = document.getElementById("cloudTestStatus");
@@ -3951,7 +4363,11 @@ function lookupPromo(codeRaw, scope){
   if(!code) return null;
   var def = PROMO_CODES[code];
   if(!def) return { error:"bad" };
-  if(def.scope !== "any" && def.scope !== scope) return { error:"scope" };
+  /* a plan code works on every plan, including the family ones; a family
+     code works only where there are places to share */
+  if(def.scope === "any") return { code:code, pct:def.pct };
+  if(def.scope === "plan" && (scope === "plan" || scope === "family")) return { code:code, pct:def.pct };
+  if(def.scope !== scope) return { error:"scope" };
   return { code:code, pct:def.pct };
 }
 /* --- Payment modal: subscription plans only, plus a clearly separate bonus card --- */
@@ -3999,7 +4415,7 @@ function renderPlanOptions(){
     });
     card.querySelector(".apply-promo-btn").addEventListener("click", function(e){
       e.stopPropagation();
-      var res = lookupPromo(card.querySelector(".promo-input").value, "plan");
+      var res = lookupPromo(card.querySelector(".promo-input").value, PLAN_DEFS[key].seats ? "family" : "plan");
       if(!res){ planPromo[key] = null; }
       else if(res.error === "bad"){ planPromo[key] = null; status.textContent = t("pay.promobad"); }
       else if(res.error === "scope"){ planPromo[key] = null; status.textContent = t("pay.promowrongscope"); }
@@ -4039,7 +4455,7 @@ function goToStripe(key, errEl){
   var sep = link.indexOf("?") === -1 ? "?" : "&";
   window.location.href = link + sep +
     "prefilled_email=" + encodeURIComponent(STATE.auth.email || "") +
-    "&client_reference_id=" + encodeURIComponent(STATE.profile.id);
+    "&client_reference_id=" + encodeURIComponent(key + ":" + STATE.profile.id);
   return true;
 }
 async function grantProduct(key, amount){
@@ -4203,13 +4619,29 @@ function exerciseCardHTML(ex, locked){
     '<div class="exercise-meta"><span>⏱ ' + t("ex.about", { n: ex.work }) + '</span><span>🪑 ' + L(EQUIP[ex.equip] || EQUIP.none) + '</span></div>';
   if(!locked){
     html += '<p class="desc-line">' + focusDescription(ex) + '</p>' +
-      '<div class="demo-wrap">' + demoSVG(ex.demo) + '</div>' +
+      '<div class="demo-wrap" data-demo-key="' + ex.demo + '"></div>' +
       '<p>' + L(ex.instr) + '</p>' +
       '<div class="tip"><strong>' + t("ex.tip") + ':</strong> ' + L(ex.tip) + '</div>' +
       '<a class="video-link" href="' + videoUrl(ex) + '" target="_blank" rel="noopener">' + t("ex.watchvideo") + '</a>' +
       '<button class="btn btn-secondary btn-sm" type="button" data-say="' + ex.id + '" style="margin-top:.5rem;align-self:flex-start">' + t("readaloud") + '</button>';
   }
   return html;
+}
+/* Whatever the library is showing right now — same filter, same search. */
+function currentLibraryIds(){
+  var unlocked = extrasActive();
+  return exerciseIds().filter(function(id){
+    var ex = EXERCISES[id];
+    if(!ex) return false;
+    if(ex.pro && !unlocked) return false;
+    if(libFilter === "extras"){ if(!ex.pro) return false; }
+    else if(libFilter !== "all" && ex.cat !== libFilter) return false;
+    if(libQuery){
+      var hay = (L(ex.name) + " " + L(ex.instr)).toLowerCase();
+      if(hay.indexOf(libQuery) === -1) return false;
+    }
+    return true;
+  });
 }
 function renderLibrary(){
   var grid = document.getElementById("exerciseGrid");
@@ -4247,6 +4679,7 @@ function renderLibrary(){
     grid.appendChild(card);
     shown++;
   });
+  watchDemos(grid);
   grid.querySelectorAll("[data-say]").forEach(function(b){
     b.addEventListener("click", function(){
       var ex = EXERCISES[b.getAttribute("data-say")];
@@ -4299,13 +4732,14 @@ function renderGG(){
       '<span class="cat-label">' + t("gg." + a.type) + '</span>' +
       '<h3>' + L(a.n) + '</h3>' +
       '<div class="exercise-meta"><span>⏱ ' + t("ex.about", { n: a.work }) + '</span><span>👧 ' + t("gg.ages") + ' ' + a.ages + '</span></div>' +
-      '<div class="demo-wrap">' + demoSVG(a.demo) + '</div>' +
+      '<div class="demo-wrap" data-demo-key="' + a.demo + '"></div>' +
       '<p><span class="badge-pill">' + t("gg.grownup") + '</span> ' + L(a.g) + '</p>' +
       '<p><span class="badge-pill gg">' + t("gg.child") + '</span> ' + L(a.c) + '</p>' +
       '<div class="tip"><strong>' + t("gg.safety") + ':</strong> ' + L(a.s) + '</div>' +
       '<a class="video-link" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(a.video) + '" target="_blank" rel="noopener">' + t("ex.watchvideo") + '</a>';
     grid.appendChild(card);
   });
+  watchDemos(grid);
 }
 document.querySelectorAll(".gg-chip").forEach(function(chip){
   chip.addEventListener("click", function(){
@@ -4416,18 +4850,75 @@ function speechLang(){ return { en:"en-US", pt:"pt-PT", es:"es-ES", fr:"fr-FR" }
 var appIsSpeaking = false, speakingUntil = 0;
 function markSpeaking(u){
   appIsSpeaking = true;
-  speakingUntil = Date.now() + 6000;
+  speakingUntil = Date.now() + 8000;
   u.onend = u.onerror = function(){ appIsSpeaking = false; speakingUntil = 0; };
 }
-function speak(text){
-  if(!STATE.settings.voice || !("speechSynthesis" in window)) return;
+/* --- The voice that guides you -----------------------------------------
+   Three things were wrong before: every new line cut off the one before it,
+   the browser picked whatever voice it liked, and the pace was the same for
+   everyone. Now: short lines queue instead of interrupting, the best voice
+   installed for the chosen language is used, and the speed is yours. */
+var chosenVoice = null, voiceHunted = false;
+function bestVoice(){
+  if(!("speechSynthesis" in window)) return null;
+  var want = speechLang(), base = want.split("-")[0];
+  var all = [];
+  try{ all = window.speechSynthesis.getVoices() || []; }catch(e){ return null; }
+  if(!all.length) return null;
+  var exact = all.filter(function(v){ return v.lang && v.lang.replace("_","-").toLowerCase() === want.toLowerCase(); });
+  var same  = all.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(base) === 0; });
+  var pool = exact.length ? exact : same;
+  if(!pool.length) return null;
+  /* a voice that lives on the device keeps working with no internet */
+  var local = pool.filter(function(v){ return v.localService; });
+  if(local.length) pool = local;
+  var nice = pool.filter(function(v){ return !/compact|espeak|robot/i.test(v.name || ""); });
+  return (nice[0] || pool[0]);
+}
+function refreshVoice(){ chosenVoice = bestVoice(); return chosenVoice; }
+if("speechSynthesis" in window){
+  try{ window.speechSynthesis.onvoiceschanged = function(){ chosenVoice = null; voiceHunted = false; }; }catch(e){}
+}
+function voiceRate(){
+  var r = STATE.settings.voiceRate;
+  return (typeof r === "number" && r >= 0.6 && r <= 1.3) ? r : 0.9;
+}
+function utterFor(text, rate){
+  var u = new SpeechSynthesisUtterance(text);
+  if(!voiceHunted || !chosenVoice){ refreshVoice(); voiceHunted = true; }
+  if(chosenVoice){ u.voice = chosenVoice; u.lang = chosenVoice.lang; }
+  else u.lang = speechLang();
+  u.rate = rate || voiceRate();
+  u.pitch = 1;
+  u.volume = 1;
+  return u;
+}
+/* urgent = the countdown, which must never arrive late */
+function say(text, urgent){
+  if(!("speechSynthesis" in window) || !text) return;
   try{
-    window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95; u.lang = speechLang();
+    if(urgent) window.speechSynthesis.cancel();
+    var u = utterFor(text, urgent ? Math.min(1.05, voiceRate() + 0.1) : null);
     markSpeaking(u);
     window.speechSynthesis.speak(u);
   }catch(e){}
+}
+function speak(text, urgent){
+  showCue(text);
+  if(!STATE.settings.voice) return;
+  say(text, urgent);
+}
+/* How much company somebody wants: nothing, just the names, or a coach. */
+function coachLevel(){
+  if(!STATE.settings.voice) return "off";
+  return STATE.settings.coach || "full";
+}
+var lastEncourage = -1;
+function encouragement(){
+  var n = 5, pick = Math.floor(Math.random() * n);
+  if(pick === lastEncourage) pick = (pick + 1) % n;
+  lastEncourage = pick;
+  return t("coach.enc" + (pick + 1));
 }
 function readAloud(text){
   if(!("speechSynthesis" in window)) return;
@@ -4601,22 +5092,42 @@ function startPhase(newPhase){
   phaseTotal = phase === "work" ? adjustedWork(ex) : REST_SEC;
   secondsLeft = phaseTotal;
   updateRing();
-  if(phase === "work"){ loadExercise(); speak(L(ex.name) + ". " + L(ex.instr)); }
-  else {
+  if(phase === "work"){
+    loadExercise();
+    var lvl = coachLevel();
+    if(lvl === "names") speak(L(ex.name), true);
+    else if(lvl === "full"){
+      speak(t("coach.now", { name: L(ex.name), n: currentIndex + 1, total: sequence.length }), true);
+      speak(L(ex.instr));
+      if(ex.seated) speak(t("coach.seatedok"));
+    }
+  } else {
     var nextEx = EXERCISES[sequence[currentIndex + 1]];
     document.getElementById("exerciseInstructions").textContent = nextEx ? t("session.restnext", { name: L(nextEx.name) }) : t("session.restlast");
-    speak(t("session.rest"));
+    if(coachLevel() === "full"){
+      speak(t("coach.restnow"), true);
+      speak(nextEx ? t("session.restnext", { name: L(nextEx.name) }) : t("session.restlast"));
+    } else if(coachLevel() === "names") speak(t("session.rest"), true);
   }
 }
 function tick(){
   secondsLeft--;
   if(secondsLeft < 0){ advance(); return; }
   /* Spoken cues for anyone who cannot read the timer from across the room. */
-  if(STATE.settings.voice && phase === "work"){
-    if(secondsLeft === Math.floor(phaseTotal / 2) && phaseTotal >= 30) speak(t("count.half"));
-    if(secondsLeft === 3 || secondsLeft === 2 || secondsLeft === 1) speak(String(secondsLeft));
-    if(secondsLeft === 0) speak(t("count.done"));
+  var lvl = coachLevel();
+  if(lvl !== "off" && phase === "work"){
+    var ex2 = EXERCISES[sequence[currentIndex]];
+    var half = Math.floor(phaseTotal / 2);
+    if(secondsLeft === half && phaseTotal >= 30){
+      speak(t("count.half"));
+      if(lvl === "full" && ex2 && ex2.tip) speak(L(ex2.tip));
+    }
+    if(lvl === "full" && phaseTotal >= 40 && secondsLeft === Math.floor(phaseTotal * 0.75)) speak(t("coach.breathe"));
+    if(lvl === "full" && phaseTotal >= 25 && secondsLeft === 8) speak(encouragement());
+    if(secondsLeft === 3 || secondsLeft === 2 || secondsLeft === 1) speak(String(secondsLeft), true);
+    if(secondsLeft === 0) speak(t("count.done"), true);
   }
+  if(lvl === "full" && phase === "rest" && secondsLeft === 3) speak(t("coach.getready"), true);
   updateRing();
 }
 function advance(){
@@ -4717,6 +5228,7 @@ function startSequenceSession(seq, minutesLabel){
   playerEl.classList.add("active");
   document.getElementById("pauseBtn").textContent = t("session.pause");
   document.getElementById("session").scrollIntoView({ behavior: STATE.settings.reduceMotion ? "auto" : "smooth" });
+  hideCue();
   keepAwake(true);
   startVoiceCommands();
   runCountdown(function(){
@@ -4729,12 +5241,18 @@ function finishSession(){
   clearInterval(timerId);
   keepAwake(false);
   stopVoiceCommands();
+  hideCue();
+  renderTodayButton();
   document.getElementById("howThanks").textContent = "";
   STATE.openSession = null; saveState();
   playerEl.classList.remove("active");
   completeEl.classList.add("active");
   document.getElementById("completeSummary").textContent = t("session.summary", { min: activeSessionLength || "", n: sequence.length });
-  speak(t("session.done"));
+  if(coachLevel() === "full"){
+    speak(t("session.done"), true);
+    speak(t("session.summary", { min: activeSessionLength || "", n: sequence.length }));
+    speak(t("coach.water"));
+  } else speak(t("session.done"), true);
   logWorkoutCompletion(activeSessionLength, chosenFocus);
 }
 beginBtn.addEventListener("click", function(){
@@ -4913,11 +5431,12 @@ async function refreshFriendStats(){
     var f = STATE.friends[i];
     var pub = await Store.getJSON("public:" + f.id, null);
     if(pub){
-      if(pub.sessions !== f.sessions || pub.streak !== f.streak || pub.name !== f.name || pub.total !== f.total){
+      if(pub.sessions !== f.sessions || pub.streak !== f.streak || pub.name !== f.name || pub.total !== f.total || pub.photo !== f.photo){
         f.sessions = pub.sessions || 0; f.streak = pub.streak || 0;
         f.total = pub.total || 0; f.avgWeek = pub.avgWeek || 0; f.minutes = pub.minutes || 0;
         f.updated = pub.updated || f.updated;
         if(pub.name) f.name = pub.name;   /* the nickname you gave stays put */
+        if(pub.photo !== undefined) f.photo = pub.photo;
         changed = true;
       }
     }
@@ -5227,14 +5746,86 @@ document.getElementById("dayModalStartBtn").addEventListener("click", function()
 function initials(n){ return (n || "?").trim().charAt(0).toUpperCase(); }
 /* The name you gave them wins over the name they chose for themselves. */
 function displayName(f){ return (f && (f.nick || f.name)) || ""; }
+/* --- A face instead of a letter ----------------------------------------
+   A photograph of themselves, a grandchild, a dog — whatever they like. It
+   is shrunk to 160 pixels and stored as a small picture inside their own
+   account, never uploaded anywhere else unless friends are being shared, and
+   it can be removed at any moment. */
+var PHOTO_MAX = 160;
+function paintAvatar(el, photo, letter, id){
+  if(!el) return;
+  if(photo){
+    el.style.backgroundImage = "url(" + photo + ")";
+    el.classList.add("has-photo");
+    el.textContent = letter || "";
+  } else {
+    el.style.backgroundImage = "";
+    el.classList.remove("has-photo");
+    el.textContent = letter || "";
+    el.style.background = colorFor(id || "");
+  }
+}
+function avatarStyle(photo, id){
+  return photo
+    ? 'background-image:url(' + photo + ');background-size:cover;background-position:center'
+    : 'background:' + colorFor(id);
+}
+function shrinkPhoto(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onerror = function(){ reject(new Error("read")); };
+    reader.onload = function(){
+      var img = new Image();
+      img.onerror = function(){ reject(new Error("decode")); };
+      img.onload = function(){
+        try{
+          var side = Math.min(img.width, img.height);          /* square, centred */
+          var sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+          var c = document.createElement("canvas");
+          c.width = PHOTO_MAX; c.height = PHOTO_MAX;
+          var ctx = c.getContext("2d");
+          ctx.drawImage(img, sx, sy, side, side, 0, 0, PHOTO_MAX, PHOTO_MAX);
+          resolve(c.toDataURL("image/jpeg", 0.75));
+        }catch(e){ reject(e); }
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+document.getElementById("photoBtn").addEventListener("click", function(){ document.getElementById("photoFile").click(); });
+document.getElementById("photoFile").addEventListener("change", async function(e){
+  var file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  var st = document.getElementById("photoStatus");
+  if(!file) return;
+  if(!/^image\//.test(file.type)){ st.textContent = t("photo.notimage"); return; }
+  st.textContent = t("photo.working");
+  try{
+    var data = await shrinkPhoto(file);
+    STATE.profile.photo = data;
+    saveState();
+    if(STATE.auth.loggedIn) await saveAccount();
+    renderProfileChrome();
+    renderQR();
+    st.textContent = t("photo.done");
+  }catch(err){ st.textContent = t("photo.failed"); }
+});
+document.getElementById("photoRemoveBtn").addEventListener("click", async function(){
+  STATE.profile.photo = null;
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  renderProfileChrome();
+  document.getElementById("photoStatus").textContent = t("photo.removed");
+});
 function renderProfileChrome(){
   var pa = document.getElementById("pillAvatar");
-  pa.textContent = initials(STATE.profile.name);
-  pa.style.background = colorFor(STATE.profile.id);
+  paintAvatar(pa, STATE.profile.photo, initials(STATE.profile.name), STATE.profile.id);
   document.getElementById("pillName").textContent = STATE.profile.name;
   var la = document.getElementById("profileAvatarLg");
-  la.textContent = initials(STATE.profile.name);
-  la.style.background = colorFor(STATE.profile.id);
+  paintAvatar(la, STATE.profile.photo, initials(STATE.profile.name), STATE.profile.id);
+  var rm = document.getElementById("photoRemoveBtn");
+  if(rm) rm.style.display = STATE.profile.photo ? "inline-flex" : "none";
   document.getElementById("usernameInput").value = STATE.profile.name;
   document.getElementById("myIdTag").textContent = STATE.profile.id;
   document.getElementById("authBtn").textContent = STATE.auth.loggedIn ? t("settings.signout") : t("settings.signin");
@@ -5353,6 +5944,7 @@ function renderFriendsView(){
   var howto = document.getElementById("friendsHowto");
   if(howto) howto.textContent = Store.isNative ? t("friends.howtoshared") : t("friends.howtolocal");
   renderMyFriends();
+  renderCarerPanel();
   pollRequests();
   checkIncomingLinks().then(function(changed){ if(changed) renderMyFriends(); });
 }
@@ -5373,7 +5965,7 @@ function renderMyFriends(){
     var card = document.createElement("div");
     card.className = "friend-card";
     card.innerHTML =
-      '<span class="avatar-sm" style="background:' + colorFor(f.id) + '">' + initials(displayName(f)) + '</span>' +
+      '<span class="avatar-sm' + (f.photo ? ' has-photo' : '') + '" style="' + avatarStyle(f.photo, f.id) + '">' + initials(displayName(f)) + '</span>' +
       '<div class="friend-info"><h3>' + displayName(f) + (f.nick ? ' <span style="font-weight:400;color:var(--ink-soft);font-size:.85rem">(' + f.name + ')</span>' : '') + '</h3>' +
       '<div class="friend-meta"><span>🔥 ' + (f.streak || 0) + '</span><span>📅 ' + (f.sessions || 0) + '</span><span class="id-tag">' + f.id + '</span>' +
       (staleDays(f) >= 5 ? '<span class="stale-badge">' + staleDays(f) + ' d</span>' : '') + '</div>' +
@@ -5440,7 +6032,7 @@ async function addFriendById(rawId, msgEl){
   var pub = await Store.getJSON("public:" + id, null);
   var name = (dir && dir.name) || (pub && pub.name) || ("Friend " + id);
   STATE.friends.push({
-    id:id, name:name, streak:(pub && pub.streak) || 0, sessions:(pub && pub.sessions) || 0,
+    id:id, name:name, photo:(dir && dir.photo) || (pub && pub.photo) || null, streak:(pub && pub.streak) || 0, sessions:(pub && pub.sessions) || 0,
     total:(pub && pub.total) || 0, avgWeek:(pub && pub.avgWeek) || 0, minutes:(pub && pub.minutes) || 0,
     pending: !(dir || pub), addedAt: Date.now()
   });
@@ -5456,6 +6048,21 @@ async function addFriendById(rawId, msgEl){
   maybeRewardReferral(id);
   return true;
 }
+document.getElementById("carerSaveBtn").addEventListener("click", async function(){
+  var id = document.getElementById("carerSelect").value;
+  STATE.carer = id ? { id: id, since: Date.now(), lastWeek: null, alertQuiet: true } : null;
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  renderCarerPanel();
+});
+document.getElementById("carerSendBtn").addEventListener("click", async function(){
+  var txt = carerText();
+  var sent = await sendCarerNote(true);
+  if(navigator.share) navigator.share({ text: txt });
+  else if(navigator.clipboard){ navigator.clipboard.writeText(txt); }
+  document.getElementById("carerStatus").textContent = sent ? t("carer.sent") : t("carer.copied");
+  renderCarerInbox();
+});
 document.getElementById("addByIdBtn").addEventListener("click", async function(){
   var input = document.getElementById("addIdInput");
   var ok = await addFriendById(input.value, document.getElementById("addIdMsg"));
@@ -5469,6 +6076,112 @@ function renderFriendsNote(){
   if(!el) return;
   if(CLOUD.base) el.textContent = CLOUD.checked && !CLOUD.live ? t("friends.cloudfail") : t("friends.cloudnote");
   else el.textContent = Store.isNative ? t("friends.sharednote") : t("friends.localnote");
+}
+/* --- Someone keeping an eye out ---------------------------------------
+   The person who pays for this is often a son or daughter, and what they
+   want to know is simply "is Mum still going?". So: one chosen friend, one
+   short note a week, with the person's own consent and nothing more than
+   numbers. It travels through the same shared list as everything else, and
+   can also be sent by message to somebody who does not use the app. */
+function weekKey(d){
+  d = d || new Date();
+  var day = (d.getDay() + 6) % 7;               /* Monday = 0 */
+  var monday = new Date(d); monday.setDate(d.getDate() - day);
+  return dateStr(monday);
+}
+function weeklyNumbers(){
+  var since = Date.now() - 7 * 86400000;
+  var recent = (STATE.sessionLog || []).filter(function(x){ return (x.ts || 0) >= since; });
+  var minutes = recent.reduce(function(a, x){ return a + (x.minutes || 0); }, 0);
+  var steps = 0, i;
+  for(i = 0; i < 7; i++){
+    var d = new Date(); d.setDate(d.getDate() - i);
+    steps += (STATE.steps.byDate && STATE.steps.byDate[dateStr(d)]) || 0;
+  }
+  return { sessions: recent.length, minutes: minutes, streak: computeStreakGraceful(), steps: steps,
+           lastGap: daysSinceLastSession() };
+}
+function daysSinceLastSession(){
+  var last = 0;
+  (STATE.sessionLog || []).forEach(function(x){ if((x.ts || 0) > last) last = x.ts; });
+  if(!last) return null;
+  return Math.floor((Date.now() - last) / 86400000);
+}
+function carerText(){
+  var n = weeklyNumbers();
+  return t("carer.msg", { name: STATE.profile.name, s: n.sessions, m: n.minutes, d: n.streak, steps: n.steps });
+}
+function renderCarerPanel(){
+  var sel = document.getElementById("carerSelect");
+  if(!sel) return;
+  sel.innerHTML = '<option value="">' + t("carer.nobody") + '</option>';
+  STATE.friends.forEach(function(f){
+    var o = document.createElement("option");
+    o.value = f.id; o.textContent = displayName(f);
+    if(STATE.carer && STATE.carer.id === f.id) o.selected = true;
+    sel.appendChild(o);
+  });
+  var st = document.getElementById("carerStatus");
+  if(STATE.carer && STATE.carer.id){
+    var f2 = STATE.friends.filter(function(x){ return x.id === STATE.carer.id; })[0];
+    st.textContent = t("carer.on", { name: f2 ? displayName(f2) : STATE.carer.id });
+  } else st.textContent = t("carer.off");
+  renderCarerInbox();
+}
+async function renderCarerInbox(){
+  var box = document.getElementById("carerInbox");
+  if(!box) return;
+  var notes = await Store.getJSON("carer:" + STATE.profile.id, []);
+  notes = (notes || []).slice(-4).reverse();
+  if(!notes.length){ box.innerHTML = ""; return; }
+  box.innerHTML = '<h3 style="font-size:1.05rem">' + t("carer.inbox") + '</h3>' +
+    notes.map(function(n){
+      return '<div class="note-box" style="margin-bottom:.6rem">' + n.text +
+        '<br><span style="color:var(--ink-soft);font-size:.85rem">' + new Date(n.ts).toLocaleDateString() + '</span></div>';
+    }).join("");
+}
+async function sendCarerNote(force){
+  if(!STATE.carer || !STATE.carer.id) return false;
+  var wk = weekKey();
+  if(!force && STATE.carer.lastWeek === wk) return false;
+  var list = await Store.getJSON("carer:" + STATE.carer.id, []);
+  list.push({ from: STATE.profile.id, text: carerText(), ts: Date.now(), week: wk });
+  if(list.length > 12) list = list.slice(-12);
+  await Store.setJSON("carer:" + STATE.carer.id, list);
+  STATE.carer.lastWeek = wk;
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  return true;
+}
+/* Sunday evening, or the first time the app opens after it. */
+function maybeWeeklyNote(){
+  if(!STATE.carer || !STATE.carer.id) return;
+  if(STATE.carer.lastWeek === weekKey()) return;
+  var day = (new Date().getDay() + 6) % 7;
+  if(day < 5) return;                            /* Saturday onwards */
+  sendCarerNote(false);
+}
+/* Five days without a session: a gentle word, and — only if they asked for
+   it — a note to the person keeping an eye out. */
+function checkQuietSpell(){
+  var gap = daysSinceLastSession();
+  if(gap === null || gap < 5) return;
+  var today = dateStr();
+  if(STATE.quietNudge === today) return;
+  STATE.quietNudge = today;
+  saveState();
+  var el = showUndoToast(t("quiet.msg", { n: gap }), function(){});
+  if(!el) return;
+  el.querySelector("button").textContent = t("common.close");
+  var go = document.createElement("button");
+  go.type = "button"; go.textContent = t("quiet.threemin"); go.style.marginLeft = ".4rem";
+  go.addEventListener("click", function(){
+    if(el.parentNode) el.parentNode.removeChild(el);
+    var btn = document.getElementById("easyDayBtn");
+    if(btn) btn.click(); else showView("home");
+  });
+  el.appendChild(go);
+  if(STATE.carer && STATE.carer.id && STATE.carer.alertQuiet) sendCarerNote(true);
 }
 /* Requests really arrive: the inbox is polled while the page is open, the
    Requests tab shows how many are waiting, and a new one raises a message. */
@@ -5541,7 +6254,7 @@ async function renderRequests(){
   reqs.forEach(function(r){
     var row = document.createElement("div");
     row.className = "friend-card";
-    row.innerHTML = '<span class="avatar-sm" style="background:' + colorFor(r.id) + '">' + initials(r.name) + '</span>' +
+    row.innerHTML = '<span class="avatar-sm' + (r.photo ? ' has-photo' : '') + '" style="' + avatarStyle(r.photo, r.id) + '">' + initials(r.name) + '</span>' +
       '<div class="friend-info"><h3>' + r.name + '</h3><div class="friend-meta"><span class="id-tag">' + r.id + '</span></div>' +
       '<div class="friend-actions"><button class="btn btn-teal btn-sm" data-acc="' + r.id + '">' + t("friends.accept") + '</button>' +
       '<button class="btn btn-secondary btn-sm" data-dec="' + r.id + '">' + t("friends.decline") + '</button></div></div>';
@@ -5727,7 +6440,7 @@ function openFriendProfile(id){
   if(!f) return;
   fpCurrentId = id;
   var av = document.getElementById("fpAvatar");
-  av.textContent = initials(displayName(f)); av.style.background = colorFor(f.id);
+  paintAvatar(av, f.photo, initials(displayName(f)), f.id);
   document.getElementById("fpName").textContent = displayName(f);
   document.getElementById("fpRealName").textContent = f.nick ? t("nick.realname", { n: f.name }) : "";
   document.getElementById("fpNick").value = f.nick || "";
@@ -7112,6 +7825,23 @@ function renderSteps(){
   document.getElementById("stepStatus").textContent = status;
   document.getElementById("stepAutoBtn").style.display = stepAutoActive ? "none" : "inline-flex";
   document.getElementById("stepAutoStopBtn").style.display = stepAutoActive ? "inline-flex" : "none";
+  var wk = document.getElementById("stepWeek");
+  if(wk){
+    var days = [], i, max = 1;
+    for(i = 6; i >= 0; i--){
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var key = dateStr(d);
+      var v = (STATE.steps.byDate && STATE.steps.byDate[key]) || 0;
+      if(v > max) max = v;
+      days.push({ key: key, v: v, label: d.toLocaleDateString([], { weekday:"short" }).slice(0,2) });
+    }
+    wk.innerHTML = days.map(function(d){
+      var h = Math.max(4, Math.round((d.v / max) * 46));
+      return '<div style="flex:1;text-align:center">' +
+        '<div title="' + d.v + '" style="height:' + h + 'px;background:var(--teal);border-radius:4px 4px 0 0"></div>' +
+        '<span style="font-size:.7rem;color:var(--ink-soft)">' + d.label + '</span></div>';
+    }).join("");
+  }
 }
 document.getElementById("stepGoalInput").addEventListener("change", function(e){
   var v = parseInt(e.target.value, 10);
@@ -7121,40 +7851,111 @@ document.getElementById("stepGoalInput").addEventListener("change", function(e){
   if(STATE.auth.loggedIn) saveAccount();
   renderSteps();
 });
-/* Peak detection over a smoothed magnitude signal: this counts real walking
-   steps from the phone's accelerometer while the page is open, so nothing has
-   to be typed in by hand. */
+/* --- Counting steps ------------------------------------------------------
+   The first version compared each reading with its neighbours and called the
+   biggest one a step, which counted car journeys and hand-waving alike.
+   This one does what a pedometer does: it separates gravity from real
+   movement, watches the size of that movement against a threshold that
+   follows the last two seconds, and only accepts a step when the signal has
+   fallen back down in between and at least a quarter of a second has passed.
+   Everything is worked out on the phone and written to the phone, so it
+   carries on with no internet at all. */
+var gravX = 0, gravY = 0, gravZ = 0, gravReady = false, gravLastTs = 0;
+var accWindow = [], stepArmed = true, stepStreak = 0, stepLastGap = 0, lastMotionAt = 0, walkStartedAt = 0;
+var stepTickTimer = null;
+function nowMs(){ return Date.now(); }
+function pushSample(v, ts){
+  accWindow.push({ v: v, ts: ts });
+  while(accWindow.length && ts - accWindow[0].ts > 2000) accWindow.shift();
+}
+function windowStats(){
+  var n = accWindow.length;
+  if(n < 8) return null;
+  var sum = 0, i;
+  for(i = 0; i < n; i++) sum += accWindow[i].v;
+  var mean = sum / n, varSum = 0;
+  for(i = 0; i < n; i++){ var d = accWindow[i].v - mean; varSum += d * d; }
+  return { mean: mean, sd: Math.sqrt(varSum / n), n: n };
+}
+function handleMotion(e){
+  var a = e.accelerationIncludingGravity || e.acceleration;
+  if(!a || a.x === null || a.x === undefined) return;
+  var ts = nowMs();
+  lastMotionAt = ts;
+  /* Gravity is the part that barely changes. The smoothing has to be slow —
+     about a second — or it follows the step itself and cancels it out, which
+     is exactly what made slow, gentle walking count as nothing. It is worked
+     out from the real gap between readings, because phones deliver these at
+     anything from 16 to 60 times a second. */
+  var dt = gravLastTs ? Math.min(200, Math.max(5, ts - gravLastTs)) : 20;
+  gravLastTs = ts;
+  var k = Math.exp(-dt / 900);
+  if(!gravReady){ gravX = a.x || 0; gravY = a.y || 0; gravZ = a.z || 0; gravReady = true; }
+  gravX = k * gravX + (1 - k) * (a.x || 0);
+  gravY = k * gravY + (1 - k) * (a.y || 0);
+  gravZ = k * gravZ + (1 - k) * (a.z || 0);
+  var lx = (a.x || 0) - gravX, ly = (a.y || 0) - gravY, lz = (a.z || 0) - gravZ;
+  var mag = Math.sqrt(lx*lx + ly*ly + lz*lz);
+  pushSample(mag, ts);
+  var st = windowStats();
+  if(!st) return;
+  /* walking shows up as a swing of roughly 0.6 to 6 m/s2; a threshold that
+     follows the recent movement copes with a phone in a pocket, in a hand or
+     on a walking frame */
+  var thresholdUp = st.mean + Math.max(0.22, st.sd * 0.8);
+  var thresholdDown = st.mean + Math.max(0.10, st.sd * 0.3);
+  var gap = ts - stepLastStepTs;
+  if(stepArmed && mag > thresholdUp && st.sd > 0.10 && mag < 25){
+    if(gap > 300 && gap < 2200){
+      /* Walking has a rhythm. A step whose gap looks nothing like the one
+         before it is treated as the start of a new rhythm, not a step — this
+         is what keeps a bumpy bus ride or a hand rummaging in a bag from
+         filling the counter. */
+      var steady = stepLastGap && gap > stepLastGap * 0.55 && gap < stepLastGap * 1.75;
+      if(steady) stepStreak++;
+      else stepStreak = 1;
+      /* three in rhythm before we believe it; then the held two are paid back */
+      if(stepStreak > 3) addSteps(1);
+      else if(stepStreak === 3) addSteps(3);
+      stepLastGap = gap;
+      stepLastStepTs = ts;
+      stepArmed = false;
+    } else if(gap >= 2200){
+      stepStreak = 1; stepLastGap = 0; stepLastStepTs = ts; stepArmed = false;
+    }
+  } else if(!stepArmed && mag < thresholdDown){
+    stepArmed = true;
+  }
+  if(gap > 3000){ stepStreak = 0; stepLastGap = 0; }
+}
+function persistSteps(){
+  saveState();
+  if(STATE.auth.loggedIn) saveAccount();
+}
 function startStepAuto(){
   if(!hasMotionSensor()){ renderSteps(); return; }
   function beginListening(){
-    stepBuf = [];
-    stepMotionHandler = function(e){
-      var a = e.accelerationIncludingGravity || e.acceleration;
-      if(!a) return;
-      var mag = Math.sqrt((a.x||0)*(a.x||0) + (a.y||0)*(a.y||0) + (a.z||0)*(a.z||0));
-      stepBuf.push(mag);
-      if(stepBuf.length > 12) stepBuf.shift();
-      if(stepBuf.length < 12) return;
-      var mean = stepBuf.reduce(function(x,y){ return x+y; }, 0) / stepBuf.length;
-      var variance = stepBuf.reduce(function(acc,v){ return acc + (v-mean)*(v-mean); }, 0) / stepBuf.length;
-      var sd = Math.sqrt(variance);
-      var mid = stepBuf[6];
-      var isPeak = mid === Math.max.apply(null, stepBuf);
-      var now = Date.now();
-      /* A step is a local peak that stands clearly above the recent average,
-         with at least 300 ms since the last one (max ~200 steps/minute). */
-      if(isPeak && sd > 0.8 && mid > mean + sd * 0.9 && (now - stepLastStepTs) > 300){
-        stepLastStepTs = now;
-        addSteps(1);
-      }
-    };
+    accWindow = []; gravReady = false; gravLastTs = 0; stepArmed = true; stepStreak = 0; stepLastGap = 0;
+    stepMotionHandler = handleMotion;
     window.addEventListener("devicemotion", stepMotionHandler);
     stepAutoActive = true;
+    walkStartedAt = nowMs();
+    STATE.steps.auto = true;
+    STATE.steps.lastSeen = nowMs();
+    saveState();
+    clearInterval(stepTickTimer);
+    /* a heartbeat, so that after a phone lock we know exactly how long the
+       counter was blind and can say so instead of inventing numbers */
+    stepTickTimer = setInterval(function(){
+      STATE.steps.lastSeen = nowMs();
+      saveState();
+      if(stepAutoActive && lastMotionAt && nowMs() - lastMotionAt > 20000) renderSteps();
+    }, 5000);
     renderSteps();
   }
-  if(typeof DeviceMotionEvent.requestPermission === "function"){
+  if(typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function"){
     DeviceMotionEvent.requestPermission().then(function(res){
-      if(res === "granted") beginListening();
+      if(res === "granted"){ STATE.steps.iosOk = true; saveState(); beginListening(); }
       else document.getElementById("stepStatus").textContent = t("steps.permission");
     }).catch(function(){ document.getElementById("stepStatus").textContent = t("steps.permission"); });
   } else {
@@ -7165,18 +7966,241 @@ function stopStepAuto(){
   if(stepMotionHandler) window.removeEventListener("devicemotion", stepMotionHandler);
   stepMotionHandler = null;
   stepAutoActive = false;
-  saveState();
+  STATE.steps.auto = false;
+  clearInterval(stepTickTimer);
+  keepAwake(false);
+  document.body.classList.remove("walk-mode");
+  persistSteps();
   renderSteps();
 }
 document.getElementById("stepAutoBtn").addEventListener("click", startStepAuto);
 document.getElementById("stepAutoStopBtn").addEventListener("click", stopStepAuto);
-/* On a phone with no permission prompt needed, start counting by itself. */
+/* Walk mode: the honest answer to "count with the app closed". No browser
+   hands the pedometer to a page that is not running — so instead we keep the
+   page running, on a nearly black screen that costs almost nothing, and the
+   phone can go in a pocket. */
+function startWalkMode(){
+  if(!stepAutoActive) startStepAuto();
+  keepAwake(true);
+  document.body.classList.add("walk-mode");
+  document.getElementById("walkOverlay").classList.add("on");
+  renderWalk();
+}
+function stopWalkMode(){
+  keepAwake(false);
+  document.body.classList.remove("walk-mode");
+  document.getElementById("walkOverlay").classList.remove("on");
+  persistSteps();
+  renderSteps();
+}
+function renderWalk(){
+  var n = document.getElementById("walkSteps");
+  if(n) n.textContent = todaySteps();
+  var m = document.getElementById("walkMinutes");
+  if(m && walkStartedAt) m.textContent = t("steps.walkmin", { n: Math.max(0, Math.round((nowMs() - walkStartedAt) / 60000)) });
+}
+setInterval(function(){ if(document.getElementById("walkOverlay").classList.contains("on")) renderWalk(); }, 2000);
+document.getElementById("walkStartBtn").addEventListener("click", startWalkMode);
+document.getElementById("walkStopBtn").addEventListener("click", stopWalkMode);
+/* Steps taken while the phone was locked cannot be recovered, but the gap can
+   at least be shown, and filled in by hand if the person wants to. */
+function checkStepGap(){
+  if(!STATE.steps.auto || !STATE.steps.lastSeen) return;
+  var gapMin = Math.round((nowMs() - STATE.steps.lastSeen) / 60000);
+  if(gapMin < 6) return;
+  var el = showUndoToast(t("steps.gap", { n: gapMin }), function(){});
+  if(!el) return;
+  el.querySelector("button").textContent = t("common.close");
+  var add = document.createElement("button");
+  add.type = "button"; add.textContent = t("steps.gapadd"); add.style.marginLeft = ".4rem";
+  add.addEventListener("click", function(){
+    var mins = prompt(t("steps.gapask"), String(Math.min(gapMin, 30)));
+    var v = parseInt(mins, 10);
+    if(v > 0){
+      addSteps(Math.round(v * 100));            /* a gentle 100 steps a minute */
+      STATE.steps.manualToday = (STATE.steps.manualToday || 0) + Math.round(v * 100);
+      persistSteps();
+    }
+    if(el.parentNode) el.parentNode.removeChild(el);
+  });
+  el.appendChild(add);
+}
+/* Never lose what was counted, even if the page is closed mid-walk. */
+["pagehide","beforeunload","blur"].forEach(function(ev){
+  window.addEventListener(ev, function(){ if(stepAutoActive) persistSteps(); });
+});
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){ if(stepAutoActive) persistSteps(); }
+  else { checkStepGap(); if(STATE.steps.auto && !stepAutoActive) startStepAuto(); renderSteps(); }
+});
+/* On a phone that needs no permission prompt — or has already given it —
+   start counting by itself, and pick up where the last visit left off. */
 function autoStartStepsIfPossible(){
   if(!hasMotionSensor()) return;
-  if(typeof DeviceMotionEvent.requestPermission === "function") return; /* iOS needs a tap */
-  if(!("ontouchstart" in window)) return; /* desktops have no useful sensor */
+  checkStepGap();
+  var needsTap = (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function");
+  if(needsTap && !STATE.steps.iosOk) return;    /* iOS asks once, with a tap */
+  if(!("ontouchstart" in window)) return;       /* desktops have no useful sensor */
   startStepAuto();
 }
+/* --- Paper for the fridge ----------------------------------------------
+   Not everybody wants to hold a telephone while standing on one leg. One
+   page per exercise, with the drawing, big instructions and the safety note,
+   printed and stuck where it will actually be seen. */
+function printCards(){
+  var ids = currentLibraryIds();
+  if(!ids.length) return;
+  var w = window.open("", "_blank");
+  if(!w) return;
+  var pages = ids.map(function(id){
+    var ex = EXERCISES[id];
+    if(!ex) return "";
+    return '<section><h1>' + L(ex.name) + '</h1>' +
+      '<div class="art">' + demoSVG(ex.demo || ex.id) + '</div>' +
+      '<p class="instr">' + L(ex.instr) + '</p>' +
+      (ex.tip ? '<p class="tip"><strong>' + t("ex.tip") + ':</strong> ' + L(ex.tip) + '</p>' : '') +
+      '<p class="meta">' + t("ex.about", { n: ex.work || 30 }) + ' · ' + t(CAT_KEY[ex.cat] || "lib.all") + '</p>' +
+      '</section>';
+  }).join("");
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + t("cards.title") + '</title><style>' +
+    'body{font-family:Georgia,serif;margin:0;color:#111}' +
+    'section{page-break-after:always;padding:2cm 2cm 1cm;min-height:24cm}' +
+    'h1{font-size:30pt;margin:0 0 .6cm}' +
+    '.art{width:12cm;margin:0 0 .8cm}.art svg{width:100%;height:auto}' +
+    '.instr{font-size:19pt;line-height:1.5}' +
+    '.tip{font-size:15pt;background:#f2efe6;padding:.5cm;border-radius:.3cm}' +
+    '.meta{font-size:12pt;color:#666;margin-top:1cm}' +
+    '@media print{section{padding:1.5cm}}' +
+    '</style></head><body>' + pages + '</body></html>');
+  w.document.close();
+  setTimeout(function(){ try{ w.print(); }catch(e){} }, 600);
+}
+document.getElementById("printCardsBtn").addEventListener("click", function(){ requireAccess(printCards); });
+/* --- The pain diary -----------------------------------------------------
+   A single number a day. On its own it says nothing; over two months it is
+   the most convincing thing there is, because it is theirs. */
+function painToday(){ var p = STATE.painLog || {}; return p[dateStr()]; }
+function renderPainScale(){
+  var wrap = document.getElementById("painScale");
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  var today = painToday();
+  for(var i = 0; i <= 10; i++){
+    (function(n){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn btn-sm " + (today === n ? "btn-primary" : "btn-secondary");
+      b.style.minWidth = "44px";
+      b.textContent = String(n);
+      b.addEventListener("click", async function(){
+        STATE.painLog = STATE.painLog || {};
+        if(STATE.painLog[dateStr()] === n) delete STATE.painLog[dateStr()];
+        else STATE.painLog[dateStr()] = n;
+        saveState();
+        if(STATE.auth.loggedIn) await saveAccount();
+        renderPainScale();
+        renderPainChart();
+      });
+      wrap.appendChild(b);
+    })(i);
+  }
+  var st = document.getElementById("painStatus");
+  st.textContent = today === undefined ? t("pain.none")
+    : today === 0 ? t("pain.zero") : t("pain.saved", { n: today });
+}
+function renderPainChart(){
+  var box = document.getElementById("painChart");
+  if(!box) return;
+  var days = [], i;
+  for(i = 29; i >= 0; i--){
+    var d = new Date(); d.setDate(d.getDate() - i);
+    var key = dateStr(d);
+    days.push({ key: key, v: (STATE.painLog || {})[key], trained: (STATE.workoutLog || []).indexOf(key) !== -1 });
+  }
+  if(!days.some(function(d){ return d.v !== undefined; })){ box.innerHTML = ""; return; }
+  var first = days.slice(0, 15).filter(function(d){ return d.v !== undefined; });
+  var last  = days.slice(15).filter(function(d){ return d.v !== undefined; });
+  var avg = function(a){ return a.length ? a.reduce(function(x, y){ return x + y.v; }, 0) / a.length : null; };
+  var a1 = avg(first), a2 = avg(last);
+  var trend = "";
+  if(a1 !== null && a2 !== null && Math.abs(a1 - a2) >= 0.5){
+    trend = a2 < a1 ? t("pain.better", { n: (a1 - a2).toFixed(1) }) : t("pain.worse", { n: (a2 - a1).toFixed(1) });
+  }
+  box.innerHTML =
+    '<div style="display:flex;gap:2px;align-items:flex-end;height:80px">' +
+    days.map(function(d){
+      var h = d.v === undefined ? 3 : Math.max(3, d.v * 7.5);
+      var col = d.v === undefined ? "var(--line)" : d.v >= 7 ? "var(--rose)" : d.v >= 4 ? "var(--marigold)" : "var(--sage)";
+      return '<div style="flex:1" title="' + d.key + (d.v === undefined ? "" : ": " + d.v) + '">' +
+        '<div style="height:' + h + 'px;background:' + col + ';border-radius:3px 3px 0 0"></div></div>';
+    }).join("") + '</div>' +
+    '<div style="display:flex;gap:2px;margin-top:2px">' +
+    days.map(function(d){
+      return '<div style="flex:1;height:6px;border-radius:2px;background:' + (d.trained ? "var(--teal)" : "transparent") + '"></div>';
+    }).join("") + '</div>' +
+    '<p style="color:var(--ink-soft);font-size:.88rem;margin-top:.4rem">' + t("pain.legend") + (trend ? " " + trend : "") + '</p>';
+}
+/* --- The two checks a physiotherapist would do --------------------------
+   Five-times sit-to-stand and the timed up-and-go. Both are ordinary
+   clinical tests, both need nothing but a chair and a stopwatch, and both
+   have published thresholds for older adults. We show the threshold, we
+   show the trend, and we say clearly that it is not a diagnosis. */
+var btTimers = { sts: null, tug: null }, btStart = { sts: 0, tug: 0 };
+var BT_BANDS = {
+  /* seconds; above the first number is worth mentioning to a doctor */
+  sts: { watch: 12, high: 15 },
+  tug: { watch: 12, high: 20 }
+};
+function btTick(which){
+  var el = document.getElementById(which === "sts" ? "btStsTime" : "btTugTime");
+  el.textContent = ((Date.now() - btStart[which]) / 1000).toFixed(1) + " s";
+}
+function btBegin(which){
+  btStart[which] = Date.now();
+  clearInterval(btTimers[which]);
+  btTimers[which] = setInterval(function(){ btTick(which); }, 100);
+  document.getElementById(which === "sts" ? "btStsStart" : "btTugStart").style.display = "none";
+  document.getElementById(which === "sts" ? "btStsStop" : "btTugStop").style.display = "inline-flex";
+  speak(t("bt.go"), true);
+}
+async function btEnd(which){
+  clearInterval(btTimers[which]);
+  var secs = Math.round((Date.now() - btStart[which]) / 100) / 10;
+  document.getElementById(which === "sts" ? "btStsStart" : "btTugStart").style.display = "inline-flex";
+  document.getElementById(which === "sts" ? "btStsStop" : "btTugStop").style.display = "none";
+  btTick(which);
+  STATE.balanceTests = STATE.balanceTests || [];
+  STATE.balanceTests.push({ kind: which, secs: secs, ts: Date.now() });
+  if(STATE.balanceTests.length > 60) STATE.balanceTests = STATE.balanceTests.slice(-60);
+  saveState();
+  if(STATE.auth.loggedIn) await saveAccount();
+  var band = BT_BANDS[which];
+  var msg = secs >= band.high ? t("bt.high") : secs >= band.watch ? t("bt.watch") : t("bt.good");
+  var prev = STATE.balanceTests.filter(function(x){ return x.kind === which; }).slice(-2)[0];
+  if(prev && prev.secs !== secs){
+    msg += " " + (secs < prev.secs ? t("bt.better", { n: (prev.secs - secs).toFixed(1) })
+                                   : t("bt.slower", { n: (secs - prev.secs).toFixed(1) }));
+  }
+  document.getElementById(which === "sts" ? "btStsResult" : "btTugResult").textContent =
+    t("bt.result", { s: secs.toFixed(1) }) + " " + msg;
+  renderBalanceHistory();
+}
+function renderBalanceHistory(){
+  var box = document.getElementById("btHistory");
+  if(!box) return;
+  var list = (STATE.balanceTests || []).slice(-10).reverse();
+  if(!list.length){ box.innerHTML = ""; return; }
+  box.innerHTML = '<h3 style="font-size:1.05rem">' + t("bt.history") + '</h3>' +
+    '<table class="code-table"><tbody>' +
+    list.map(function(x){
+      return '<tr><td>' + new Date(x.ts).toLocaleDateString() + '</td><td>' +
+        t(x.kind === "sts" ? "bt.sts.h" : "bt.tug.h") + '</td><td><strong>' + x.secs.toFixed(1) + ' s</strong></td></tr>';
+    }).join("") + '</tbody></table>';
+}
+document.getElementById("btStsStart").addEventListener("click", function(){ requireAccess(function(){ btBegin("sts"); }); });
+document.getElementById("btStsStop").addEventListener("click", function(){ btEnd("sts"); });
+document.getElementById("btTugStart").addEventListener("click", function(){ requireAccess(function(){ btBegin("tug"); }); });
+document.getElementById("btTugStop").addEventListener("click", function(){ btEnd("tug"); });
 /* ============ 12b. EFFORT, SAFETY, PROGRESSION, REPORT, FAMILY ============ */
 /* "How did that feel?" quietly tunes the next session: two easy answers make
    the work a little longer, two hard ones make it shorter. */
@@ -7539,6 +8563,52 @@ document.getElementById("reviewSubmitBtn").addEventListener("click", function(){
     });
   });
 });
+/* --- When something breaks on somebody else's telephone ----------------
+   Without this, a fault is only ever discovered if the person bothers to
+   complain. Errors are kept short, kept local unless a shared database is
+   set up, and never contain what anybody typed. */
+var errorsLogged = 0;
+async function logError(kind, message, where){
+  if(errorsLogged >= 5) return;                /* one broken loop must not flood */
+  errorsLogged++;
+  try{
+    var rec = {
+      kind: kind,
+      msg: String(message || "").slice(0, 300),
+      at: String(where || "").slice(0, 200),
+      build: BUILD_TAG,
+      lang: STATE.settings.lang,
+      ua: (navigator.userAgent || "").slice(0, 160),
+      email: STATE.auth.loggedIn ? normEmail(STATE.auth.email) : null,
+      ts: Date.now()
+    };
+    var list = await Store.getJSON("business:errors", []);
+    list.push(rec);
+    if(list.length > 60) list = list.slice(-60);
+    await Store.setJSON("business:errors", list);
+  }catch(e){}
+}
+window.addEventListener("error", function(e){
+  logError("error", e.message, (e.filename || "") + ":" + (e.lineno || ""));
+});
+window.addEventListener("unhandledrejection", function(e){
+  var r = e.reason;
+  logError("promise", (r && r.message) || String(r), (r && r.stack || "").split("\n")[1] || "");
+});
+async function renderErrorLog(){
+  var box = document.getElementById("errorLog");
+  if(!box) return;
+  var list = await Store.getJSON("business:errors", []);
+  if(!list.length){ box.innerHTML = "<p>No faults reported. That is the good outcome.</p>"; return; }
+  box.innerHTML = '<table class="code-table"><thead><tr><th>When</th><th>Build</th><th>What</th><th>Where</th></tr></thead><tbody>' +
+    list.slice(-25).reverse().map(function(r){
+      return '<tr><td>' + new Date(r.ts).toLocaleString() + '</td><td>' + (r.build || "?") + '</td><td>' +
+        (r.msg || "").replace(/</g, "&lt;") + '</td><td>' + (r.at || "").replace(/</g, "&lt;") + '</td></tr>';
+    }).join("") + '</tbody></table>' +
+    '<button class="btn btn-secondary btn-sm" id="clearErrorsBtn" type="button">Clear the list</button>';
+  var cb = document.getElementById("clearErrorsBtn");
+  if(cb) cb.addEventListener("click", async function(){ await Store.setJSON("business:errors", []); renderErrorLog(); });
+}
 /* ============ 15. UNDO TOASTS ============ */
 function showUndoToast(label, undoFn){
   var wrap = document.getElementById("toastWrap");
@@ -7652,7 +8722,8 @@ function applyComfortAssist(){
   var on = !!STATE.settings.comfortAssist;
   document.body.style.letterSpacing = on ? ".01em" : "";
   document.body.style.lineHeight = on ? "1.8" : "";
-  if(on) document.documentElement.style.fontSize = SIZE_STEPS[2];
+  if(on && zoomIndex() < 5){ STATE.a11y.zoom = 5; saveState(); }
+  applyZoom(false);
   document.getElementById("settingsComfortAssist").checked = on;
 }
 document.getElementById("settingsComfortAssist").addEventListener("change", function(e){
@@ -7661,7 +8732,7 @@ document.getElementById("settingsComfortAssist").addEventListener("change", func
   applyComfortAssist();
 });
 /* ============ 17b. VERSION, FEATURE LIST, WELCOME, CONTRAST ============ */
-var APP_VERSION = "4.0", APP_BUILD = "2026-07-30";
+var APP_VERSION = BUILD_TAG, APP_BUILD = APP_BUILD_DATE;
 var FEATURES = [
   {en:"Sign-in wall: the app only opens with a free account, and a 7-day trial starts then",
    pt:"Entrada com conta: a aplicação só abre com conta gratuita, e os 7 dias grátis começam aí",
@@ -7751,6 +8822,58 @@ var FEATURES = [
    pt:"Um resumo mensal de uma página, para imprimir e levar ao médico ou mostrar à família",
    es:"Un resumen mensual de una página, para imprimir y llevar al médico o enseñar a la familia",
    fr:"Un bilan mensuel d'une page à imprimer pour le médecin ou la famille"},
+  {en:"A photograph instead of a letter — your own face, a grandchild, the dog — shrunk on your device and shown to your friends too",
+   pt:"Uma fotografia em vez de uma letra — a sua cara, um neto, o cão — reduzida no seu aparelho e mostrada também aos seus amigos",
+   es:"Una fotografía en vez de una letra — tu cara, un nieto, el perro — reducida en tu dispositivo y mostrada también a tus amigos",
+   fr:"Une photographie plutôt qu'une lettre — votre visage, un petit-enfant, le chien — réduite sur votre appareil et vue aussi par vos amis"},
+  {en:"Only real email addresses get in, checked at sign-up and again at sign-in, against two independent name servers",
+   pt:"Só entram endereços de e-mail verdadeiros, verificados ao criar conta e outra vez ao entrar, contra dois servidores de nomes independentes",
+   es:"Solo entran direcciones de correo reales, comprobadas al crear la cuenta y otra vez al entrar, contra dos servidores de nombres independientes",
+   fr:"Seules les vraies adresses e-mail passent, vérifiées à l'inscription puis à la connexion, auprès de deux serveurs de noms indépendants"},
+  {en:"Text size is now a proper zoom, from 90% to 220% in nine steps, with the number shown and Ctrl + or − from a keyboard",
+   pt:"O tamanho do texto passou a ser um zoom a sério, de 90% a 220% em nove degraus, com a percentagem à vista e Ctrl + ou − pelo teclado",
+   es:"El tamaño del texto es ahora un zoom de verdad, del 90% al 220% en nueve pasos, con el porcentaje a la vista y Ctrl + o − desde el teclado",
+   fr:"La taille du texte est devenue un vrai zoom, de 90% à 220% en neuf paliers, avec le pourcentage affiché et Ctrl + ou − au clavier"},
+  {en:"Payments are checked by a real server (stripe-worker.js) instead of by the address bar, so typing ?unlock=yearly no longer opens anything",
+   pt:"Os pagamentos passam a ser confirmados por um servidor a sério (stripe-worker.js) em vez do endereço, por isso escrever ?unlock=yearly já não abre nada",
+   es:"Los pagos los comprueba un servidor de verdad (stripe-worker.js) en vez de la barra de direcciones, así que escribir ?unlock=yearly ya no abre nada",
+   fr:"Les paiements sont vérifiés par un vrai serveur (stripe-worker.js) et non par la barre d'adresse : taper ?unlock=yearly n'ouvre plus rien"},
+  {en:"Cancel or ask for a refund from inside the app, with the 14-day right of withdrawal spelled out",
+   pt:"Cancelar ou pedir reembolso dentro da própria aplicação, com o direito de arrependimento de 14 dias explicado",
+   es:"Cancelar o pedir reembolso desde la propia aplicación, con el derecho de desistimiento de 14 días explicado",
+   fr:"Annuler ou demander un remboursement depuis l'application, avec le droit de rétractation de 14 jours expliqué"},
+  {en:"One chosen person can get a short weekly note — sessions, minutes, streak, steps and nothing else — and a quiet word arrives after five days away",
+   pt:"Uma pessoa à sua escolha recebe um recado curto por semana — sessões, minutos, sequência, passos e mais nada — e ao fim de cinco dias parados chega uma palavra amiga",
+   es:"Una persona elegida recibe una nota corta semanal — sesiones, minutos, racha, pasos y nada más — y a los cinco días parado llega una palabra amable",
+   fr:"Une personne choisie reçoit un mot hebdomadaire — séances, minutes, série, pas, rien d'autre — et après cinq jours d'absence, un mot bienveillant arrive"},
+  {en:"The two timed checks physiotherapists use — five sit-to-stands and the up-and-go — with your history and the usual ranges",
+   pt:"Os dois testes cronometrados que os fisioterapeutas usam — levantar cinco vezes e levantar-e-andar — com o seu histórico e as faixas habituais",
+   es:"Las dos pruebas cronometradas que usan los fisioterapeutas — levantarse cinco veces y levantarse-y-andar — con tu historial y los rangos habituales",
+   fr:"Les deux tests chronométrés des kinésithérapeutes — cinq levers et le lever-et-marcher — avec votre historique et les valeurs habituelles"},
+  {en:"One button that already knows your usual session, big words on screen for anyone hard of hearing, and dark and high-contrast colours",
+   pt:"Um botão que já sabe qual é a sua sessão do costume, palavras grandes no ecrã para quem ouve mal, e cores escuras e de alto contraste",
+   es:"Un botón que ya sabe cuál es tu sesión de siempre, palabras grandes en pantalla para quien oye mal, y colores oscuros y de alto contraste",
+   fr:"Un bouton qui connaît déjà votre séance habituelle, de gros mots à l'écran pour qui entend mal, et des couleurs sombres et à fort contraste"},
+  {en:"Printable exercise cards for the fridge, and a one-tap daily pain diary charted against the days you trained",
+   pt:"Fichas de exercícios para imprimir e pôr no frigorífico, e um diário da dor de um toque por dia, desenhado ao lado dos dias em que treinou",
+   es:"Fichas de ejercicios para imprimir y poner en la nevera, y un diario del dolor de un toque al día, dibujado junto a los días que entrenaste",
+   fr:"Des fiches d'exercices à imprimer pour le frigo, et un journal de la douleur en un appui par jour, tracé en regard des jours d'entraînement"},
+  {en:"A copy of everything in one file, a note when a newer version is ready, faults reported straight to the admin panel, and drawings built only when they come into view",
+   pt:"Uma cópia de tudo num ficheiro, aviso quando há versão nova, falhas comunicadas diretamente ao painel de administração, e desenhos construídos só quando aparecem no ecrã",
+   es:"Una copia de todo en un archivo, aviso cuando hay versión nueva, fallos comunicados directamente al panel, y dibujos construidos solo cuando aparecen en pantalla",
+   fr:"Une copie de tout dans un fichier, un avis quand une nouvelle version est prête, les pannes remontées au panneau d'administration, et des dessins construits seulement quand ils apparaissent"},
+  {en:"The guiding voice picks the best voice installed for your language, lines queue instead of cutting each other off, the speed is yours, and you choose between silence, names only, or a full coach",
+   pt:"A voz que guia escolhe a melhor voz instalada para a sua língua, as frases esperam umas pelas outras em vez de se cortarem, a velocidade é sua, e escolhe entre silêncio, só os nomes, ou acompanhamento completo",
+   es:"La voz que guía elige la mejor voz instalada para tu idioma, las frases esperan en vez de cortarse, la velocidad es tuya, y eliges entre silencio, solo los nombres o acompañamiento completo",
+   fr:"La voix qui guide choisit la meilleure voix installée pour votre langue, les phrases s'enchaînent sans se couper, la vitesse est la vôtre, et vous choisissez entre silence, noms seuls ou accompagnement complet"},
+  {en:"Steps are counted like a real pedometer — gravity separated out, a threshold that follows your movement, and three steps in a row before one counts — saved constantly, resumed by itself, and working with no internet at all",
+   pt:"Os passos são contados como num pedómetro a sério — a gravidade é separada, o limiar acompanha o seu movimento e são precisos três passos seguidos para contar um — guardados a toda a hora, retomados sozinhos, e a funcionar sem internet nenhuma",
+   es:"Los pasos se cuentan como en un podómetro de verdad — la gravedad se separa, el umbral sigue tu movimiento y hacen falta tres pasos seguidos para contar uno — guardados constantemente, reanudados solos y funcionando sin nada de internet",
+   fr:"Les pas sont comptés comme sur un vrai podomètre — la gravité est séparée, le seuil suit votre mouvement et il faut trois pas d'affilée pour en compter un — enregistrés en continu, repris tout seuls, et sans aucune connexion"},
+  {en:"Walk mode: a nearly black screen that keeps the page awake in your pocket, plus an honest note about what a closed page can never do",
+   pt:"Modo caminhada: um ecrã quase todo preto que mantém a página acordada no bolso, mais uma nota honesta sobre o que uma página fechada nunca poderá fazer",
+   es:"Modo paseo: una pantalla casi negra que mantiene la página despierta en el bolsillo, más una nota honesta sobre lo que una página cerrada nunca podrá hacer",
+   fr:"Mode marche : un écran presque noir qui garde la page éveillée dans la poche, et une note honnête sur ce qu'une page fermée ne pourra jamais faire"},
   {en:"Say \"next\", \"pause\" or \"carry on\" during a session and the app obeys, so nobody has to reach for the screen mid-exercise",
    pt:"Diga \"passa\", \"pausa\" ou \"continua\" durante a sessão e a aplicação obedece, para não ter de chegar ao ecrã a meio do exercício",
    es:"Di \"siguiente\", \"pausa\" o \"continúa\" durante la sesión y la aplicación obedece, sin tener que tocar la pantalla a media serie",
@@ -7816,6 +8939,31 @@ var FEATURES = [
    es:"Modo de contraste reforzado, letra en tres tamaños, y menú deslizante en el móvil",
    fr:"Mode contraste renforcé, texte en trois tailles, et menu qui défile sur téléphone"}
 ];
+function applyBuildTag(){
+  try{ document.title = "Steady & Strong " + BUILD_TAG + " — " + t("meta.title"); }catch(e){}
+  document.querySelectorAll(".build-tag").forEach(function(el){ el.textContent = BUILD_TAG; });
+}
+/* If the cached worker is from an older release, the person is running a mix
+   of the two. Better to know. */
+async function checkWorkerVersion(){
+  var out = document.getElementById("swVersion");
+  if(!("serviceWorker" in navigator)) { if(out) out.textContent = "Page " + BUILD_TAG + " · no offline worker on this browser."; return; }
+  var reg = await navigator.serviceWorker.getRegistration();
+  var active = reg && reg.active;
+  if(!active){ if(out) out.textContent = "Page " + BUILD_TAG + " · offline worker not registered yet."; return; }
+  var answered = false;
+  var ch = new MessageChannel();
+  ch.port1.onmessage = function(ev){
+    answered = true;
+    var v = ev.data && ev.data.version;
+    if(!out) return;
+    out.textContent = (v === BUILD_TAG)
+      ? "Page " + BUILD_TAG + " and offline copy " + v + " — matching."
+      : "Page " + BUILD_TAG + " but the offline copy is " + v + ". Change VERSION at the top of sw.js to " + BUILD_TAG + " and upload it again.";
+  };
+  try{ active.postMessage({ type:"version" }, [ch.port2]); }catch(e){}
+  setTimeout(function(){ if(!answered && out) out.textContent = "Page " + BUILD_TAG + " · the offline copy did not answer (it is probably from an older release)."; }, 1500);
+}
 function renderWhatsNew(){
   var wrap = document.getElementById("whatsnewList");
   if(!wrap) return;
@@ -7854,9 +9002,10 @@ function openWelcome(){
   });
   welcomeOverlay.querySelectorAll("[data-wsize]").forEach(function(b){
     b.addEventListener("click", function(){
-      var i = b.getAttribute("data-wsize");
-      var target = document.querySelector('.size-btn[data-size="' + i + '"]');
-      if(target) target.click();
+      var pick = [1, 2, 5][parseInt(b.getAttribute("data-wsize"), 10)];
+      STATE.a11y.zoom = (pick === undefined) ? ZOOM_NORMAL : pick;
+      saveState();
+      applyZoom(false);
       welcomeOverlay.querySelectorAll("[data-wsize]").forEach(function(x){ x.classList.remove("btn-teal"); x.classList.add("btn-secondary"); });
       b.classList.remove("btn-secondary"); b.classList.add("btn-teal");
     });
@@ -8048,10 +9197,34 @@ function renderOfflineStatus(on){
   var el = document.getElementById("offlineStatus");
   if(el) el.textContent = on ? t("offline.on") : t("offline.off");
 }
+function offerUpdate(worker){
+  var el = showUndoToast(t("update.msg"), function(){});
+  if(!el) return;
+  el.querySelector("button").textContent = t("common.close");
+  var go = document.createElement("button");
+  go.type = "button"; go.textContent = t("update.btn"); go.style.marginLeft = ".4rem";
+  go.addEventListener("click", function(){
+    try{ if(worker) worker.postMessage({ type:"skipWaiting" }); }catch(e){}
+    setTimeout(function(){ location.reload(); }, 300);
+  });
+  el.appendChild(go);
+}
 function setupOffline(){
   if(!("serviceWorker" in navigator) || location.protocol !== "https:"){ renderOfflineStatus(false); return; }
-  navigator.serviceWorker.register("sw.js").then(function(){ renderOfflineStatus(true); })
-    .catch(function(){ renderOfflineStatus(false); });
+  navigator.serviceWorker.register("sw.js").then(function(reg){
+    renderOfflineStatus(true);
+    /* A cached page can otherwise serve a month-old app without anybody
+       noticing. When a newer one is ready, say so and let them choose. */
+    if(reg.waiting) offerUpdate(reg.waiting);
+    reg.addEventListener("updatefound", function(){
+      var fresh = reg.installing;
+      if(!fresh) return;
+      fresh.addEventListener("statechange", function(){
+        if(fresh.state === "installed" && navigator.serviceWorker.controller) offerUpdate(fresh);
+      });
+    });
+    setInterval(function(){ try{ reg.update(); }catch(e){} }, 3600000);
+  }).catch(function(){ renderOfflineStatus(false); });
 }
 /* --- Which exercises get skipped: honest, local, and useful. --- */
 function noteSkip(){
@@ -8082,6 +9255,80 @@ document.getElementById("voiceToggle").addEventListener("change", function(e){
 document.getElementById("settingsVoiceToggle").addEventListener("change", function(e){
   STATE.settings.voice = e.target.checked; saveState(); syncVoiceCheckboxes();
 });
+function applyTheme(){
+  var th = STATE.settings.theme || "light";
+  document.body.classList.remove("theme-dark", "theme-contrast");
+  if(th === "dark") document.body.classList.add("theme-dark");
+  if(th === "contrast") document.body.classList.add("theme-contrast");
+  var sel = document.getElementById("themeSelect");
+  if(sel) sel.value = th;
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute("content", th === "light" ? "#1F5C54" : th === "dark" ? "#14171A" : "#000000");
+}
+(function buildZoomSelect(){
+  var sel = document.getElementById("zoomSelect");
+  if(!sel) return;
+  ZOOM_STEPS.forEach(function(z, i){
+    var o = document.createElement("option");
+    o.value = String(i); o.textContent = Math.round(z) + "%";
+    sel.appendChild(o);
+  });
+  sel.addEventListener("change", function(e){
+    STATE.a11y.zoom = parseInt(e.target.value, 10);
+    saveState();
+    applyZoom(true);
+  });
+  document.getElementById("zoomOutBtn2").addEventListener("click", function(){ stepZoom(-1); });
+  document.getElementById("zoomInBtn2").addEventListener("click", function(){ stepZoom(1); });
+})();
+document.getElementById("themeSelect").addEventListener("change", function(e){
+  STATE.settings.theme = e.target.value;
+  saveState();
+  applyTheme();
+});
+/* Big words at the bottom: the same sentence the voice says, for anybody who
+   cannot hear it — or has the sound off in a quiet house. */
+var cueTimer = null;
+function showCue(text){
+  if(!STATE.settings.bigCue || !text) return;
+  var el = document.getElementById("bigCue");
+  el.textContent = text;
+  el.classList.add("on");
+  clearTimeout(cueTimer);
+  cueTimer = setTimeout(function(){ el.classList.remove("on"); }, 6000);
+}
+function hideCue(){
+  clearTimeout(cueTimer);
+  document.getElementById("bigCue").classList.remove("on");
+}
+document.getElementById("settingsBigCue").addEventListener("change", function(e){
+  STATE.settings.bigCue = e.target.checked;
+  saveState();
+  if(!e.target.checked) hideCue();
+});
+/* One button that already knows what you usually do. */
+function renderTodayButton(){
+  var box = document.getElementById("todayBox");
+  if(!box) return;
+  var f = (STATE.memory && STATE.memory.facts) || {};
+  var mins = parseInt(f.favLength, 10) || (STATE.sessionLog.length ? 10 : 0);
+  if(!mins){ box.style.display = "none"; return; }
+  var focus = f.favFocus || "both";
+  box.style.display = "block";
+  document.getElementById("todayBtn").textContent = t("today.btn", { n: mins });
+  document.getElementById("todayHint").textContent = t("today.hint", { f: focusLabel(focus) });
+  box.setAttribute("data-mins", mins);
+  box.setAttribute("data-focus", focus);
+}
+document.getElementById("todayBtn").addEventListener("click", function(){
+  var box = document.getElementById("todayBox");
+  var mins = parseInt(box.getAttribute("data-mins"), 10) || 10;
+  var focus = box.getAttribute("data-focus") || "both";
+  requireAccess(function(){
+    chosenLength = mins; chosenFocus = focus;
+    askReady(generateRoutine(categoriesForFocus(focus), mins), mins);
+  });
+});
 function setVoiceCmd(on){
   STATE.settings.voiceCmd = !!on;
   saveState();
@@ -8090,14 +9337,30 @@ function setVoiceCmd(on){
   else if(playerEl.classList.contains("active")) startVoiceCommands();
 }
 document.getElementById("settingsVoiceCmd").addEventListener("change", function(e){ setVoiceCmd(e.target.checked); });
+document.getElementById("coachSelect").addEventListener("change", function(e){
+  STATE.settings.coach = e.target.value;
+  if(e.target.value !== "off" && !STATE.settings.voice){ STATE.settings.voice = true; syncVoiceCheckboxes(); }
+  saveState();
+});
+document.getElementById("voiceRateSelect").addEventListener("change", function(e){
+  STATE.settings.voiceRate = parseFloat(e.target.value);
+  saveState();
+  say(t("coach.sample"));
+});
+document.getElementById("voiceTestBtn").addEventListener("click", function(){
+  chosenVoice = null; voiceHunted = false;
+  say(t("coach.sample"));
+});
 document.getElementById("voiceCmdToggle").addEventListener("change", function(e){ setVoiceCmd(e.target.checked); });
 document.getElementById("settingsReduceMotion").addEventListener("change", function(e){
   STATE.settings.reduceMotion = e.target.checked; saveState(); renderLibrary(); renderGG();
 });
 document.getElementById("langSelect").addEventListener("change", function(e){
   STATE.settings.lang = e.target.value;
+  chosenVoice = null; voiceHunted = false;
   saveState();
   applyI18n();
+  applyBuildTag();
   renderAllVisible();
 });
 /* Erasing means erasing: the account record, the public summary, the friend
@@ -8143,6 +9406,48 @@ async function deleteAccountEverywhere(){
   }catch(e){}
   return true;
 }
+/* --- A copy of everything ----------------------------------------------
+   No account, no cloud, no trust required: one file the person owns. It is
+   also the honest answer to "what if you disappear tomorrow". */
+function exportData(){
+  var blob = {
+    app: "steady-strong", version: BUILD_TAG, exported: Date.now(),
+    state: STATE, ownerSettings: isOwner() ? ownerSettings : undefined
+  };
+  var text = JSON.stringify(blob, null, 2);
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type:"application/json" }));
+  a.download = "steady-strong-" + dateStr() + ".json";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function importData(file){
+  var reader = new FileReader();
+  reader.onload = async function(){
+    var blob;
+    try{ blob = JSON.parse(String(reader.result)); }
+    catch(e){ alert(t("backup.bad")); return; }
+    if(!blob || blob.app !== "steady-strong" || !blob.state){ alert(t("backup.bad")); return; }
+    if(!confirm(t("backup.confirm", { d: new Date(blob.exported || Date.now()).toLocaleDateString() }))) return;
+    var incoming = blob.state;
+    /* keep whoever is signed in on this device; bring everything else over */
+    var auth = STATE.auth;
+    STATE = Object.assign(defaultState(), incoming);
+    STATE.auth = auth;
+    saveState();
+    if(STATE.auth.loggedIn) await saveAccount();
+    alert(t("backup.done"));
+    location.reload();
+  };
+  reader.readAsText(file);
+}
+document.getElementById("exportBtn").addEventListener("click", exportData);
+document.getElementById("importBtn").addEventListener("click", function(){ document.getElementById("importFile").click(); });
+document.getElementById("importFile").addEventListener("change", function(e){
+  if(e.target.files && e.target.files[0]) importData(e.target.files[0]);
+  e.target.value = "";
+});
 document.getElementById("resetDataBtn").addEventListener("click", async function(){
   if(!confirm(t("reset.confirm"))) return;
   var btn = this;
@@ -8187,8 +9492,15 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
   document.getElementById("langSelect").value = STATE.settings.lang || "en";
   syncVoiceCheckboxes();
   syncVoiceCmdCheckboxes();
+  applyTheme();
+  document.getElementById("settingsBigCue").checked = !!STATE.settings.bigCue;
+  renderTodayButton();
+  document.getElementById("coachSelect").value = STATE.settings.coach || "full";
+  document.getElementById("voiceRateSelect").value = String(voiceRate());
   document.getElementById("settingsReduceMotion").checked = !!STATE.settings.reduceMotion;
   applyI18n();
+  applyBuildTag();
+  applyZoom(false);
   setHealthMode("pain");
   renderProfileChrome();
   renderTrialBanner();
@@ -8220,6 +9532,9 @@ setInterval(function(){ renderTrialBanner(); renderLock(); renderAccountSettings
     applyGuard();
     revokeUnpaidExtras();
     refreshFamilyMembership();
+    syncEntitlement();
+    maybeWeeklyNote();
+    checkQuietSpell();
     setupGoogleSignIn();
     handleReturnFromStripe();
     handleInviteLink();
