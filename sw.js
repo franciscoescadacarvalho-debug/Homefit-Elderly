@@ -6,7 +6,7 @@
    The version below is bumped with every release. The page listens for a
    newly installed worker and offers a "there is a new version" button,
    instead of quietly serving last month's app for days on end. */
-var VERSION = "v17";
+var VERSION = "v20";
 var CACHE = "steady-strong-" + VERSION;
 var CORE = ["./", "./index.html"];
 
