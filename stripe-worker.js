@@ -262,6 +262,95 @@ async function handlePortal(request, env) {
   return json({ error: "portal failed", detail: session.error || null }, 500);
 }
 
+/* ---------- proving an address belongs to the person using it ----------
+   A six-digit code, sent to the address, valid for ten minutes, five guesses.
+   Without an email provider configured this politely refuses, and the app
+   carries on as before rather than locking anybody out.
+
+   To switch it on, add a RESEND_API_KEY secret (resend.com, free tier is
+   plenty) and a MAIL_FROM secret such as "Steady & Strong <no-reply@your-
+   domain.com>". Any provider with an HTTP API would do; this is one line to
+   change.                                                                 */
+
+async function sendEmail(env, to, subject, text) {
+  if (!env.RESEND_API_KEY || !env.MAIL_FROM) return { ok: false, why: "no email provider configured" };
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ from: env.MAIL_FROM, to: [to], subject, text })
+  });
+  if (res.ok) return { ok: true };
+  return { ok: false, why: await res.text() };
+}
+
+function sixDigits() {
+  const b = crypto.getRandomValues(new Uint32Array(1))[0];
+  return String(100000 + (b % 900000));
+}
+
+async function handleSendCode(request, env) {
+  const url = new URL(request.url);
+  const email = normEmail(url.searchParams.get("email"));
+  const lang = (url.searchParams.get("lang") || "en").slice(0, 2);
+  if (!email) return json({ error: "email needed" }, 400);
+
+  /* one code a minute, and no more than five an hour for the same address */
+  const throttleRaw = await env.SS.get(`codethrottle:${email}`);
+  const throttle = throttleRaw ? JSON.parse(throttleRaw) : { n: 0, first: Date.now(), last: 0 };
+  if (Date.now() - throttle.last < 60000) return json({ error: "too soon" }, 429);
+  if (Date.now() - throttle.first < 3600000 && throttle.n >= 5) return json({ error: "too many" }, 429);
+
+  const code = sixDigits();
+  await env.SS.put(
+    `code:${email}`,
+    JSON.stringify({ code, made: Date.now(), tries: 0 }),
+    { expirationTtl: 900 }
+  );
+
+  const words = {
+    en: { s: "Your Steady & Strong code", b: `Your code is ${code}. It works for ten minutes. If you did not ask for it, ignore this message — nothing will happen.` },
+    pt: { s: "O seu código Steady & Strong", b: `O seu código é ${code}. É válido durante dez minutos. Se não foi o senhor a pedi-lo, ignore esta mensagem — não acontece nada.` },
+    es: { s: "Tu código de Steady & Strong", b: `Tu código es ${code}. Sirve durante diez minutos. Si no lo has pedido, ignora este mensaje — no pasará nada.` },
+    fr: { s: "Votre code Steady & Strong", b: `Votre code est ${code}. Il est valable dix minutes. Si vous ne l'avez pas demandé, ignorez ce message — rien ne se passera.` }
+  };
+  const w = words[lang] || words.en;
+  const sent = await sendEmail(env, email, w.s, w.b);
+  if (!sent.ok) return json({ error: "mail not configured", detail: sent.why }, 501);
+
+  throttle.n = Date.now() - throttle.first < 3600000 ? throttle.n + 1 : 1;
+  if (Date.now() - throttle.first >= 3600000) throttle.first = Date.now();
+  throttle.last = Date.now();
+  await env.SS.put(`codethrottle:${email}`, JSON.stringify(throttle), { expirationTtl: 3600 });
+  return json({ ok: true });
+}
+
+async function handleCheckCode(request, env) {
+  const url = new URL(request.url);
+  const email = normEmail(url.searchParams.get("email"));
+  const given = (url.searchParams.get("code") || "").trim();
+  const raw = await env.SS.get(`code:${email}`);
+  if (!raw) return json({ ok: false, error: "expired" });
+
+  const rec = JSON.parse(raw);
+  if (Date.now() - rec.made > 600000) {
+    await env.SS.delete(`code:${email}`);
+    return json({ ok: false, error: "expired" });
+  }
+  if (rec.tries >= 5) return json({ ok: false, error: "too many" });
+
+  if (rec.code !== given) {
+    rec.tries++;
+    await env.SS.put(`code:${email}`, JSON.stringify(rec), { expirationTtl: 900 });
+    return json({ ok: false, error: "wrong", left: 5 - rec.tries });
+  }
+  await env.SS.delete(`code:${email}`);
+  await env.SS.put(`verified:${email}`, String(Date.now()));
+  return json({ ok: true });
+}
+
 /* ---------- family places, counted where nobody can edit them ---------- */
 
 async function handleFamily(request, env) {
@@ -307,7 +396,11 @@ export default {
       if (url.pathname === "/entitlement") return handleEntitlement(request, env);
       if (url.pathname === "/portal") return handlePortal(request, env);
       if (url.pathname === "/family") return handleFamily(request, env);
-      if (url.pathname === "/health") return json({ ok: true, ts: Date.now() });
+      if (url.pathname === "/sendcode") return handleSendCode(request, env);
+      if (url.pathname === "/checkcode") return handleCheckCode(request, env);
+      if (url.pathname === "/health") {
+        return json({ ok: true, ts: Date.now(), mail: !!(env.RESEND_API_KEY && env.MAIL_FROM) });
+      }
       return json({ error: "not found" }, 404);
     } catch (err) {
       return json({ error: "server error", detail: String(err) }, 500);
